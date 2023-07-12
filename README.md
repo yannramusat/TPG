@@ -1,8 +1,17 @@
 # vPGt
 
+## Install
+
+```
+git clone git@github.com:yannramusat/vPGt.git
+cd vPGt
+pip install -r requirements.txt
+python main.py
+```
+
 ## Setup 
 
-We connect to a local Neo4j Community Edition instance. 
+To run the experiments we connect to a local Neo4j Community Edition instance. 
 
 This instance should be configured with the default settings from `$NEO4J_CONF/neo4j.conf`, 
 but to be able to access any CSV from the local file system, we need to make sure Neo4j is configured this way:
