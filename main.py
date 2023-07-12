@@ -31,11 +31,9 @@ class App(object):
             self.print_query_stats(records, summary, keys)
         print(f"Del:    Deleted {summary.counters.nodes_deleted} nodes, deleted {summary.counters.relationships_deleted} relationships, completed after {summary.result_available_after} ms.")
 
-    def populate_with_csv(self, path_to_csv_file, fieldterminator='|', label="test"):
-        populate_query = """
-        LOAD CSV FROM 'file:///home/yann/research/ibench/build/ibench/try/address.csv' as row FIELDTERMINATOR '|'
-        MERGE (n:Address {zip: row[1], city: row[2]})
-        """
+    def populate_with_csv(self, path_to_csv_file, fieldterminator="|"):
+        populate_query = f"LOAD CSV FROM '{path_to_csv_file}' as row FIELDTERMINATOR '{fieldterminator}' " 
+        populate_query += "MERGE (n:Address {zip: row[1], city: row[2]})"
         records, summary, keys = self.driver.execute_query(
                 populate_query,
                 )
@@ -63,8 +61,8 @@ if __name__ == "__main__":
     uri = f"{scheme}://{hostname}:{port}"
     app = App(uri, "neo4j", verbose=False)
 
-    prefix = "file:///home/yann/ibench/build/ibench/"
-    app.populate_with_csv(prefix+"try/measure_le_0_nl0_ce0_address.csv")
+    prefix = "file:///home/yann/research/ibench/build/ibench/"
+    app.populate_with_csv(prefix+"try/address.csv")
     app.output_all_nodes()
     app.flush_database()
     app.output_all_nodes()
