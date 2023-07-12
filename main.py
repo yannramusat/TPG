@@ -1,3 +1,5 @@
+#!/bin/env python3
+
 from neo4j import GraphDatabase
 
 # connect to a local Neo4j Community Edition instance
@@ -21,21 +23,40 @@ from neo4j import GraphDatabase
 #   Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz
 #   32GiB system memory (2133 MHz)
 
-driver = GraphDatabase.driver(
-        "bolt://localhost:7687",
-        auth=None)
+class App(object):
+    def __init__(self, uri, database=None):
+        self.driver = GraphDatabase.driver(
+                        uri,
+                        auth=None)
+        self.database = database
+
+    def close(self):
+        self.driver.close
+
+    def flush(self):
+        flush_query = '''MATCH (n) DETACH DELETE(n)'''
+        with self.driver.session() as session:
+            result = self.driver.execute_query(flush_query,database=self.database)
+            print(result)
 
 cypher_query = '''
 MATCH (n)
-RETURN COUNT(n) AS count
+RETURN COUNT(n) as count
 LIMIT $limit
 '''
 
-with driver.session(database="neo4j") as session:
-    results = session.read_transaction(
-            lambda tx: tx.run(cypher_query,
-                              limit=10).data())
-    for record in results:
-        print(record['count'])
+if __name__ == "__main__":
+    scheme = "bolt"
+    hostname = "localhost"
+    port = "7687"
+    uri = f"{scheme}://{hostname}:{port}"
+    app = App(uri, "neo4j")
+    with app.driver.session(database="neo4j") as session:
+        results = session.read_transaction(
+                    lambda tx: tx.run(cypher_query,
+                                        limit=10).data())
+        for record in results:
+            print(record['count'])
+    app.flush()
 
-driver.close()
+    app.close()
