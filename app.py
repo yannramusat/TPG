@@ -27,7 +27,7 @@ class App(object):
                 database=self.database)
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
-        print(f"Del:    Deleted {summary.counters.nodes_deleted} nodes, deleted {summary.counters.relationships_deleted} relationships, completed after {summary.result_available_after} ms.")
+            print(f"Del:    Deleted {summary.counters.nodes_deleted} nodes, deleted {summary.counters.relationships_deleted} relationships, completed after {summary.result_available_after} ms.")
 
     def populate_with_csv(self, path_to_csv_file, mergeCMD, fieldterminator="|"):
         populate_query = f"LOAD CSV FROM '{path_to_csv_file}' as row FIELDTERMINATOR '{fieldterminator}' " + mergeCMD
@@ -36,10 +36,10 @@ class App(object):
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
-        print(f"CSV:    Added {summary.counters.labels_added} labels, created {summary.counters.nodes_created} nodes, " 
-              f"set {summary.counters.properties_set} properties, created {summary.counters.relationships_created} relationships, completed after {summary.result_available_after} ms.")
+            print(f"CSV:    Added {summary.counters.labels_added} labels, created {summary.counters.nodes_created} nodes, " 
+                  f"set {summary.counters.properties_set} properties, created {summary.counters.relationships_created} relationships, completed after {summary.result_available_after} ms.")
 
-    def output_all_nodes(self):
+    def output_all_nodes(self, stats=False):
         count_all_query = """
         MATCH (n)
         RETURN COUNT(n) as count
@@ -49,7 +49,8 @@ class App(object):
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
-        print(f"Out:    There is currently {records[0]['count']} node(s) in the database.")
+        if(self.verbose or stats):
+            print(f"Out:    There is currently {records[0]['count']} node(s) in the database.")
 
     def query(self, query):
         records, summary, keys = self.driver.execute_query(
@@ -57,6 +58,6 @@ class App(object):
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
-        print(f"Query:  Added {summary.counters.labels_added} labels, created {summary.counters.nodes_created} nodes, " 
-              f"set {summary.counters.properties_set} properties, created {summary.counters.relationships_created} relationships, completed after {summary.result_available_after} ms.")
+            print(f"Query:  Added {summary.counters.labels_added} labels, created {summary.counters.nodes_created} nodes, " 
+                  f"set {summary.counters.properties_set} properties, created {summary.counters.relationships_created} relationships, completed after {summary.result_available_after} ms.")
         return summary.result_available_after

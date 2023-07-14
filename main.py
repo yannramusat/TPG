@@ -23,7 +23,7 @@ if __name__ == "__main__":
     rel_person = InputRelation(prefix+"personaddress/person100-5.csv", rel_person_cmd)
     # source schema
     source_schema = InputSchema([rel_address, rel_person])
-    # rule#1
+    # rule#1 using our framework
     rule1 = TransformationRule("""
     MATCH (a:Address)
     MERGE (x:Person2 { _id: "(Person2:" + a.zip + "," + a.city + ")", address: a.zip })
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
     }]->(y)
     """)
-    # rule#2
+    # rule#2 using our framework
     rule2 = TransformationRule("""
     MATCH (p:Person)
     MATCH (a:Address)
@@ -43,14 +43,18 @@ if __name__ == "__main__":
         _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
     }]->(y)
     """)
-    ## running scenario
+    # baseline rules; using APOC
+
+    ## running scenarios
+    # framework
     launches = 5
     ttime = 0.0
     scenario_personaddress = Scenario(source_schema, [rule1, rule2])
     for i in range(launches):
-        scenario_personaddress.prepare(app)
-        ttime += scenario_personaddress.transform(app)
+        scenario_personaddress.prepare(app, stats=False)
+        ttime += scenario_personaddress.transform(app, stats=False)
     print(f"The transformation has averaged {ttime / launches} ms over {launches} runs.")
+    # APOC
 
     # close connection
     app.close()

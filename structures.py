@@ -28,15 +28,17 @@ class Scenario(object):
         self.schema = schema
         self.rules = rules
 
-    def prepare(self, app):
+    def prepare(self, app, stats=False):
         app.flush_database()
         self.schema.instanciate(app)
-        app.output_all_nodes()
+        if(stats):
+            app.output_all_nodes(stats=True)
 
-    def transform(self, app):
+    def transform(self, app, stats=False):
         elapsed = 0
         for rule in self.rules:
             elapsed += rule.apply(app)
-        print(f"The transformation has been executed in {elapsed} ms.")
-        app.output_all_nodes()
+        if(stats):
+            print(f"The transformation has been executed in {elapsed} ms.")
+            app.output_all_nodes(stats=True)
         return elapsed
