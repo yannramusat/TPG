@@ -1,47 +1,7 @@
 #!/bin/env python3
 
 from app import App
-
-class InputRelation(object):
-    def __init__(self, path_to_csv_file, mergeCMD):
-        self.file = path_to_csv_file
-        self.mergeCMD = mergeCMD
-
-    def populate(self):
-        app.populate_with_csv(self.file, self.mergeCMD)
-
-class InputSchema(object):
-    def __init__(self, input_relations):
-        self.relations = input_relations
-
-    def instanciate(self):
-        for rel in self.relations:
-            rel.populate()
-
-class TransformationRule(object):
-    def __init__(self, query_str):
-        self.query_str = query_str
-
-    def apply(self):
-        return app.query(self.query_str) 
-
-class Scenario(object):
-    def __init__(self, schema, rules):
-        self.schema = schema
-        self.rules = rules
-
-    def prepare(self):
-        app.flush_database()
-        self.schema.instanciate()
-        app.output_all_nodes()
-
-    def transform(self):
-        elapsed = 0
-        for rule in self.rules:
-            elapsed += rule.apply()
-        print(f"The transformation has been executed in {elapsed} ms.")
-        app.output_all_nodes()
-        return elapsed
+from structures import InputRelation, InputSchema, TransformationRule, Scenario
 
 if __name__ == "__main__":
     # app setup
@@ -84,12 +44,13 @@ if __name__ == "__main__":
     }]->(y)
     """)
     ## running scenario
-    launches = 100
+    launches = 5
     ttime = 0.0
     scenario_personaddress = Scenario(source_schema, [rule1, rule2])
     for i in range(launches):
-        scenario_personaddress.prepare()
-        ttime += scenario_personaddress.transform()
+        scenario_personaddress.prepare(app)
+        ttime += scenario_personaddress.transform(app)
     print(f"The transformation has averaged {ttime / launches} ms over {launches} runs.")
+
     # close connection
     app.close()
