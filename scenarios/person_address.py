@@ -60,7 +60,7 @@ class PersonAddressScenario(Scenario):
         DROP INDEX idx_address2 IF EXISTS
         """
         app.dropIndex(dropAddress2, stats)
-        # drop index on address2
+        # drop index on person2
         dropPerson2 = """
         DROP INDEX idx_person2 IF EXISTS
         """
