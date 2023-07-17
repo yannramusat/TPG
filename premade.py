@@ -36,13 +36,4 @@ class PersonAddressScenario(Scenario):
         }]->(y)
         """)
         # transformation rules
-        self.rules = [rule1, rule2]
-    
-    def run(self, app, launches = 5, stats = False):
-        ttime = 0.0
-        for i in range(launches):
-            self.prepare(app, stats=stats)
-            ttime += self.transform(app, stats=stats)
-        avg_time = ttime / launches
-        print(f"The transformation: {self} averaged {avg_time} ms over {launches} runs.")
-        return avg_time 
+        self.rules = [rule1, rule2] 

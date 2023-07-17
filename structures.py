@@ -63,3 +63,13 @@ class Scenario(object):
             desc += str(rule)
         desc += f"\n*****\n"
         return desc
+    
+    def run(self, app, launches = 5, stats = False):
+        ttime = 0.0
+        for i in range(launches):
+            self.prepare(app, stats=stats)
+            ttime += self.transform(app, stats=stats)
+        avg_time = ttime / launches
+        if(stats):
+            print(f"The transformation: {self} averaged {avg_time} ms over {launches} runs.")
+        return avg_time 
