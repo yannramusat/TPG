@@ -81,5 +81,5 @@ class Scenario(object):
                 self.destroyIndexes(app, stats=stats)
         avg_time = ttime / launches
         if(stats):
-            print(f"The transformation: {self} averaged {avg_time} ms over {launches} run(s).")
+            print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
         return avg_time 

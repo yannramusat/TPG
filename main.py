@@ -2,7 +2,6 @@
 
 from app import App
 from structures import InputRelation, InputSchema, TransformationRule, Scenario
-from premade import PersonAddressScenario
 
 if __name__ == "__main__":
     # app setup
@@ -16,6 +15,7 @@ if __name__ == "__main__":
     prefix = "file:///home/yann/research/ibench/build/ibench/"
 
     # execute the scenario PersonAddress
+    from scenarios.PersonAddress import PersonAddressScenario
     results = []
     for i in [100, 200, 500, 1000, 2000]:
         scenario = PersonAddressScenario(prefix, size=i)
