@@ -8,6 +8,9 @@ class InputRelation(object):
     def populate(self, app):
         app.populate_with_csv(self.file, self.mergeCMD)
 
+    def __str__(self):
+        return f"    {self.mergeCMD} from {self.file}\n" 
+
 class InputSchema(object):
     def __init__(self, input_relations):
         self.relations = input_relations
@@ -16,12 +19,21 @@ class InputSchema(object):
         for rel in self.relations:
             rel.populate(app)
 
+    def __str__(self):
+        desc = "Input schema:\n"
+        for rel in self.relations:
+            desc += str(rel)
+        return desc
+
 class TransformationRule(object):
     def __init__(self, query_str):
         self.query_str = query_str
 
     def apply(self, app):
         return app.query(self.query_str) 
+
+    def __str__(self):
+        return f"    {self.query_str}"
 
 class Scenario(object):
     def __init__(self, schema, rules):
@@ -42,3 +54,12 @@ class Scenario(object):
             print(f"The transformation has been executed in {elapsed} ms.")
             app.output_all_nodes(stats=True)
         return elapsed
+
+    def __str__(self):
+        desc = f"\n*****\n"
+        desc += str(self.schema)
+        desc += "Transformation rules:"
+        for rule in self.rules:
+            desc += str(rule)
+        desc += f"\n*****\n"
+        return desc
