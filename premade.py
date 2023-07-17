@@ -37,3 +37,31 @@ class PersonAddressScenario(Scenario):
         """)
         # transformation rules
         self.rules = [rule1, rule2] 
+
+    def addIndexes(self, app, stats=False):
+        # index on address2
+        indexAddress2 = """
+        CREATE INDEX idx_address2 IF NOT EXISTS
+        FOR (n:Address2)
+        ON (n._id)
+        """
+        app.addIndex(indexAddress2, stats)
+        # index on person2 
+        indexPerson2 = """
+        CREATE INDEX idx_person2 IF NOT EXISTS
+        FOR (n:Person2)
+        ON (n._id)
+        """
+        app.addIndex(indexPerson2, stats)
+
+    def destroyIndexes(self, app, stats=False):
+        # drop index on address2
+        dropAddress2 = """
+        DROP INDEX idx_address2 IF EXISTS
+        """
+        app.dropIndex(dropAddress2, stats)
+        # drop index on address2
+        dropPerson2 = """
+        DROP INDEX idx_person2 IF EXISTS
+        """
+        app.dropIndex(dropPerson2, stats)

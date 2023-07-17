@@ -63,13 +63,23 @@ class Scenario(object):
             desc += str(rule)
         desc += f"\n*****\n"
         return desc
+
+    def addIndexes(self, app, stats=False):
+        pass
+
+    def destroyIndexes(self, app, stats=False):
+        pass
     
-    def run(self, app, launches = 5, stats = False):
+    def run(self, app, launches = 5, stats=False, index=True):
         ttime = 0.0
         for i in range(launches):
             self.prepare(app, stats=stats)
+            if(index):
+                self.addIndexes(app, stats=stats)
             ttime += self.transform(app, stats=stats)
+            if(index):
+                self.destroyIndexes(app, stats=stats)
         avg_time = ttime / launches
         if(stats):
-            print(f"The transformation: {self} averaged {avg_time} ms over {launches} runs.")
+            print(f"The transformation: {self} averaged {avg_time} ms over {launches} run(s).")
         return avg_time 

@@ -61,3 +61,21 @@ class App(object):
             print(f"Query:  Added {summary.counters.labels_added} labels, created {summary.counters.nodes_created} nodes, " 
                   f"set {summary.counters.properties_set} properties, created {summary.counters.relationships_created} relationships, completed after {summary.result_available_after} ms.")
         return summary.result_available_after
+
+    def addIndex(self, query, stats=False):
+        records, summary, keys = self.driver.execute_query(
+                query,
+                database=self.database,)
+        if(self.verbose):
+            self.print_query_stats(records, summary, keys)
+        if(self.verbose or stats):
+            print(f"Idx:    Added . index, completed after {summary.result_available_after} ms.")
+
+    def dropIndex(self, query, stats=False):
+        records, summary, keys = self.driver.execute_query(
+                query,
+                database=self.database,)
+        if(self.verbose):
+            self.print_query_stats(records, summary, keys)
+        if(self.verbose or stats):
+            print(f"Idx:    Removed . index, completed after {summary.result_available_after} ms.") 

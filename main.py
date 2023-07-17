@@ -18,8 +18,8 @@ if __name__ == "__main__":
     # execute the buit-in scenario PersonAddress
     results = []
     for i in [100, 200, 500, 1000, 2000]:
-        scenario = PersonAddressScenario(prefix, size = i)
-        results.append(scenario.run(app, launches = 1, stats = True))
+        scenario = PersonAddressScenario(prefix, size=i)
+        results.append(scenario.run(app, launches=5, stats=True, index=True))
     print(results)
 
     # close connection
