@@ -33,6 +33,7 @@ class App(object):
         populate_query = f"LOAD CSV FROM '{path_to_csv_file}' as row FIELDTERMINATOR '{fieldterminator}' " + mergeCMD
         records, summary, keys = self.driver.execute_query(
                 populate_query,
+                database=self.database,
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
@@ -46,6 +47,7 @@ class App(object):
         """
         records, summary, keys = self.driver.execute_query(
                 count_all_query,
+                database=self.database,
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
@@ -55,6 +57,7 @@ class App(object):
     def query(self, query):
         records, summary, keys = self.driver.execute_query(
                 query,
+                database=self.database,
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
@@ -65,17 +68,19 @@ class App(object):
     def addIndex(self, query, stats=False):
         records, summary, keys = self.driver.execute_query(
                 query,
-                database=self.database,)
+                database=self.database,
+                )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
         if(self.verbose or stats):
-            print(f"Idx:    Added . index, completed after {summary.result_available_after} ms.")
+            print(f"Idx:    Added {summary.counters.indexes_added} index, completed after {summary.result_available_after} ms.")
 
     def dropIndex(self, query, stats=False):
         records, summary, keys = self.driver.execute_query(
                 query,
-                database=self.database,)
+                database=self.database,
+                )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
         if(self.verbose or stats):
-            print(f"Idx:    Removed . index, completed after {summary.result_available_after} ms.") 
+            print(f"Idx:    Removed {summary.counters.indexes_removed} index, completed after {summary.result_available_after} ms.") 
