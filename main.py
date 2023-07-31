@@ -15,10 +15,10 @@ if __name__ == "__main__":
     prefix = "file:///home/yann/research/ibench/build/ibench/"
 
     # execute the scenario PersonAddress
-    from scenarios.person_address import PersonAddressScenario
+    from scenarios.person_address import PersonAddressScenarioWithIndexes
     results = []
     for i in [100, 200, 500, 1000, 2000]:
-        scenario = PersonAddressScenario(prefix, size=i)
+        scenario = PersonAddressScenarioWithIndexes(prefix, size=i)
         results.append(scenario.run(app, launches=1, stats=True, index=True))
     print(results)
 
