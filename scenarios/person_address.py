@@ -77,14 +77,14 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         rule1 = TransformationRule("""
         MATCH (a:Address)
         MERGE (x:Person2 {
-            _id: "(Person2:" + a.zip + "," + a.city + ")", 
-            address: a.zip
+            _id: "(Person2:" + a.zip + "," + a.city + ")" 
         })
+        SET x.address = a.zip
         MERGE (y:Address2 {
-            _id: "(Address2:" + elementId(a) + ")", 
-            zip: a.zip, 
-            city: a.city
+            _id: "(Address2:" + elementId(a) + ")" 
         })
+        SET y.zip = a.zip,
+            y.city = a.city
         MERGE (x)-[v:livesAt {
             _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
@@ -95,15 +95,15 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         MATCH (a:Address)
         WHERE p.address = a.zip
         MERGE (x:Person2 { 
-            _id: "(Person2:" + elementId(p) + ")", 
-            name: p.name, 
-            address: p.address 
+            _id: "(Person2:" + elementId(p) + ")" 
         })
+        SET x.name = p.name,
+            x.address = p.address
         MERGE (y:Address2 { 
-            _id: "(Address2:" + elementId(a) + ")", 
-            zip: a.zip, 
-            city: a.city
+            _id: "(Address2:" + elementId(a) + ")" 
         })
+        SET y.zip = a.zip,
+            y.city = a.city
         MERGE (x)-[v:livesAt {
             _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
@@ -138,3 +138,96 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         DROP INDEX idx_person2 IF EXISTS
         """
         app.dropIndex(dropPerson2, stats)
+
+class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioWithIndexes):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (a:Address)
+        MERGE (x:Person2 {
+            _id: "(Person2:" + a.zip + "," + a.city + ")"
+        })
+        ON CREATE
+            SET x.address = a.zip
+        ON MATCH
+            SET x.address =
+                CASE
+                    WHEN x.address <> a.zip
+                        THEN "Conflict detected!"
+                    ELSE a.zip
+                END
+        MERGE (y:Address2 {
+            _id: "(Address2:" + elementId(a) + ")"
+        })
+        ON CREATE
+            SET y.zip = a.zip,
+                y.city = a.city
+        ON MATCH
+            SET y.zip =
+                CASE
+                    WHEN y.zip <> a.zip
+                        THEN "Conflict detected!"
+                    ELSE a.zip
+                END,
+                y.city =
+                CASE
+                    WHEN y.city <> a.city
+                        THEN "Conflict detected!"
+                    ELSE a.city
+                END
+        MERGE (x)-[v:livesAt {
+            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        }]->(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule("""
+        MATCH (p:Person)
+        MATCH (a:Address)
+        WHERE p.address = a.zip
+        MERGE (x:Person2 { 
+            _id: "(Person2:" + elementId(p) + ")"
+        })
+        ON CREATE
+            SET x.name = p.name,
+                x.address = p.address
+        ON MATCH
+            SET x.name =
+                CASE
+                    WHEN x.name <> p.name
+                        THEN "Conflict detected!"
+                    ELSE p.name
+                END,
+                x.address =
+                CASE
+                    WHEN x.address <> p.address
+                        THEN "Conflict detected!"
+                    ELSE p.address
+                END
+        MERGE (y:Address2 { 
+            _id: "(Address2:" + elementId(a) + ")"
+        })
+        ON CREATE
+            SET y.zip = a.zip,
+                y.city = a.city
+        ON MATCH
+            SET y.zip =
+                CASE
+                    WHEN y.zip <> a.zip
+                        THEN "Conflict detected!"
+                    ELSE a.zip
+                END,
+                y.city =
+                CASE
+                    WHEN y.city <> a.city
+                        THEN "Conflict detected!"
+                    ELSE a.city
+                END 
+        MERGE (x)-[v:livesAt {
+            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        }]->(y)
+        """)
+        # transformation rules
+        self.rules = [rule1, rule2]
