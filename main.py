@@ -16,32 +16,48 @@ if __name__ == "__main__":
     nbLaunches = 1
     showStats = True
     useIndexes = True
+    x = [100, 200, 500, 1_000, 2_000]
 
-    # execute the scenario PersonAddress
+    # execute the Optimized alternative implementation of the scenario PersonAddress
     from scenarios.person_address import PersonAddressScenarioWithIndexes
-    results = []
-    for i in [100, 200, 500, 1000, 2000]:
+    resultsOpti = []
+    for i in x:
         scenario = PersonAddressScenarioWithIndexes(prefix, size=i)
-        results.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
+        resultsOpti.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
 
-    # execute the Naive alternative
+    # execute the Naive alternative implementation of the scenario PersonAddress
     from scenarios.person_address import PersonAddressScenarioNaive
     resultsNaive = []
-    for i in []: #[100, 200, 500, 1000, 2000]:
+    for i in x:
         scenario = PersonAddressScenarioNaive(prefix, size=i)
         resultsNaive.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
 
-    # execute the alternative with conflict detection
+    # execute the alternative implementation with Conflict Detection of the scenario PersonAddress
     from scenarios.person_address import PersonAddressScenarioWithConflictDetection
     resultsCD = []
-    for i in [100, 200, 500, 1000, 2000]:
+    for i in x:
         scenario = PersonAddressScenarioWithConflictDetection(prefix, size=i)
         resultsCD.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
-   
-    # print results   
-    print(results)
-    print(resultsNaive)
-    print(resultsCD)
+
+    if showStats:
+        print(resultsOpti)
+        print(resultsNaive)
+        print(resultsCD)
+
+    # plot results using matplotlib
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig, ax = plt.subplots(layout="constrained")
+    ax.plot(x, resultsOpti, label="Optimized")
+    ax.plot(x, resultsNaive, label="Naive")
+    ax.plot(x, resultsCD, label="Conflict Detection")
+    ax.set_title("$\mathtt{PersonAddress}$ Scenario")
+    ax.set_xlabel("input relation sizes")
+    ax.set_ylabel("time [ms]")
+    ax.set_yscale("log")
+    ax.legend()
+    plt.show()
 
     # close connection
     app.close()
