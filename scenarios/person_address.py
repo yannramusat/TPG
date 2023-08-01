@@ -30,12 +30,12 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         rule1 = TransformationRule("""
         MATCH (a:Address)
         MERGE (x {
-            _id: "(Person2:" + a.zip + "," + a.city + ")"
+            _id: "(" + a.zip + "," + a.city + ")"
         })
         SET x:Person2, 
             x.address = a.zip
         MERGE (y {
-            _id: "(Address2:" + elementId(a) + ")"
+            _id: "(" + elementId(a) + ")"
         })
         SET y:Address2, 
             y.zip = a.zip, 
@@ -50,13 +50,13 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         MATCH (a:Address)
         WHERE p.address = a.zip
         MERGE (x { 
-            _id: "(Person2:" + elementId(p) + ")"
+            _id: "(" + elementId(p) + ")"
         })
         SET x:Person2,
             x.name = p.name,
             x.address = p.address
         MERGE (y { 
-            _id: "(Address2:" + elementId(a) + ")"
+            _id: "(" + elementId(a) + ")"
         })
         SET y:Address2,
             y.zip = a.zip,
