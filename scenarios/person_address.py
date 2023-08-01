@@ -29,12 +29,12 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         # rule#1 using our framework
         rule1 = TransformationRule("""
         MATCH (a:Address)
-        MERGE (x {
+        MERGE (x:_dummy {
             _id: "(" + a.zip + "," + a.city + ")"
         })
         SET x:Person2, 
             x.address = a.zip
-        MERGE (y {
+        MERGE (y:_dummy {
             _id: "(" + elementId(a) + ")"
         })
         SET y:Address2, 
@@ -49,13 +49,13 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         MATCH (p:Person)
         MATCH (a:Address)
         WHERE p.address = a.zip
-        MERGE (x { 
+        MERGE (x:_dummy { 
             _id: "(" + elementId(p) + ")"
         })
         SET x:Person2,
             x.name = p.name,
             x.address = p.address
-        MERGE (y { 
+        MERGE (y:_dummy { 
             _id: "(" + elementId(a) + ")"
         })
         SET y:Address2,
@@ -67,6 +67,22 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         """)
         # transformation rules
         self.rules = [rule1, rule2]
+
+    def addIndexes(self, app, stats=False):
+        # index on _dummy
+        indexAddress2 = """
+        CREATE INDEX idx_dummy IF NOT EXISTS
+        FOR (n:_dummy)
+        ON (n._id)
+        """
+        app.addIndex(indexAddress2, stats)
+
+    def destroyIndexes(self, app, stats=False):
+        # drop index on address2
+        dropAddress2 = """
+        DROP INDEX idx_dummy IF EXISTS
+        """
+        app.dropIndex(dropAddress2, stats)
 
 class PersonAddressScenarioWithIndexes(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
