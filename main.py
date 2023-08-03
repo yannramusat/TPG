@@ -18,14 +18,14 @@ if __name__ == "__main__":
     x = [100, 200, 500, 1_000, 2_000] #, 5_000, 10_000, 20_000, 50_000, 100_000]
 
     # execute the Optimized alternative implementation of the scenario PersonAddress
-    from scenarios.person_address import PersonAddressScenarioWithIndexes
+    from scenarios.personaddress import PersonAddressScenarioWithIndexes
     resultsOpti = []
     for i in x:
         scenario = PersonAddressScenarioWithIndexes(prefix, size=i)
         resultsOpti.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
 
     # execute the Naive alternative implementation of the scenario PersonAddress
-    from scenarios.person_address import PersonAddressScenarioNaive
+    from scenarios.personaddress import PersonAddressScenarioNaive
     resultsNaive = []
     for i in []:
         scenario = PersonAddressScenarioNaive(prefix, size=i)
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         resultsDummy.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=True))
 
     # execute the alternative implementation with Conflict Detection of the scenario PersonAddress
-    from scenarios.person_address import PersonAddressScenarioWithConflictDetection
+    from scenarios.personaddress import PersonAddressScenarioWithConflictDetection
     resultsCD = []
     for i in x:
         scenario = PersonAddressScenarioWithConflictDetection(prefix, size=i)
