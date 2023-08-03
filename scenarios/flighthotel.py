@@ -71,7 +71,27 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         ON (n._id)
         """
         app.addIndex(indexTravel, stats)
-        ## TODO add indexes on Hotel2, FLIGHTS_TO, HAS_HOTEL
+        # index on hotel2
+        indexHotel2 = """
+        CREATE INDEX idx_hotel2 IF NOT EXISTS
+        FOR (n:Hotel2)
+        ON (n._id)
+        """
+        app.addIndex(indexHotel2, stats)
+        # index on flightsTo
+        indexFlightsTo = """
+        CREATE INDEX idx_flightsTo IF NOT EXISTS
+        FOR ()-[r:FLIGHTS_TO]-()
+        ON (r._id)
+        """
+        app.addIndex(indexFlightsTo, stats)
+        # index on hasHotel
+        indexHasHotel = """
+        CREATE INDEX idx_hasHotel IF NOT EXISTS
+        FOR ()-[r:HAS_HOTEL]-()
+        ON (r._id)
+        """
+        app.addIndex(indexHasHotel, stats)
 
     def destroyIndexes(self, app, stats=False):
         # drop index on location
@@ -84,4 +104,18 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         DROP INDEX idx_travel IF EXISTS
         """
         app.dropIndex(dropTravel, stats)
-        ## TODO remove indexes on Hotel2, FLIGHTS_TO, HAS_HOTEL
+        # drop index on hotel2
+        dropHotel2 = """
+        DROP INDEX idx_hotel2 IF EXISTS
+        """
+        app.dropIndex(dropHotel2, stats)
+        # drop index on flightsTo
+        dropFlightsTo = """
+        DROP INDEX idx_flightsTo IF EXISTS
+        """
+        app.dropIndex(dropFlightsTo, stats)
+        # drop index on hasHotel
+        dropHasHotel = """
+        DROP INDEX idx_hasHotel IF EXISTS
+        """
+        app.dropIndex(dropHasHotel, stats)
