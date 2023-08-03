@@ -1,0 +1,67 @@
+################################################################################
+# iBench configuration file used for vPGt experiments
+#
+# Example with user defined primitive (UDPs), create 1 copy of the PersonAddress
+# scenario to compare different alternative implementations
+#
+################################################################################
+
+# Output Path Prefixes
+SchemaPathPrefix=tmp_personaddress
+InstancePathPrefix=tmp_personaddress
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 0
+
+################################################################################
+# User defined primitives (UDP) specification. 
+################################################################################
+
+# The number of user defined primitives to be loaded
+LoadScenarios.NumScenarios = 1
+
+########################################
+# create UDP for personaddress.xml
+# TrampXML file specifying the schema elements, correspondences, and mappings
+LoadScenarios.0.File = personaddress.xml
+# name for the primitive
+LoadScenarios.0.Name = PersonAddress
+# how many instances should be created
+LoadScenarios.0.Inst = 1
+
+################################################################################
+# Additional configuration
+
+ConfigOptions.NumOfSubElements = 3
+
+RandomSeed = 2
+# change the following line to control the cardinalities of input relations
+RepElementCount = 2000
+MaxStringLength = 5
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+QueryGenerator = Postgres
+MappingLanguage = SOtgds
+ExchangeTargetData = false
+
+################################################################################
+# Optional activation/deactivation of output options
+# create only TrampXML metadata file and data
+################################################################################ 
+
+OutputOption.HTMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = false
+OutputOption.HTMLMapping = false
+OutputOption.TrampXML = true			
+OutputOption.Clio = false				
+
+################################################################################
+# Optional activation/deactivation of parts of the generated Tramp XML document
+################################################################################
+
+TrampXMLOutput.Correspondences = true
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = false	  			
