@@ -15,14 +15,44 @@ if __name__ == "__main__":
     nbLaunches = 1
     showStats = True
     useIndexes = True
-    x = [100, 200, 500, 1_000, 2_000] #, 5_000, 10_000, 20_000, 50_000, 100_000]
+    x = [100, 200, 500, 1_000, 2_000, 5_000] #, 10_000, 20_000, 50_000, 100_000]
 
+    # execute the Optimized alternative implementation of the scenario FlightHotel
     from scenarios.flighthotel import FlightHotelScenarioWithIndexes
-    resultsTest = []
-    scenario = FlightHotelScenarioWithIndexes(prefix, 100)
-    resultsTest.append(scenario.run(app, launches=1, stats=True, index=True))
-    print(resultsTest)
+    resultsOptiFH = []
+    for i in x:
+        scenario = FlightHotelScenarioWithIndexes(prefix, size=i)
+        resultsOptiFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=True))
+
+    # execute the Optimized alternative implementation of the scenario FlightHotel (without Indexes!)
+    resultsNoIndexFH = []
+    for i in x:
+        scenario = FlightHotelScenarioWithIndexes(prefix, size=i)
+        resultsNoIndexFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=False))
+
+    # optional print in console
+    if showStats:
+        print(resultsOptiFH)
+        print(resultsNoIndexFH)
+   
+    #####
+    # TEMPORARY PLOTTING
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig, ax = plt.subplots(layout="constrained")
+    ax.plot(x, resultsOptiFH, label="Optimized")
+    ax.plot(x, resultsNoIndexFH, label="Without indexes")
+    ax.set_title("$\mathtt{FlightHotel}$ scenario")
+    ax.set_xlabel("cardinality of input relations")
+    ax.set_ylabel("time [ms]")
+    ax.set_yscale("log")
+    ax.legend()
+    plt.show()
+
+    # TEMPORARY BREAK POINT
     exit()
+    #####
 
     # execute the Optimized alternative implementation of the scenario PersonAddress
     from scenarios.personaddress import PersonAddressScenarioWithIndexes
