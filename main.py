@@ -17,6 +17,13 @@ if __name__ == "__main__":
     useIndexes = True
     x = [100, 200, 500, 1_000, 2_000] #, 5_000, 10_000, 20_000, 50_000, 100_000]
 
+    from scenarios.flighthotel import FlightHotelScenarioWithIndexes
+    resultsTest = []
+    scenario = FlightHotelScenarioWithIndexes(prefix, 100)
+    resultsTest.append(scenario.run(app, launches=1, stats=True, index=True))
+    print(resultsTest)
+    exit()
+
     # execute the Optimized alternative implementation of the scenario PersonAddress
     from scenarios.personaddress import PersonAddressScenarioWithIndexes
     resultsOpti = []
