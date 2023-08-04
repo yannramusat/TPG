@@ -40,8 +40,8 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         SET y:Address2, 
             y.zip = a.zip, 
             y.city = a.city
-        MERGE (x)-[v:livesAt {
-            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
         """)
         # rule#2 using our framework
@@ -61,8 +61,8 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         SET y:Address2,
             y.zip = a.zip,
             y.city = a.city
-        MERGE (x)-[v:livesAt {
-            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
         """)
         # transformation rules
@@ -76,6 +76,13 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         ON (n._id)
         """
         app.addIndex(indexAddress2, stats)
+        # index on livesAt
+        indexLivesAt = """
+        CREATE INDEX idx_livesAt IF NOT EXISTS
+        FOR ()-[r:LIVES_AT]-()
+        ON (r._id)
+        """
+        app.addIndex(indexLivesAt, stats)
 
     def destroyIndexes(self, app, stats=False):
         # drop index on address2
@@ -83,6 +90,11 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         DROP INDEX idx_dummy IF EXISTS
         """
         app.dropIndex(dropAddress2, stats)
+        # drop index on livesAt
+        dropLivesAt = """
+        DROP INDEX idx_livesAt IF EXISTS
+        """
+        app.dropIndex(dropLivesAt, stats)
 
 class PersonAddressScenarioWithIndexes(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -101,8 +113,8 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         })
         SET y.zip = a.zip,
             y.city = a.city
-        MERGE (x)-[v:livesAt {
-            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
         """)
         # rule#2 using our framework
@@ -120,8 +132,8 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         })
         SET y.zip = a.zip,
             y.city = a.city
-        MERGE (x)-[v:livesAt {
-            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
         """)
         # transformation rules
@@ -142,6 +154,13 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         ON (n._id)
         """
         app.addIndex(indexPerson2, stats)
+        # index on livesAt
+        indexLivesAt = """
+        CREATE INDEX idx_livesAt IF NOT EXISTS
+        FOR ()-[r:LIVES_AT]-()
+        ON (r._id)
+        """
+        app.addIndex(indexLivesAt, stats)
 
     def destroyIndexes(self, app, stats=False):
         # drop index on address2
@@ -154,6 +173,11 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         DROP INDEX idx_person2 IF EXISTS
         """
         app.dropIndex(dropPerson2, stats)
+        # drop index on livesAt
+        dropLivesAt = """
+        DROP INDEX idx_livesAt IF EXISTS
+        """
+        app.dropIndex(dropLivesAt, stats)
 
 class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioWithIndexes):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -194,8 +218,8 @@ class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioWithIndexe
                         THEN "Conflict detected!"
                     ELSE a.city
                 END
-        MERGE (x)-[v:livesAt {
-            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
         """)
         # rule#2 using our framework
@@ -241,8 +265,8 @@ class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioWithIndexe
                         THEN "Conflict detected!"
                     ELSE a.city
                 END 
-        MERGE (x)-[v:livesAt {
-            _id: "(livesAt:" + elementId(x) + "," + elementId(y) + ")"
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
         }]->(y)
         """)
         # transformation rules
