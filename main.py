@@ -16,8 +16,8 @@ if __name__ == "__main__":
     showStats = True
     nodeIndexes = True
     relIndexes = True
-    x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
-    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
+    x = [100, 200, 500, 1_000] #, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
+    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000] #, 20_000, 50_000, 100_000]
     
     # execute the alternative implementation of the scenario PersonAddress with Separate indexes
     from scenarios.personaddress import PersonAddressScenarioSeparateIndexes
@@ -135,16 +135,23 @@ if __name__ == "__main__":
         print(results_Plain_NI)
         print(results_Plain_RI)
         print(results_Plain)
-        print("conflict Detection over Separate indexes")
+        print("Conflict Detection over Separate indexes")
         print(results_CDoverSI_NI_RI)
         print(results_CDoverSI_NI)
         print(results_CDoverSI_RI)
         print(results_CDoverSI)
-        print("conflict Detection over Plain")
+        print("Conflict Detection over Plain")
         print(results_CDoverPlain_NI_RI)
         print(results_CDoverPlain_NI)
         print(results_CDoverPlain_RI)
         print(results_CDoverPlain)
+
+    if showStats:
+        print("Comparison of alternative implementations")
+        print(results_Sep_long)
+        print(results_Plain_long)
+        print(results_CDoverSI_long)
+        print(results_CDoverPlain_long)
 
     # plot results using matplotlib
     import matplotlib.pyplot as plt
