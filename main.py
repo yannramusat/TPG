@@ -16,8 +16,9 @@ if __name__ == "__main__":
     showStats = True
     nodeIndexes = True
     relIndexes = True
-    x = [100, 200, 500, 1_000, 2_000, 5_000] #, 10_000, 20_000, 50_000, 100_000]
-
+    x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
+    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
+    
     # execute the alternative implementation of the scenario PersonAddress with Separate indexes
     from scenarios.personaddress import PersonAddressScenarioSeparateIndexes
     results_Sep_NI_RI = []
@@ -26,9 +27,13 @@ if __name__ == "__main__":
         results_Sep_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
     
     results_Sep_NI = []
+    results_Sep_long = []
     for i in x:
         scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
         results_Sep_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    for i in y:
+        scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
+        results_Sep_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
     
     results_Sep_RI = []
     for i in x:
@@ -48,10 +53,14 @@ if __name__ == "__main__":
         results_Plain_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
     
     results_Plain_NI = []
+    results_Plain_long = []
     for i in x:
         scenario = PersonAddressScenarioPlain(prefix, size=i)
         results_Plain_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
-    
+    for i in y:
+        scenario = PersonAddressScenarioPlain(prefix, size=i)
+        results_Plain_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+
     results_Plain_RI = []
     for i in x:
         scenario = PersonAddressScenarioPlain(prefix, size=i)
@@ -70,9 +79,13 @@ if __name__ == "__main__":
         results_CDoverSI_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
     
     results_CDoverSI_NI = []
+    results_CDoverSI_long = []
     for i in x:
         scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
         results_CDoverSI_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    for i in y:
+        scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
+        results_CDoverSI_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
     
     results_CDoverSI_RI = []
     for i in x:
@@ -92,9 +105,13 @@ if __name__ == "__main__":
         results_CDoverPlain_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
     
     results_CDoverPlain_NI = []
+    results_CDoverPlain_long = []
     for i in x:
         scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
         results_CDoverPlain_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    for i in y:
+        scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
+        results_CDoverPlain_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
     
     results_CDoverPlain_RI = []
     for i in x:
@@ -179,10 +196,10 @@ if __name__ == "__main__":
 
     # Figure for comparing alternative implementations | PersonAddress scenario
     fig2, ax = plt.subplots(layout="constrained")
-    ax.plot(x, results_Sep_NI, label="Separate indexes alternative")
-    ax.plot(x, results_Plain_NI, label="Plain implementation")
-    ax.plot(x, results_CDoverSI_NI, label="Conflict Detection over Separate indexes")
-    ax.plot(x, results_CDoverPlain_NI, label="Conflict Detection over Plain implementation")
+    ax.plot(y, results_Sep_long, label="Separate indexes alternative")
+    ax.plot(y, results_Plain_long, label="Plain implementation")
+    ax.plot(y, results_CDoverSI_long, label="Conflict Detection over Separate indexes")
+    ax.plot(y, results_CDoverPlain_long, label="Conflict Detection over Plain implementation")
     ax.set_title("Comparison of alternative implementations | PersonAddress scenario")
     ax.set_xlabel("number of rows in each input relation")
     ax.set_ylabel("time (ms)")
