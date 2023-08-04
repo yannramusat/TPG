@@ -16,7 +16,7 @@ if __name__ == "__main__":
     showStats = True
     nodeIndexes = True
     relIndexes = True
-    x = [100, 200, 500, 1_000, 2_000] #, 5_000, 10_000, 20_000, 50_000, 100_000]
+    x = [100, 200, 500] #, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
 
     # execute the alternative implementation of the scenario PersonAddress with Separate indexes
     from scenarios.personaddress import PersonAddressScenarioSeparateIndexes
@@ -62,53 +62,86 @@ if __name__ == "__main__":
         scenario = PersonAddressScenarioPlain(prefix, size=i)
         results_Plain.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
-    # execute the alternative implementation with Conflict Detection of the scenario PersonAddress
-    #from scenarios.personaddress import PersonAddressScenarioWithConflictDetection
-    #resultsCD = []
-    #for i in x:
-    #    scenario = PersonAddressScenarioWithConflictDetection(prefix, size=i)
-    #    resultsCD.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=nodeIndexes, relIndex=relIndexes))
+    # execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Separate index
+    from scenarios.personaddress import PersonAddressScenarioCDoverSI
+    results_CDoverSI_NI_RI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
+        results_CDoverSI_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
+    
+    results_CDoverSI_NI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
+        results_CDoverSI_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    
+    results_CDoverSI_RI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
+        results_CDoverSI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=True))
+    
+    results_CDoverSI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
+        results_CDoverSI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
     # optional printing of the results in the console
     if showStats:
+        print("Separate indexes alternative")
         print(results_Sep_NI_RI)
         print(results_Sep_NI)
         print(results_Sep_RI)
         print(results_Sep)
+        print("Plain implementation")
         print(results_Plain_NI_RI)
         print(results_Plain_NI)
         print(results_Plain_RI)
         print(results_Plain)
+        print("conflict Detection over Separate indexes")
+        print(results_CDoverSI_NI_RI)
+        print(results_CDoverSI_NI)
+        print(results_CDoverSI_RI)
+        print(results_CDoverSI)
 
     # plot results using matplotlib
     import matplotlib.pyplot as plt
     import numpy as np
 
-    fig, (ax1, ax3) = plt.subplots(1, 2, layout="constrained")
+    fig, axs = plt.subplots(2, 2, layout="constrained")
     
-    ax1.plot(x, results_Sep_NI_RI, label="Indexes on Nodes and Relations")
-    ax1.plot(x, results_Sep_NI, label="Indexes on Nodes only")
-    ax1.plot(x, results_Sep_RI, label="Indexes on Relations only")
-    ax1.plot(x, results_Sep, label="Without indexes")
+    # Axes Separate indexes
+    axs[0, 0].plot(x, results_Sep_NI_RI, label="Indexes on Nodes and Relations")
+    axs[0, 0].plot(x, results_Sep_NI, label="Indexes on Nodes only")
+    axs[0, 0].plot(x, results_Sep_RI, label="Indexes on Relations only")
+    axs[0, 0].plot(x, results_Sep, label="Without indexes")
+    axs[0, 0].set_title("Separate indexes alternative")
+    axs[0, 0].set_xlabel("number of rows in each input relation")
+    axs[0, 0].set_ylabel("time (ms)")
+    axs[0, 0].set_yscale("log")
+    axs[0, 0].legend()
 
-    ax1.set_title("$\mathtt{Separate}$ alternative")
-    ax1.set_xlabel("number of rows in each input relation")
-    ax1.set_ylabel("time (ms)")
-    ax1.set_yscale("log")
-    ax1.legend()
+    # Axes Plain implementation
+    axs[0, 1].plot(x, results_Plain_NI_RI, label="Indexes on Nodes and Relations")
+    axs[0, 1].plot(x, results_Plain_NI, label="Indexes on Nodes only")
+    axs[0, 1].plot(x, results_Plain_RI, label="Indexes on Relations only") 
+    axs[0, 1].plot(x, results_Plain, label="Without indexes")
+    axs[0, 1].set_title("Plain implementation")
+    axs[0, 1].set_xlabel("number of rows in each input relation")
+    axs[0, 1].set_ylabel("time (ms)")
+    axs[0, 1].set_yscale("log")
+    axs[0, 1].legend()
+    
+    # Axes Conflict Detection over Separate indexes
+    axs[1, 0].plot(x, results_CDoverSI_NI_RI, label="Indexes on Nodes and Relations")
+    axs[1, 0].plot(x, results_CDoverSI_NI, label="Indexes on Nodes only")
+    axs[1, 0].plot(x, results_CDoverSI_RI, label="Indexes on Relations only") 
+    axs[1, 0].plot(x, results_CDoverSI, label="Without indexes")
+    axs[1, 0].set_title("Conflict Detection over Separate indexes")
+    axs[1, 0].set_xlabel("number of rows in each input relation")
+    axs[1, 0].set_ylabel("time (ms)")
+    axs[1, 0].set_yscale("log")
+    axs[1, 0].legend()
 
-    ax3.plot(x, results_Plain_NI_RI, label="Indexes on Nodes and Relations")
-    ax3.plot(x, results_Plain_NI, label="Indexes on Nodes only")
-    ax3.plot(x, results_Plain_RI, label="Indexes on Relations only") 
-    ax3.plot(x, results_Plain, label="Without indexes")
-
-    ax3.set_title("$\mathtt{Plain}$ alternative")
-    ax3.set_xlabel("number of rows in each input relation")
-    ax3.set_ylabel("time (ms)")
-    ax3.set_yscale("log")
-    ax3.legend()
-
-    fig.suptitle("$\mathsf{PersonAddress}$ scenario", fontsize=16)
+    fig.suptitle("PersonAddress scenario", fontsize=16)
     plt.show()
  
     # TEMPORARY BREAK POINT

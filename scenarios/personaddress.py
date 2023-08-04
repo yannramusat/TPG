@@ -165,7 +165,7 @@ class PersonAddressScenarioSeparateIndexes(PersonAddressScenario):
         """
         app.dropIndex(dropPerson2, stats)
     
-class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioSeparateIndexes):
+class PersonAddressScenarioCDoverSI(PersonAddressScenarioSeparateIndexes):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
