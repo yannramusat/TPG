@@ -84,24 +84,31 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    fig, ax = plt.subplots(layout="constrained")
+    fig, (ax1, ax3) = plt.subplots(1, 2, layout="constrained")
     
-    ax.plot(x, results_Sep_NI_RI, label="Separate; with Node and Rel indexes")
-    ax.plot(x, results_Sep_NI, label="Separate; with Node indexes")
-    ax.plot(x, results_Sep_RI, label="Separate; with Rel indexes")
-    ax.plot(x, results_Sep, label="Separate; with no index")
+    ax1.plot(x, results_Sep_NI_RI, label="Indexes on Nodes and Relations")
+    ax1.plot(x, results_Sep_NI, label="Indexes on Nodes only")
+    ax1.plot(x, results_Sep_RI, label="Indexes on Relations only")
+    ax1.plot(x, results_Sep, label="Without indexes")
 
-    ax.plot(x, results_Plain_NI_RI, label="Plain; with Node and Rel indexes")
-    ax.plot(x, results_Plain_NI, label="Plain; with Node indexes")
-    ax.plot(x, results_Plain_RI, label="Plain; with Rel indexes") 
-    ax.plot(x, results_Plain, label="Plain; with no index")
+    ax1.set_title("$\mathtt{Separate}$ alternative")
+    ax1.set_xlabel("number of rows in each input relation")
+    ax1.set_ylabel("time (ms)")
+    ax1.set_yscale("log")
+    ax1.legend()
 
-    #ax.plot(x, resultsCD, label="Conflict Detection")
-    ax.set_title("$\mathtt{PersonAddress}$ scenario")
-    ax.set_xlabel("cardinality of input relations")
-    ax.set_ylabel("time [ms]")
-    ax.set_yscale("log")
-    ax.legend()
+    ax3.plot(x, results_Plain_NI_RI, label="Indexes on Nodes and Relations")
+    ax3.plot(x, results_Plain_NI, label="Indexes on Nodes only")
+    ax3.plot(x, results_Plain_RI, label="Indexes on Relations only") 
+    ax3.plot(x, results_Plain, label="Without indexes")
+
+    ax3.set_title("$\mathtt{Plain}$ alternative")
+    ax3.set_xlabel("number of rows in each input relation")
+    ax3.set_ylabel("time (ms)")
+    ax3.set_yscale("log")
+    ax3.legend()
+
+    fig.suptitle("$\mathsf{PersonAddress}$ scenario", fontsize=16)
     plt.show()
  
     # TEMPORARY BREAK POINT
