@@ -18,49 +18,85 @@ if __name__ == "__main__":
     relIndexes = True
     x = [100, 200, 500, 1_000, 2_000] #, 5_000, 10_000, 20_000, 50_000, 100_000]
 
-    # execute the Optimized alternative implementation of the scenario PersonAddress
-    from scenarios.personaddress import PersonAddressScenarioWithIndexes
-    resultsOpti = []
+    # execute the alternative implementation of the scenario PersonAddress with Separate indexes
+    from scenarios.personaddress import PersonAddressScenarioSeparateIndexes
+    results_Sep_NI_RI = []
     for i in x:
-        scenario = PersonAddressScenarioWithIndexes(prefix, size=i)
-        resultsOpti.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=nodeIndexes, relIndex=relIndexes))
+        scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
+        results_Sep_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
+    
+    results_Sep_NI = []
+    for i in x:
+        scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
+        results_Sep_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    
+    results_Sep_RI = []
+    for i in x:
+        scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
+        results_Sep_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=True))
+    
+    results_Sep = []
+    for i in x:
+        scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
+        results_Sep.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
-    # execute the Naive alternative implementation of the scenario PersonAddress
-    from scenarios.personaddress import PersonAddressScenarioNaive
-    resultsNaive = []
+    # execute the plain implementation of the scenario PersonAddress
+    from scenarios.personaddress import PersonAddressScenarioPlain
+    results_Plain_NI_RI = []
     for i in x:
-        scenario = PersonAddressScenarioNaive(prefix, size=i)
-        resultsNaive.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
-
-    # execute the dummy version of the Naive alternative implementation of the scenario PersonAddress
-    resultsDummy = []
+        scenario = PersonAddressScenarioPlain(prefix, size=i)
+        results_Plain_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
+    
+    results_Plain_NI = []
     for i in x:
-        scenario = PersonAddressScenarioNaive(prefix, size=i)
-        resultsDummy.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
+        scenario = PersonAddressScenarioPlain(prefix, size=i)
+        results_Plain_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    
+    results_Plain_RI = []
+    for i in x:
+        scenario = PersonAddressScenarioPlain(prefix, size=i)
+        results_Plain_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=True))
+    
+    results_Plain = []
+    for i in x:
+        scenario = PersonAddressScenarioPlain(prefix, size=i)
+        results_Plain.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
     # execute the alternative implementation with Conflict Detection of the scenario PersonAddress
-    from scenarios.personaddress import PersonAddressScenarioWithConflictDetection
-    resultsCD = []
-    for i in x:
-        scenario = PersonAddressScenarioWithConflictDetection(prefix, size=i)
-        resultsCD.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=nodeIndexes, relIndex=relIndexes))
+    #from scenarios.personaddress import PersonAddressScenarioWithConflictDetection
+    #resultsCD = []
+    #for i in x:
+    #    scenario = PersonAddressScenarioWithConflictDetection(prefix, size=i)
+    #    resultsCD.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=nodeIndexes, relIndex=relIndexes))
 
     # optional printing of the results in the console
     if showStats:
-        print(resultsOpti)
-        print(resultsNaive)
-        print(resultsDummy)
-        print(resultsCD)
+        print(results_Sep_NI_RI)
+        print(results_Sep_NI)
+        print(results_Sep_RI)
+        print(results_Sep)
+        print(results_Plain_NI_RI)
+        print(results_Plain_NI)
+        print(results_Plain_RI)
+        print(results_Plain)
 
     # plot results using matplotlib
     import matplotlib.pyplot as plt
     import numpy as np
 
     fig, ax = plt.subplots(layout="constrained")
-    ax.plot(x, resultsOpti, label="Optimized")
-    ax.plot(x, resultsNaive, label="Naive")
-    ax.plot(x, resultsDummy, label="Dummy")
-    ax.plot(x, resultsCD, label="Conflict Detection")
+    
+    ax.plot(x, results_Sep_NI_RI, label="Separate; with Node and Rel indexes")
+    ax.plot(x, results_Sep_NI, label="Separate; with Node indexes")
+    ax.plot(x, results_Sep_RI, label="Separate; with Rel indexes")
+    ax.plot(x, results_Sep, label="Separate; with no index")
+
+    ax.plot(x, results_Plain_NI_RI, label="Plain; with Node and Rel indexes")
+    ax.plot(x, results_Plain_NI, label="Plain; with Node indexes")
+    ax.plot(x, results_Plain_RI, label="Plain; with Rel indexes") 
+    ax.plot(x, results_Plain, label="Plain; with no index")
+
+    #ax.plot(x, resultsCD, label="Conflict Detection")
     ax.set_title("$\mathtt{PersonAddress}$ scenario")
     ax.set_xlabel("cardinality of input relations")
     ax.set_ylabel("time [ms]")

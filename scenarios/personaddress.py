@@ -31,7 +31,7 @@ class PersonAddressScenario(Scenario):
         """
         app.dropIndex(dropLivesAt, stats)
 
-class PersonAddressScenarioNaive(PersonAddressScenario):
+class PersonAddressScenarioPlain(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
@@ -94,7 +94,7 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         """
         app.dropIndex(dropAddress2, stats)
 
-class PersonAddressScenarioWithIndexes(PersonAddressScenario):
+class PersonAddressScenarioSeparateIndexes(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
@@ -165,7 +165,7 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         """
         app.dropIndex(dropPerson2, stats)
     
-class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioWithIndexes):
+class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioSeparateIndexes):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
