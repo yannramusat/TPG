@@ -14,6 +14,22 @@ class PersonAddressScenario(Scenario):
         rel_person = InputRelation(os.path.join(prefix, param_string), rel_person_cmd)
         # source schema
         self.schema = InputSchema([rel_address, rel_person])
+    
+    def addRelIndexes(self, app, stats=False):
+        # index on livesAt
+        indexLivesAt = """
+        CREATE INDEX idx_livesAt IF NOT EXISTS
+        FOR ()-[r:LIVES_AT]-()
+        ON (r._id)
+        """
+        app.addIndex(indexLivesAt, stats)
+    
+    def destroyRelIndexes(self, app, stats=False):
+        # drop index on livesAt
+        dropLivesAt = """
+        DROP INDEX idx_livesAt IF EXISTS
+        """
+        app.dropIndex(dropLivesAt, stats)
 
 class PersonAddressScenarioNaive(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -71,28 +87,12 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         """
         app.addIndex(indexAddress2, stats)
     
-    def addRelIndexes(self, app, stats=False):
-        # index on livesAt
-        indexLivesAt = """
-        CREATE INDEX idx_livesAt IF NOT EXISTS
-        FOR ()-[r:LIVES_AT]-()
-        ON (r._id)
-        """
-        app.addIndex(indexLivesAt, stats)
-
     def destroyNodeIndexes(self, app, stats=False):
         # drop index on address2
         dropAddress2 = """
         DROP INDEX idx_dummy IF EXISTS
         """
         app.dropIndex(dropAddress2, stats)
-    
-    def destroyRelIndexes(self, app, stats=False):
-        # drop index on livesAt
-        dropLivesAt = """
-        DROP INDEX idx_livesAt IF EXISTS
-        """
-        app.dropIndex(dropLivesAt, stats)
 
 class PersonAddressScenarioWithIndexes(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -153,15 +153,6 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         """
         app.addIndex(indexPerson2, stats)
     
-    def addRelIndexes(self, app, stats=False):
-        # index on livesAt
-        indexLivesAt = """
-        CREATE INDEX idx_livesAt IF NOT EXISTS
-        FOR ()-[r:LIVES_AT]-()
-        ON (r._id)
-        """
-        app.addIndex(indexLivesAt, stats)
-
     def destroyNodeIndexes(self, app, stats=False):
         # drop index on address2
         dropAddress2 = """
@@ -174,13 +165,6 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         """
         app.dropIndex(dropPerson2, stats)
     
-    def destroyRelIndexes(self, app, stats=False):
-        # drop index on livesAt
-        dropLivesAt = """
-        DROP INDEX idx_livesAt IF EXISTS
-        """
-        app.dropIndex(dropLivesAt, stats)
-
 class PersonAddressScenarioWithConflictDetection(PersonAddressScenarioWithIndexes):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
