@@ -43,7 +43,7 @@ class FlightHotelScenario(Scenario):
         """
         app.dropIndex(dropHasHotel, stats)
 
-class FlightHotelScenarioWithIndexes(FlightHotelScenario):
+class FlightHotelScenarioSeparateIndexes(FlightHotelScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)

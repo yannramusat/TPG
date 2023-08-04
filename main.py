@@ -108,16 +108,16 @@ if __name__ == "__main__":
     exit()
 
     # execute the Optimized alternative implementation of the scenario FlightHotel
-    from scenarios.flighthotel import FlightHotelScenarioWithIndexes
+    from scenarios.flighthotel import FlightHotelScenarioSeparateIndexes
     resultsOptiFH = []
     for i in x:
-        scenario = FlightHotelScenarioWithIndexes(prefix, size=i)
+        scenario = FlightHotelScenarioSeparateIndexes(prefix, size=i)
         resultsOptiFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
 
     # execute the Optimized alternative implementation of the scenario FlightHotel (without Indexes!)
     resultsNoIndexFH = []
     for i in x:
-        scenario = FlightHotelScenarioWithIndexes(prefix, size=i)
+        scenario = FlightHotelScenarioSeparateIndexes(prefix, size=i)
         resultsNoIndexFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
     # optional printing of the results in the console
