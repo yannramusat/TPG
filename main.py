@@ -14,7 +14,8 @@ if __name__ == "__main__":
     prefix = "file:///home/yann/research/ibench/build/ibench/"
     nbLaunches = 1
     showStats = True
-    useIndexes = True
+    nodeIndexes = True
+    relIndexes = True
     x = [100, 200, 500, 1_000, 2_000] #, 5_000, 10_000, 20_000, 50_000, 100_000]
 
     # execute the Optimized alternative implementation of the scenario PersonAddress
@@ -22,27 +23,27 @@ if __name__ == "__main__":
     resultsOpti = []
     for i in x:
         scenario = PersonAddressScenarioWithIndexes(prefix, size=i)
-        resultsOpti.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
+        resultsOpti.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=nodeIndexes, relIndex=relIndexes))
 
     # execute the Naive alternative implementation of the scenario PersonAddress
     from scenarios.personaddress import PersonAddressScenarioNaive
     resultsNaive = []
     for i in x:
         scenario = PersonAddressScenarioNaive(prefix, size=i)
-        resultsNaive.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=False))
+        resultsNaive.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
     # execute the dummy version of the Naive alternative implementation of the scenario PersonAddress
     resultsDummy = []
     for i in x:
         scenario = PersonAddressScenarioNaive(prefix, size=i)
-        resultsDummy.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=True))
+        resultsDummy.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
 
     # execute the alternative implementation with Conflict Detection of the scenario PersonAddress
     from scenarios.personaddress import PersonAddressScenarioWithConflictDetection
     resultsCD = []
     for i in x:
         scenario = PersonAddressScenarioWithConflictDetection(prefix, size=i)
-        resultsCD.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=useIndexes))
+        resultsCD.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=nodeIndexes, relIndex=relIndexes))
 
     # optional printing of the results in the console
     if showStats:
@@ -75,13 +76,13 @@ if __name__ == "__main__":
     resultsOptiFH = []
     for i in x:
         scenario = FlightHotelScenarioWithIndexes(prefix, size=i)
-        resultsOptiFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=True))
+        resultsOptiFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
 
     # execute the Optimized alternative implementation of the scenario FlightHotel (without Indexes!)
     resultsNoIndexFH = []
     for i in x:
         scenario = FlightHotelScenarioWithIndexes(prefix, size=i)
-        resultsNoIndexFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, index=False))
+        resultsNoIndexFH.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
     # optional printing of the results in the console
     if showStats:

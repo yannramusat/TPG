@@ -15,12 +15,6 @@ class PersonAddressScenario(Scenario):
         # source schema
         self.schema = InputSchema([rel_address, rel_person])
 
-    def addIndexes(self, app, stats=False):
-        pass
-    
-    def destroyIndexes(self, app, stats=False):
-        pass
-
 class PersonAddressScenarioNaive(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
@@ -68,7 +62,7 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         # transformation rules
         self.rules = [rule1, rule2]
 
-    def addIndexes(self, app, stats=False):
+    def addNodeIndexes(self, app, stats=False):
         # index on _dummy
         indexAddress2 = """
         CREATE INDEX idx_dummy IF NOT EXISTS
@@ -76,6 +70,8 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         ON (n._id)
         """
         app.addIndex(indexAddress2, stats)
+    
+    def addRelIndexes(self, app, stats=False):
         # index on livesAt
         indexLivesAt = """
         CREATE INDEX idx_livesAt IF NOT EXISTS
@@ -84,12 +80,14 @@ class PersonAddressScenarioNaive(PersonAddressScenario):
         """
         app.addIndex(indexLivesAt, stats)
 
-    def destroyIndexes(self, app, stats=False):
+    def destroyNodeIndexes(self, app, stats=False):
         # drop index on address2
         dropAddress2 = """
         DROP INDEX idx_dummy IF EXISTS
         """
         app.dropIndex(dropAddress2, stats)
+    
+    def destroyRelIndexes(self, app, stats=False):
         # drop index on livesAt
         dropLivesAt = """
         DROP INDEX idx_livesAt IF EXISTS
@@ -139,7 +137,7 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         # transformation rules
         self.rules = [rule1, rule2]
 
-    def addIndexes(self, app, stats=False):
+    def addNodeIndexes(self, app, stats=False):
         # index on address2
         indexAddress2 = """
         CREATE INDEX idx_address2 IF NOT EXISTS
@@ -154,6 +152,8 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         ON (n._id)
         """
         app.addIndex(indexPerson2, stats)
+    
+    def addRelIndexes(self, app, stats=False):
         # index on livesAt
         indexLivesAt = """
         CREATE INDEX idx_livesAt IF NOT EXISTS
@@ -162,7 +162,7 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         """
         app.addIndex(indexLivesAt, stats)
 
-    def destroyIndexes(self, app, stats=False):
+    def destroyNodeIndexes(self, app, stats=False):
         # drop index on address2
         dropAddress2 = """
         DROP INDEX idx_address2 IF EXISTS
@@ -173,6 +173,8 @@ class PersonAddressScenarioWithIndexes(PersonAddressScenario):
         DROP INDEX idx_person2 IF EXISTS
         """
         app.dropIndex(dropPerson2, stats)
+    
+    def destroyRelIndexes(self, app, stats=False):
         # drop index on livesAt
         dropLivesAt = """
         DROP INDEX idx_livesAt IF EXISTS

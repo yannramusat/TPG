@@ -15,12 +15,6 @@ class FlightHotelScenario(Scenario):
         # source schema
         self.schema = InputSchema([rel_flight, rel_hotel])
 
-    def addIndexes(self, app, stats=False):
-        pass
-    
-    def destroyIndexes(self, app, stats=False):
-        pass
-
 class FlightHotelScenarioWithIndexes(FlightHotelScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
@@ -56,7 +50,7 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         # transformation rules
         self.rules = [rule1]
 
-    def addIndexes(self, app, stats=False):
+    def addNodeIndexes(self, app, stats=False):
         # index on location
         indexLocation = """
         CREATE INDEX idx_location IF NOT EXISTS
@@ -78,6 +72,8 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         ON (n._id)
         """
         app.addIndex(indexHotel2, stats)
+    
+    def addRelIndexes(self, app, stats=False):
         # index on flightsTo
         indexFlightsTo = """
         CREATE INDEX idx_flightsTo IF NOT EXISTS
@@ -93,7 +89,7 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         """
         app.addIndex(indexHasHotel, stats)
 
-    def destroyIndexes(self, app, stats=False):
+    def destroyNodeIndexes(self, app, stats=False):
         # drop index on location
         dropLocation = """
         DROP INDEX idx_location IF EXISTS
@@ -109,6 +105,8 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         DROP INDEX idx_hotel2 IF EXISTS
         """
         app.dropIndex(dropHotel2, stats)
+    
+    def destroyRelIndexes(self, app, stats=False):
         # drop index on flightsTo
         dropFlightsTo = """
         DROP INDEX idx_flightsTo IF EXISTS

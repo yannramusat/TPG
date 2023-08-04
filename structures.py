@@ -64,21 +64,31 @@ class Scenario(object):
         desc += f"\n*****\n"
         return desc
 
-    def addIndexes(self, app, stats=False):
+    def addNodeIndexes(self, app, stats=False):
         pass
 
-    def destroyIndexes(self, app, stats=False):
+    def destroyNodeIndexes(self, app, stats=False):
         pass
     
-    def run(self, app, launches = 5, stats=False, index=True):
+    def addRelIndexes(self, app, stats=False):
+        pass
+
+    def destroyRelIndexes(self, app, stats=False):
+        pass
+
+    def run(self, app, launches = 5, stats=False, nodeIndex=True, relIndex=True):
         ttime = 0.0
         for i in range(launches):
             self.prepare(app, stats=stats)
-            if(index):
-                self.addIndexes(app, stats=stats)
+            if(nodeIndex):
+                self.addNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.addRelIndexes(app, stats=stats)
             ttime += self.transform(app, stats=stats)
-            if(index):
-                self.destroyIndexes(app, stats=stats)
+            if(nodeIndex):
+                self.destroyNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.destroyRelIndexes(app, stats=stats)
         avg_time = ttime / launches
         if(stats):
             print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
