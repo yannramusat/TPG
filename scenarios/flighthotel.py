@@ -14,6 +14,34 @@ class FlightHotelScenario(Scenario):
         rel_hotel = InputRelation(os.path.join(prefix, param_string), rel_hotel_cmd)
         # source schema
         self.schema = InputSchema([rel_flight, rel_hotel])
+    
+    def addRelIndexes(self, app, stats=False):
+        # index on flightsTo
+        indexFlightsTo = """
+        CREATE INDEX idx_flightsTo IF NOT EXISTS
+        FOR ()-[r:FLIGHTS_TO]-()
+        ON (r._id)
+        """
+        app.addIndex(indexFlightsTo, stats)
+        # index on hasHotel
+        indexHasHotel = """
+        CREATE INDEX idx_hasHotel IF NOT EXISTS
+        FOR ()-[r:HAS_HOTEL]-()
+        ON (r._id)
+        """
+        app.addIndex(indexHasHotel, stats)
+    
+    def destroyRelIndexes(self, app, stats=False):
+        # drop index on flightsTo
+        dropFlightsTo = """
+        DROP INDEX idx_flightsTo IF EXISTS
+        """
+        app.dropIndex(dropFlightsTo, stats)
+        # drop index on hasHotel
+        dropHasHotel = """
+        DROP INDEX idx_hasHotel IF EXISTS
+        """
+        app.dropIndex(dropHasHotel, stats)
 
 class FlightHotelScenarioWithIndexes(FlightHotelScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -73,22 +101,6 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         """
         app.addIndex(indexHotel2, stats)
     
-    def addRelIndexes(self, app, stats=False):
-        # index on flightsTo
-        indexFlightsTo = """
-        CREATE INDEX idx_flightsTo IF NOT EXISTS
-        FOR ()-[r:FLIGHTS_TO]-()
-        ON (r._id)
-        """
-        app.addIndex(indexFlightsTo, stats)
-        # index on hasHotel
-        indexHasHotel = """
-        CREATE INDEX idx_hasHotel IF NOT EXISTS
-        FOR ()-[r:HAS_HOTEL]-()
-        ON (r._id)
-        """
-        app.addIndex(indexHasHotel, stats)
-
     def destroyNodeIndexes(self, app, stats=False):
         # drop index on location
         dropLocation = """
@@ -105,15 +117,3 @@ class FlightHotelScenarioWithIndexes(FlightHotelScenario):
         DROP INDEX idx_hotel2 IF EXISTS
         """
         app.dropIndex(dropHotel2, stats)
-    
-    def destroyRelIndexes(self, app, stats=False):
-        # drop index on flightsTo
-        dropFlightsTo = """
-        DROP INDEX idx_flightsTo IF EXISTS
-        """
-        app.dropIndex(dropFlightsTo, stats)
-        # drop index on hasHotel
-        dropHasHotel = """
-        DROP INDEX idx_hasHotel IF EXISTS
-        """
-        app.dropIndex(dropHasHotel, stats)
