@@ -257,3 +257,104 @@ class PersonAddressScenarioCDoverSI(PersonAddressScenarioSeparateIndexes):
         """)
         # transformation rules
         self.rules = [rule1, rule2]
+
+class PersonAddressScenarioCDoverPlain(PersonAddressScenarioPlain):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (a:Address)
+        MERGE (x:_dummy {
+            _id: "(" + a.zip + "," + a.city + ")"
+        })
+        ON CREATE
+            SET x:Person2,
+                x.address = a.zip
+        ON MATCH
+            SET x:Person2,
+                x.address =
+                CASE
+                    WHEN x.address <> a.zip
+                        THEN "Conflict detected!"
+                    ELSE a.zip
+                END
+        MERGE (y:_dummy {
+            _id: "(" + elementId(a) + ")"
+        })
+        ON CREATE
+            SET y:Address2,
+                y.zip = a.zip,
+                y.city = a.city
+        ON MATCH
+            SET y:Address2,
+                y.zip =
+                CASE
+                    WHEN y.zip <> a.zip
+                        THEN "Conflict detected!"
+                    ELSE a.zip
+                END,
+                y.city =
+                CASE
+                    WHEN y.city <> a.city
+                        THEN "Conflict detected!"
+                    ELSE a.city
+                END
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
+        }]->(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule("""
+        MATCH (p:Person)
+        MATCH (a:Address)
+        WHERE p.address = a.zip
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(p) + ")"
+        })
+        ON CREATE
+            SET x:Person2,
+                x.name = p.name,
+                x.address = p.address
+        ON MATCH
+            SET x:Person2,
+                x.name =
+                CASE
+                    WHEN x.name <> p.name
+                        THEN "Conflict detected!"
+                    ELSE p.name
+                END,
+                x.address =
+                CASE
+                    WHEN x.address <> p.address
+                        THEN "Conflict detected!"
+                    ELSE p.address
+                END
+        MERGE (y:_dummy { 
+            _id: "(" + elementId(a) + ")"
+        })
+        ON CREATE
+            SET y:Address2,
+                y.zip = a.zip,
+                y.city = a.city
+        ON MATCH
+            SET y:Address2,
+                y.zip =
+                CASE
+                    WHEN y.zip <> a.zip
+                        THEN "Conflict detected!"
+                    ELSE a.zip
+                END,
+                y.city =
+                CASE
+                    WHEN y.city <> a.city
+                        THEN "Conflict detected!"
+                    ELSE a.city
+                END 
+        MERGE (x)-[v:LIVES_AT {
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
+        }]->(y)
+        """)
+        # transformation rules
+        self.rules = [rule1, rule2]

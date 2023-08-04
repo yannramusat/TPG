@@ -84,6 +84,28 @@ if __name__ == "__main__":
         scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
         results_CDoverSI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
 
+    # execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Plain implementation
+    from scenarios.personaddress import PersonAddressScenarioCDoverPlain
+    results_CDoverPlain_NI_RI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
+        results_CDoverPlain_NI_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True))
+    
+    results_CDoverPlain_NI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
+        results_CDoverPlain_NI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+    
+    results_CDoverPlain_RI = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
+        results_CDoverPlain_RI.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=True))
+    
+    results_CDoverPlain = []
+    for i in x:
+        scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
+        results_CDoverPlain.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False))
+
     # optional printing of the results in the console
     if showStats:
         print("Separate indexes alternative")
@@ -101,6 +123,11 @@ if __name__ == "__main__":
         print(results_CDoverSI_NI)
         print(results_CDoverSI_RI)
         print(results_CDoverSI)
+        print("conflict Detection over Plain")
+        print(results_CDoverPlain_NI_RI)
+        print(results_CDoverPlain_NI)
+        print(results_CDoverPlain_RI)
+        print(results_CDoverPlain)
 
     # plot results using matplotlib
     import matplotlib.pyplot as plt
@@ -113,7 +140,7 @@ if __name__ == "__main__":
     axs[0, 0].plot(x, results_Sep_NI, label="Indexes on Nodes only")
     axs[0, 0].plot(x, results_Sep_RI, label="Indexes on Relations only")
     axs[0, 0].plot(x, results_Sep, label="Without indexes")
-    axs[0, 0].set_title("Separate indexes alternative")
+    axs[0, 0].set_title("Separate indexes alternative implementation")
     axs[0, 0].set_xlabel("number of rows in each input relation")
     axs[0, 0].set_ylabel("time (ms)")
     axs[0, 0].set_yscale("log")
@@ -140,6 +167,17 @@ if __name__ == "__main__":
     axs[1, 0].set_ylabel("time (ms)")
     axs[1, 0].set_yscale("log")
     axs[1, 0].legend()
+
+    # Axes Conflict Detection over Plain
+    axs[1, 1].plot(x, results_CDoverPlain_NI_RI, label="Indexes on Nodes and Relations")
+    axs[1, 1].plot(x, results_CDoverPlain_NI, label="Indexes on Nodes only")
+    axs[1, 1].plot(x, results_CDoverPlain_RI, label="Indexes on Relations only") 
+    axs[1, 1].plot(x, results_CDoverPlain, label="Without indexes")
+    axs[1, 1].set_title("Conflict Detection over Plain implementation")
+    axs[1, 1].set_xlabel("number of rows in each input relation")
+    axs[1, 1].set_ylabel("time (ms)")
+    axs[1, 1].set_yscale("log")
+    axs[1, 1].legend()
 
     fig.suptitle("PersonAddress scenario", fontsize=16)
     plt.show()
