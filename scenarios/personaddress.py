@@ -80,19 +80,19 @@ class PersonAddressScenarioPlain(PersonAddressScenario):
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
-        indexAddress2 = """
+        indexDummy = """
         CREATE INDEX idx_dummy IF NOT EXISTS
         FOR (n:_dummy)
         ON (n._id)
         """
-        app.addIndex(indexAddress2, stats)
+        app.addIndex(indexDummy, stats)
     
     def destroyNodeIndexes(self, app, stats=False):
         # drop index on address2
-        dropAddress2 = """
+        dropDummy = """
         DROP INDEX idx_dummy IF EXISTS
         """
-        app.dropIndex(dropAddress2, stats)
+        app.dropIndex(dropDummy, stats)
 
 class PersonAddressScenarioSeparateIndexes(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
