@@ -31,7 +31,7 @@ class FlightHotelScenario(Scenario):
         """
         app.addIndex(indexHasHotel, stats)
     
-    def destroyRelIndexes(self, app, stats=False):
+    def delRelIndexes(self, app, stats=False):
         # drop index on flightsTo
         dropFlightsTo = """
         DROP INDEX idx_flightsTo IF EXISTS
@@ -101,7 +101,7 @@ class FlightHotelScenarioSeparateIndexes(FlightHotelScenario):
         """
         app.addIndex(indexHotel2, stats)
     
-    def destroyNodeIndexes(self, app, stats=False):
+    def delNodeIndexes(self, app, stats=False):
         # drop index on location
         dropLocation = """
         DROP INDEX idx_location IF EXISTS

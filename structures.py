@@ -67,13 +67,13 @@ class Scenario(object):
     def addNodeIndexes(self, app, stats=False):
         pass
 
-    def destroyNodeIndexes(self, app, stats=False):
+    def delNodeIndexes(self, app, stats=False):
         pass
     
     def addRelIndexes(self, app, stats=False):
         pass
 
-    def destroyRelIndexes(self, app, stats=False):
+    def delRelIndexes(self, app, stats=False):
         pass
 
     def run(self, app, launches = 5, stats=False, nodeIndex=True, relIndex=True):
@@ -86,9 +86,9 @@ class Scenario(object):
                 self.addRelIndexes(app, stats=stats)
             ttime += self.transform(app, stats=stats)
             if(nodeIndex):
-                self.destroyNodeIndexes(app, stats=stats)
+                self.delNodeIndexes(app, stats=stats)
             if(relIndex):
-                self.destroyRelIndexes(app, stats=stats)
+                self.delRelIndexes(app, stats=stats)
         avg_time = ttime / launches
         if(stats):
             print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")

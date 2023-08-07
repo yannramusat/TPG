@@ -24,7 +24,7 @@ class PersonAddressScenario(Scenario):
         """
         app.addIndex(indexLivesAt, stats)
     
-    def destroyRelIndexes(self, app, stats=False):
+    def delRelIndexes(self, app, stats=False):
         # drop index on livesAt
         dropLivesAt = """
         DROP INDEX idx_livesAt IF EXISTS
@@ -87,7 +87,7 @@ class PersonAddressScenarioPlain(PersonAddressScenario):
         """
         app.addIndex(indexDummy, stats)
     
-    def destroyNodeIndexes(self, app, stats=False):
+    def delNodeIndexes(self, app, stats=False):
         # drop index on address2
         dropDummy = """
         DROP INDEX idx_dummy IF EXISTS
@@ -153,7 +153,7 @@ class PersonAddressScenarioSeparateIndexes(PersonAddressScenario):
         """
         app.addIndex(indexPerson2, stats)
     
-    def destroyNodeIndexes(self, app, stats=False):
+    def delNodeIndexes(self, app, stats=False):
         # drop index on address2
         dropAddress2 = """
         DROP INDEX idx_address2 IF EXISTS
