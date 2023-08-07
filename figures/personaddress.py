@@ -210,5 +210,3 @@ class FigureComparisonAlternativeApproachesPersonAddress(object):
         print(f"{self.results_Plain_long=}")
         print(f"{self.results_CDoverSI_long=}")
         print(f"{self.results_CDoverPlain_long=}")
-
-

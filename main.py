@@ -1,6 +1,7 @@
 #!/bin/env python3
 from app import App
-import figures
+import matplotlib.pyplot as plt
+import numpy as np
 
 if __name__ == "__main__":
     # app setup
@@ -24,22 +25,20 @@ if __name__ == "__main__":
         FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats)
     ]
-    # launch experiments    
+    # compute results    
     for fig in figures:
         fig.compute()
-    # print results into cmdline
+    # print results into the cmdline
     if showStats:
         for fig in figures:
             fig.print_cmd()
-    # generate figures
+    # generate the figures
     for fig in figures:
         fig.plot()
-    # show all figures using matplotlib
-    import matplotlib.pyplot as plt
-    import numpy as np
+    # show all figures
     plt.show()
  
-    # TEMPORARY BREAK POINT
+    ### TEMPORARY BREAK POINT
     exit()
 
     # execute the Optimized alternative implementation of the scenario FlightHotel
@@ -60,11 +59,6 @@ if __name__ == "__main__":
         print(resultsOptiFH)
         print(resultsNoIndexFH)
    
-    #####
-    # TEMPORARY PLOTTING
-    import matplotlib.pyplot as plt
-    import numpy as np
-
     fig, ax = plt.subplots(layout="constrained")
     ax.plot(x, resultsOptiFH, label="Optimized")
     ax.plot(x, resultsNoIndexFH, label="Without indexes")
@@ -74,7 +68,7 @@ if __name__ == "__main__":
     ax.set_yscale("log")
     ax.legend()
     plt.show()
-    #####
+    ### END TEMPORARY BREAKPOINT
 
     # close connection
     app.close()
