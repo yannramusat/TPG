@@ -1,5 +1,4 @@
 #!/bin/env python3
-
 from app import App
 
 class FigureComparisonIndexesPersonAddress(object):
@@ -130,7 +129,7 @@ class FigureComparisonIndexesPersonAddress(object):
         axs[1, 1].legend()
 
     def print_cmd(self):
-        print("Figure for exhaustive comparison of indexes | PersonAddress scenario")
+        print("## Figure for exhaustive comparison of indexes | PersonAddress scenario")
         print("# Separate indexes alternative")
         print(f"{self.results_Sep_NI_RI=}")
         print(f"{self.results_Sep_NI=}")
@@ -152,6 +151,60 @@ class FigureComparisonIndexesPersonAddress(object):
         print(f"{self.results_CDoverPlain_RI=}")
         print(f"{self.results_CDoverPlain=}")
 
+class FigureComparisonAlternativeApproachesPersonAddress(object):
+    def __init__(self):
+        self.x = []
+        self.results_Sep_long = []
+        self.results_Plain_long = []
+        self.results_CDoverSI_long = []
+        self.results_CDoverPlain_long = []
+
+    def compute(self, values=[], nbLaunches=1, showStats=True, nodeindexes=True, relIndexes=True):
+        self.x = values
+        # execute the alternative implementation of the scenario PersonAddress with Separate indexes
+        from scenarios.personaddress import PersonAddressScenarioSeparateIndexes
+        for i in x:
+            scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
+            self.results_Sep_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+        # execute the plain implementation of the scenario PersonAddress
+        from scenarios.personaddress import PersonAddressScenarioPlain
+        for i in x:
+            scenario = PersonAddressScenarioPlain(prefix, size=i)
+            self.results_Plain_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Separate index
+        from scenarios.personaddress import PersonAddressScenarioCDoverSI
+        for i in x:
+            scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
+            self.results_CDoverSI_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Plain implementation
+        from scenarios.personaddress import PersonAddressScenarioCDoverPlain
+        for i in x:
+            scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
+            self.results_CDoverPlain_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+
+    def plot(self):
+        # plot results using matplotlib
+        import matplotlib.pyplot as plt
+        import numpy as np
+        # Figure for comparing alternative implementations | PersonAddress scenario
+        fig2, ax = plt.subplots(layout="constrained")
+        ax.plot(y, self.results_Sep_long, label="Separate indexes alternative")
+        ax.plot(y, self.results_Plain_long, label="Plain implementation")
+        ax.plot(y, self.results_CDoverSI_long, label="Conflict Detection over Separate indexes")
+        ax.plot(y, self.results_CDoverPlain_long, label="Conflict Detection over Plain implementation")
+        ax.set_title("Comparison of alternative implementations | PersonAddress scenario")
+        ax.set_xlabel("number of rows in each input relation")
+        ax.set_ylabel("time (ms)")
+        ax.legend()
+
+    def print_cmd(self):
+        print("## Figure for comparing alternative implementations | PersonAddress scenario")
+        print("# Comparison of alternative implementations")
+        print(f"{self.results_Sep_long=}")
+        print(f"{self.results_Plain_long=}")
+        print(f"{self.results_CDoverSI_long=}")
+        print(f"{self.results_CDoverPlain_long=}")
+
 if __name__ == "__main__":
     # app setup
     scheme = "bolt"
@@ -171,60 +224,20 @@ if __name__ == "__main__":
 
     figureCompIndPA = FigureComparisonIndexesPersonAddress()
     figureCompIndPA.compute(values=x, nbLaunches=nbLaunches, showStats=showStats)
-    
-    # execute the alternative implementation of the scenario PersonAddress with Separate indexes
-    from scenarios.personaddress import PersonAddressScenarioSeparateIndexes
-    results_Sep_long = []
-    for i in y:
-        scenario = PersonAddressScenarioSeparateIndexes(prefix, size=i)
-        results_Sep_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
-    # execute the plain implementation of the scenario PersonAddress
-    from scenarios.personaddress import PersonAddressScenarioPlain
-    results_Plain_long = []
-    for i in y:
-        scenario = PersonAddressScenarioPlain(prefix, size=i)
-        results_Plain_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
-    # execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Separate index
-    from scenarios.personaddress import PersonAddressScenarioCDoverSI
-    results_CDoverSI_long = []
-    for i in y:
-        scenario = PersonAddressScenarioCDoverSI(prefix, size=i)
-        results_CDoverSI_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
-    # execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Plain implementation
-    from scenarios.personaddress import PersonAddressScenarioCDoverPlain
-    results_CDoverPlain_long = []
-    for i in y:
-        scenario = PersonAddressScenarioCDoverPlain(prefix, size=i)
-        results_CDoverPlain_long.append(scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False))
+
+    figureCompAltAppPA = FigureComparisonAlternativeApproachesPersonAddress()
+    figureCompAltAppPA.compute(values=x, nbLaunches=nbLaunches, showStats=showStats)
 
     if showStats:
         figureCompIndPA.print_cmd()
-    
-    if showStats:
-        print("# Comparison of alternative implementations")
-        print(f"{results_Sep_long=}")
-        print(f"{results_Plain_long=}")
-        print(f"{results_CDoverSI_long=}")
-        print(f"{results_CDoverPlain_long=}")
+        figureCompAltAppPA.print_cmd() 
 
     figureCompIndPA.plot()
-    # plot results using matplotlib
+    figureCompAltAppPA.plot()
+
+    # show all figures using matplotlib
     import matplotlib.pyplot as plt
     import numpy as np
-
-    # Figure for comparing alternative implementations | PersonAddress scenario
-    fig2, ax = plt.subplots(layout="constrained")
-    ax.plot(y, results_Sep_long, label="Separate indexes alternative")
-    ax.plot(y, results_Plain_long, label="Plain implementation")
-    ax.plot(y, results_CDoverSI_long, label="Conflict Detection over Separate indexes")
-    ax.plot(y, results_CDoverPlain_long, label="Conflict Detection over Plain implementation")
-    ax.set_title("Comparison of alternative implementations | PersonAddress scenario")
-    ax.set_xlabel("number of rows in each input relation")
-    ax.set_ylabel("time (ms)")
-    #ax.set_yscale("log")
-    ax.legend()
-
-    # plot all figures
     plt.show()
  
     # TEMPORARY BREAK POINT
