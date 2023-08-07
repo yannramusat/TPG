@@ -1,14 +1,11 @@
 from app import App
+from figures.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 
-class FigureComparisonIndexesPersonAddress(object):
+class FigureComparisonIndexesPersonAddress(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
-        self.app = app
-        self.prefix = prefix
-        self.x = values
-        self.nbLaunches = nbLaunches
-        self.showStats = showStats
+        super().__init__(app, prefix, values, nbLaunches, showStats)
         # results 
         self.results_Sep_NI_RI = []
         self.results_Sep_NI = []
@@ -153,13 +150,9 @@ class FigureComparisonIndexesPersonAddress(object):
         print(f"{self.results_CDoverPlain_RI=}")
         print(f"{self.results_CDoverPlain=}")
 
-class FigureComparisonAlternativeApproachesPersonAddress(object):
+class FigureComparisonAlternativeApproachesPersonAddress(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
-        self.app = app
-        self.prefix = prefix
-        self.x = values
-        self.nbLaunches = nbLaunches
-        self.showStats = showStats
+        super().__init__(app, prefix, values, nbLaunches, showStats)
         # results
         self.results_Sep_long = []
         self.results_Plain_long = []
