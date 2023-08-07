@@ -1,6 +1,6 @@
 import os
 from app import App
-from structures import InputRelation, InputSchema, TransformationRule, Scenario
+from scenarios.scenario import InputRelation, InputSchema, TransformationRule, Scenario
 
 class FlightHotelScenario(Scenario):
     def __init__(self, prefix, size = 100, lstring = 5):
