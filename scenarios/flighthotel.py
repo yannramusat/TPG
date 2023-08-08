@@ -66,7 +66,7 @@ class FlightHotelScenarioPlain(FlightHotelScenario):
         })
         SET t:Travel
         MERGE (m:_dummy {
-            _id: "(" + h.hid + ")"
+            _id: "(h(" + h.hid + "))"
         })
         SET m:Hotel2
         MERGE (l)-[ft:FLIGHTS_TO {
