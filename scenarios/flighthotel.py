@@ -56,19 +56,24 @@ class FlightHotelScenarioPlain(FlightHotelScenario):
         MERGE (l:_dummy { 
             _id: "(" + f.src + ")" 
         })
-        SET l:Location
+        SET l:Location,
+            l.name = f.src
         MERGE (j:_dummy { 
             _id: "(" + f.dest + ")" 
         })
-        SET j:Location
+        SET j:Location,
+            j.name = f.dest
         MERGE (t:_dummy {
             _id: "(" + f.src + "," + f.dest + ")"
         })
-        SET t:Travel
+        SET t:Travel,
+            t.from = f.src,
+            t.to = f.dest
         MERGE (m:_dummy {
             _id: "(h(" + h.hid + "))"
         })
-        SET m:Hotel2
+        SET m:Hotel2,
+            m.name = h.hid
         MERGE (l)-[ft:FLIGHTS_TO {
             _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
         }]->(t)
@@ -111,15 +116,20 @@ class FlightHotelScenarioSeparateIndexes(FlightHotelScenario):
         MERGE (l:Location { 
             _id: "(Location:" + f.src + ")" 
         })
+        SET l.name = f.src
         MERGE (j:Location { 
             _id: "(Location:" + f.dest + ")" 
         })
+        SET j.name = f.dest
         MERGE (t:Travel {
             _id: "(Travel:" + f.src + "," + f.dest + ")"
         })
+        SET t.from = f.src,
+            t.to = f.dest
         MERGE (m:Hotel2 {
             _id: "(Hotel2:" + h.hid + ")"
         })
+        SET m.name = h.hid
         MERGE (l)-[ft:FLIGHTS_TO {
             _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
         }]->(t)
@@ -172,3 +182,177 @@ class FlightHotelScenarioSeparateIndexes(FlightHotelScenario):
         DROP INDEX idx_hotel2 IF EXISTS
         """
         app.dropIndex(dropHotel2, stats)
+
+class FlightHotelScenarioCDoverSI(FlightHotelScenarioSeparateIndexes):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (f:Flight)
+        MATCH (h:Hotel)
+        WHERE f.fid = h.flid
+        MERGE (l:Location { 
+            _id: "(Location:" + f.src + ")" 
+        })
+        ON CREATE
+            SET l.name = f.src
+        ON MATCH
+            SET l.name =
+                CASE
+                    WHEN l.name <> f.src
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.src
+                END
+        MERGE (j:Location { 
+            _id: "(Location:" + f.dest + ")" 
+        })
+        ON CREATE
+            SET j.name = f.dest
+        ON MATCH
+            SET j.name =
+                CASE
+                    WHEN j.name <> f.dest
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.dest
+                END
+        MERGE (t:Travel {
+            _id: "(Travel:" + f.src + "," + f.dest + ")"
+        })
+        ON CREATE
+            SET t.from = f.src,
+                t.to = f.dest
+        ON MATCH
+            SET t.from =
+                CASE
+                    WHEN t.from <> f.src
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.src
+                END,
+                t.to =
+                CASE
+                    WHEN t.to <> f.dest
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.dest
+                END
+        MERGE (m:Hotel2 {
+            _id: "(Hotel2:" + h.hid + ")"
+        })
+        ON CREATE
+            SET m.name = h.hid
+        ON MATCH
+            SET m.name =
+                CASE
+                    WHEN m.name <> h.hid
+                        THEN "Conflict detected!"
+                    ELSE
+                        h.hid
+                END
+        MERGE (l)-[ft:FLIGHTS_TO {
+            _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
+        }]->(t)
+        MERGE (t)-[ft2:FLIGHTS_TO {
+            _id: "(FLIGHTS_TO:" + elementId(t) + "," + elementId(j) + ")"
+        }]->(j)
+        MERGE (t)-[hh:HAS_HOTEL {
+            _id: "(HAS_HOTEL:" + elementId(t) + "," + elementId(m) + ")"
+        }]->(m)
+        """)
+        # transformation rules
+        self.rules = [rule1]
+
+class FlightHotelScenarioCDoverPlain(FlightHotelScenarioPlain):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (f:Flight)
+        MATCH (h:Hotel)
+        WHERE f.fid = h.flid
+        MERGE (l:_dummy { 
+            _id: "(" + f.src + ")" 
+        })
+        ON CREATE
+            SET l:Location,
+                l.name = f.src
+        ON MATCH
+            SET l:Location,
+                l.name =
+                CASE
+                    WHEN l.name <> f.src
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.src
+                END
+        MERGE (j:_dummy { 
+            _id: "(" + f.dest + ")" 
+        })
+        ON CREATE
+            SET j:Location,
+                j.name = f.dest
+        ON MATCH
+            SET j:Location,
+                j.name =
+                CASE
+                    WHEN j.name <> f.dest
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.dest
+                END
+        MERGE (t:_dummy {
+            _id: "(" + f.src + "," + f.dest + ")"
+        })
+        ON CREATE
+            SET t:Travel,
+                t.from = f.src,
+                t.to = f.dest
+        ON MATCH
+            SET t:Travel,
+                t.from =
+                CASE
+                    WHEN t.from <> f.src
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.src
+                END,
+                t.to =
+                CASE
+                    WHEN t.to <> f.dest
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.dest
+                END
+        MERGE (m:_dummy {
+            _id: "(h(" + h.hid + "))"
+        })
+        ON CREATE
+            SET m:Hotel2,
+                m.name = h.hid
+        ON MATCH
+            SET m:Hotel2,
+                m.name =
+                CASE
+                    WHEN m.name <> h.hid
+                        THEN "Conflict detected!"
+                    ELSE
+                        h.hid
+                END
+        MERGE (l)-[ft:FLIGHTS_TO {
+            _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
+        }]->(t)
+        MERGE (t)-[ft2:FLIGHTS_TO {
+            _id: "(FLIGHTS_TO:" + elementId(t) + "," + elementId(j) + ")"
+        }]->(j)
+        MERGE (t)-[hh:HAS_HOTEL {
+            _id: "(HAS_HOTEL:" + elementId(t) + "," + elementId(m) + ")"
+        }]->(m)
+        """)
+        # transformation rules
+        self.rules = [rule1]
