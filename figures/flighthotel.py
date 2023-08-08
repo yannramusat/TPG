@@ -11,10 +11,10 @@ class FigureComparisonIndexesFlightHotel(Figure):
         self.results_Sep_NI = []
         self.results_Sep_RI = []
         self.results_Sep = []
-        #self.results_Plain_NI_RI = []
-        #self.results_Plain_NI = []
-        #self.results_Plain_RI = []
-        #self.results_Plain = []
+        self.results_Plain_NI_RI = []
+        self.results_Plain_NI = []
+        self.results_Plain_RI = []
+        self.results_Plain = []
         #self.results_CDoverSI_NI_RI = []
         #self.results_CDoverSI_NI = []
         #self.results_CDoverSI_RI = []
@@ -39,20 +39,20 @@ class FigureComparisonIndexesFlightHotel(Figure):
         for i in self.x:
             scenario = FlightHotelScenarioSeparateIndexes(self.prefix, size=i)
             self.results_Sep.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
-        ## execute the plain implementation of the scenario PersonAddress
-        #from scenarios.personaddress import PersonAddressScenarioPlain
-        #for i in self.x:
-        #    scenario = PersonAddressScenarioPlain(self.prefix, size=i)
-        #    self.results_Plain_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
-        #for i in self.x:
-        #    scenario = PersonAddressScenarioPlain(self.prefix, size=i)
-        #    self.results_Plain_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-        #for i in self.x:
-        #    scenario = PersonAddressScenarioPlain(self.prefix, size=i)
-        #    self.results_Plain_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
-        #for i in self.x:
-        #    scenario = PersonAddressScenarioPlain(self.prefix, size=i)
-        #    self.results_Plain.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the plain implementation of the scenario FlightHotel
+        from scenarios.flighthotel import FlightHotelScenarioPlain
+        for i in self.x:
+            scenario = FlightHotelScenarioPlain(self.prefix, size=i)
+            self.results_Plain_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
+        for i in self.x:
+            scenario = FlightHotelScenarioPlain(self.prefix, size=i)
+            self.results_Plain_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        for i in self.x:
+            scenario = FlightHotelScenarioPlain(self.prefix, size=i)
+            self.results_Plain_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
+        for i in self.x:
+            scenario = FlightHotelScenarioPlain(self.prefix, size=i)
+            self.results_Plain.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
         ## execute the alternative implementation with Conflict Detection of the scenario PersonAddress based on Separate index
         #from scenarios.personaddress import PersonAddressScenarioCDoverSI
         #for i in self.x:
@@ -96,16 +96,16 @@ class FigureComparisonIndexesFlightHotel(Figure):
         axs[0, 0].set_ylabel("time (ms)")
         axs[0, 0].set_yscale("log")
         axs[0, 0].legend()
-        ## Axes Plain implementation
-        #axs[0, 1].plot(self.x, self.results_Plain_NI_RI, label="Indexes on Nodes and Relations")
-        #axs[0, 1].plot(self.x, self.results_Plain_NI, label="Indexes on Nodes only")
-        #axs[0, 1].plot(self.x, self.results_Plain_RI, label="Indexes on Relations only") 
-        #axs[0, 1].plot(self.x, self.results_Plain, label="Without indexes")
-        #axs[0, 1].set_title("Plain implementation")
-        #axs[0, 1].set_xlabel("number of rows in each input relation")
-        #axs[0, 1].set_ylabel("time (ms)")
-        #axs[0, 1].set_yscale("log")
-        #axs[0, 1].legend()
+        # Axes Plain implementation
+        axs[0, 1].plot(self.x, self.results_Plain_NI_RI, label="Indexes on Nodes and Relations")
+        axs[0, 1].plot(self.x, self.results_Plain_NI, label="Indexes on Nodes only")
+        axs[0, 1].plot(self.x, self.results_Plain_RI, label="Indexes on Relations only") 
+        axs[0, 1].plot(self.x, self.results_Plain, label="Without indexes")
+        axs[0, 1].set_title("Plain implementation")
+        axs[0, 1].set_xlabel("number of rows in each input relation")
+        axs[0, 1].set_ylabel("time (ms)")
+        axs[0, 1].set_yscale("log")
+        axs[0, 1].legend()
         ## Axes Conflict Detection over Separate indexes
         #axs[1, 0].plot(self.x, self.results_CDoverSI_NI_RI, label="Indexes on Nodes and Relations")
         #axs[1, 0].plot(self.x, self.results_CDoverSI_NI, label="Indexes on Nodes only")
@@ -134,11 +134,11 @@ class FigureComparisonIndexesFlightHotel(Figure):
         print(f"{self.results_Sep_NI=}")
         print(f"{self.results_Sep_RI=}")
         print(f"{self.results_Sep=}")
-        #print("# Plain implementation")
-        #print(f"{self.results_Plain_NI_RI=}")
-        #print(f"{self.results_Plain_NI=}")
-        #print(f"{self.results_Plain_RI=}")
-        #print(f"{self.results_Plain=}")
+        print("# Plain implementation")
+        print(f"{self.results_Plain_NI_RI=}")
+        print(f"{self.results_Plain_NI=}")
+        print(f"{self.results_Plain_RI=}")
+        print(f"{self.results_Plain=}")
         #print("# Conflict Detection over Separate indexes")
         #print(f"{self.results_CDoverSI_NI_RI=}")
         #print(f"{self.results_CDoverSI_NI=}")
