@@ -88,7 +88,7 @@ class PersonAddressScenarioPlain(PersonAddressScenario):
         app.addIndex(indexDummy, stats)
     
     def delNodeIndexes(self, app, stats=False):
-        # drop index on address2
+        # drop index on _dummy
         dropDummy = """
         DROP INDEX idx_dummy IF EXISTS
         """

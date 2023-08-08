@@ -43,6 +43,61 @@ class FlightHotelScenario(Scenario):
         """
         app.dropIndex(dropHasHotel, stats)
 
+class FlightHotelScenarioPlain(FlightHotelScenario):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (f:Flight)
+        MATCH (h:Hotel)
+        WHERE f.fid = h.flid
+        MERGE (l:_dummy { 
+            _id: "(" + f.src + ")" 
+        })
+        SET l:Location
+        MERGE (j:_dummy { 
+            _id: "(" + f.dest + ")" 
+        })
+        SET j:Location
+        MERGE (t:_dummy {
+            _id: "(" + f.src + "," + f.dest + ")"
+        })
+        SET t:Travel
+        MERGE (m:_dummy {
+            _id: "(" + h.hid + ")"
+        })
+        SET m:Hotel2
+        MERGE (l)-[ft:FLIGHTS_TO {
+            _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
+        }]->(t)
+        MERGE (t)-[ft2:FLIGHTS_TO {
+            _id: "(FLIGHTS_TO:" + elementId(t) + "," + elementId(j) + ")"
+        }]->(j)
+        MERGE (t)-[hh:HAS_HOTEL {
+            _id: "(HAS_HOTEL:" + elementId(t) + "," + elementId(m) + ")"
+        }]->(m)
+        """)
+        # transformation rules
+        self.rules = [rule1]
+
+    def addNodeIndexes(self, app, stats=False):
+        # index on _dummy
+        indexDummy = """
+        CREATE INDEX idx_dummy IF NOT EXISTS
+        FOR (n:_dummy)
+        ON (n._id)
+        """
+        app.addIndex(indexDummy, stats)
+    
+    def delNodeIndexes(self, app, stats=False):
+        # drop index on _dummy
+        dropDummy = """
+        DROP INDEX idx_dummy IF EXISTS
+        """
+        app.dropIndex(dropDummy, stats)
+
 class FlightHotelScenarioSeparateIndexes(FlightHotelScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
