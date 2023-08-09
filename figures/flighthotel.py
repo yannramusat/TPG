@@ -156,8 +156,10 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         # results
         self.results_Sep_long = []
         self.results_Plain_long = []
+        self.results_Conflicting_long = []
         self.results_CDoverSI_long = []
         self.results_CDoverPlain_long = []
+        self.results_CDoverConflicting_long = []
 
     def compute(self):
         # execute the alternative implementation of the scenario PersonAddress with Separate indexes
@@ -170,6 +172,11 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         for i in self.x:
             scenario = FlightHotelScenarioPlain(self.prefix, size=i)
             self.results_Plain_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # execute the conflicting variant of the transformation
+        from scenarios.flighthotel import FlightHotelScenarioConflicting
+        for i in self.x:
+            scenario = FlightHotelScenarioConflicting(self.prefix, size=i)
+            self.results_Conflicting_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         # execute the alternative implementation with Conflict Detection of the scenario FlightHotel based on Separate index
         from scenarios.flighthotel import FlightHotelScenarioCDoverSI
         for i in self.x:
@@ -180,7 +187,12 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         for i in self.x:
             scenario = FlightHotelScenarioCDoverPlain(self.prefix, size=i)
             self.results_CDoverPlain_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-
+        # execute the conflicting variant of the transformation with Conflict Detection
+        from scenarios.flighthotel import FlightHotelScenarioCDoverConflicting
+        for i in self.x:
+            scenario = FlightHotelScenarioCDoverConflicting(self.prefix, size=i)
+            self.results_CDoverConflicting_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+ 
     def plot(self):
         # plot results using matplotlib
         import matplotlib.pyplot as plt
@@ -189,8 +201,10 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         fig2, ax = plt.subplots(layout="constrained")
         ax.plot(self.x, self.results_Sep_long, label="Separate indexes alternative")
         ax.plot(self.x, self.results_Plain_long, label="Plain implementation")
+        ax.plot(self.x, self.results_Conflicting_long, label="Variant with conflicts")
         ax.plot(self.x, self.results_CDoverSI_long, label="Conflict Detection over Separate indexes")
         ax.plot(self.x, self.results_CDoverPlain_long, label="Conflict Detection over Plain implementation")
+        ax.plot(self.x, self.results_CDoverConflicting_long, label="Conflict Detection over variant with conflicts")
         ax.set_title("Comparison of alternative implementations | FlightHotel scenario")
         ax.set_xlabel("number of rows in each input relation")
         ax.set_ylabel("time (ms)")
@@ -201,5 +215,7 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         print("# Comparison of alternative implementations")
         print(f"{self.results_Sep_long=}")
         print(f"{self.results_Plain_long=}")
+        print(f"{self.results_Conflicting_long=}")
         print(f"{self.results_CDoverSI_long=}")
         print(f"{self.results_CDoverPlain_long=}")
+        print(f"{self.results_CDoverConflicting_long=}")
