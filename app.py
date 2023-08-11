@@ -29,7 +29,7 @@ class App(object):
             self.print_query_stats(records, summary, keys)
             print(f"Del:    Deleted {summary.counters.nodes_deleted} nodes, deleted {summary.counters.relationships_deleted} relationships, completed after {summary.result_available_after} ms.")
 
-    def populate_with_csv(self, path_to_csv_file, mergeCMD, fieldterminator="|"):
+    def populate_with_csv(self, path_to_csv_file, mergeCMD, fieldterminator="|", stats=False):
         populate_query = f"LOAD CSV FROM '{path_to_csv_file}' as row FIELDTERMINATOR '{fieldterminator}' " + mergeCMD
         records, summary, keys = self.driver.execute_query(
                 populate_query,
@@ -37,6 +37,7 @@ class App(object):
                 )
         if(self.verbose):
             self.print_query_stats(records, summary, keys)
+        if(self.verbose or stats):    
             print(f"CSV:    Added {summary.counters.labels_added} labels, created {summary.counters.nodes_created} nodes, " 
                   f"set {summary.counters.properties_set} properties, created {summary.counters.relationships_created} relationships, completed after {summary.result_available_after} ms.")
 

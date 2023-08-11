@@ -5,8 +5,8 @@ class InputRelation(object):
         self.file = path_to_csv_file
         self.mergeCMD = mergeCMD
 
-    def populate(self, app):
-        app.populate_with_csv(self.file, self.mergeCMD)
+    def populate(self, app, stats=False):
+        app.populate_with_csv(self.file, self.mergeCMD, stats=stats)
 
     def __str__(self):
         return f"    {self.mergeCMD} from {self.file}\n" 
@@ -15,9 +15,9 @@ class InputSchema(object):
     def __init__(self, input_relations):
         self.relations = input_relations
 
-    def instanciate(self, app):
+    def instanciate(self, app, stats=False):
         for rel in self.relations:
-            rel.populate(app)
+            rel.populate(app, stats=stats)
 
     def __str__(self):
         desc = "Input schema:\n"
@@ -42,7 +42,7 @@ class Scenario(object):
 
     def prepare(self, app, stats=False):
         app.flush_database()
-        self.schema.instanciate(app)
+        self.schema.instanciate(app, stats=stats)
         if(stats):
             app.output_all_nodes(stats=True)
 
