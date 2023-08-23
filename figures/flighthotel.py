@@ -162,7 +162,7 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         self.results_CDoverConflicting_long = []
 
     def compute(self):
-        # execute the alternative implementation of the scenario PersonAddress with Separate indexes
+        # execute the alternative implementation of the scenario FlightHotel with Separate indexes
         from scenarios.flighthotel import FlightHotelScenarioSeparateIndexes
         for i in self.x:
             scenario = FlightHotelScenarioSeparateIndexes(self.prefix, size=i)

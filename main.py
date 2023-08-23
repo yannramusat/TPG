@@ -23,11 +23,13 @@ if __name__ == "__main__":
     # choose which figures to use and their parameters
     from figures.personaddress import *
     from figures.flighthotel import *
+    from figures.flighthoteluc import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonIndexesFlightHotel(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
-        FigureComparisonAlternativeApproachesFlightHotel(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonAlternativeApproachesFlightHotel(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonAlternativeApproachesFlightHotelUC(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
