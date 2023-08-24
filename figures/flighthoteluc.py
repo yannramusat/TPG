@@ -3,7 +3,7 @@ from figures.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 
-class FigureComparisonIndexesFlightHotelUC(Figure):
+class FigureComparisonConstraintsFlightHotelUC(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
         super().__init__(app, prefix, values, nbLaunches, showStats)
         # results 

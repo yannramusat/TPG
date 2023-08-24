@@ -17,8 +17,8 @@ if __name__ == "__main__":
     showStats = True
     nodeIndexes = True
     relIndexes = True
-    x = [100, 200, 500, 1_000]#, 2_000, 5_000] #, 10_000, 20_000, 50_000, 100_000]
-    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000] #, 20_000, 50_000, 100_000] 
+    x = [100, 200, 500, 1_000]#, 2_000, 5_000]#, 10_000, 20_000, 50_000, 100_000]
+    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000, 100_000] 
     
     # choose which figures to use and their parameters
     from figures.personaddress import *
@@ -29,7 +29,8 @@ if __name__ == "__main__":
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonIndexesFlightHotel(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesFlightHotel(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
-        FigureComparisonAlternativeApproachesFlightHotelUC(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonConstraintsFlightHotelUC(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonAlternativeApproachesFlightHotelUC(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
