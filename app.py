@@ -85,3 +85,25 @@ class App(object):
             self.print_query_stats(records, summary, keys)
         if(self.verbose or stats):
             print(f"Idx:    Removed {summary.counters.indexes_removed} index, completed after {summary.result_available_after} ms.") 
+
+    def addConstraint(self, query, stats=False):
+        records, summary, keys = self.driver.execute_query(
+                query,
+                database=self.database,
+                )
+        if(self.verbose):
+            self.print_query_stats(records, summary, keys)
+        if(self.verbose or stats):
+            print(f"Cns:    Added {summary.counters.constraints_added} constraint, completed after {summary.result_available_after} ms.")
+
+    def dropConstraint(self, query, stats=False):
+        records, summary, keys = self.driver.execute_query(
+                query,
+                database=self.database,
+                )
+        if(self.verbose):
+            self.print_query_stats(records, summary, keys)
+        if(self.verbose or stats):
+            print(f"Cns:    Removed {summary.counters.constraints_removed} constraint, completed after {summary.result_available_after} ms.") 
+
+

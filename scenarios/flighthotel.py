@@ -163,7 +163,6 @@ class FlightHotelScenarioConflicting(FlightHotelScenario):
         """
         app.dropIndex(dropDummy, stats)
 
-
 class FlightHotelScenarioSeparateIndexes(FlightHotelScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema

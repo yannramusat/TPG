@@ -16,32 +16,32 @@ class FlightHotelScenarioUC(Scenario):
         self.schema = InputSchema([rel_flight, rel_hotel])
     
     def addRelIndexes(self, app, stats=False):
-        # index on flightsTo
-        indexFlightsTo = """
-        CREATE CONSTRAINT idx_flightsTo IF NOT EXISTS
+        # constraint on flightsTo
+        constraintFlightsTo = """
+        CREATE CONSTRAINT cns_flightsTo IF NOT EXISTS
         FOR ()-[r:FLIGHTS_TO]-()
         REQUIRE r._id IS UNIQUE
         """
-        app.addIndex(indexFlightsTo, stats)
-        # index on hasHotel
-        indexHasHotel = """
-        CREATE CONSTRAINT idx_hasHotel IF NOT EXISTS
+        app.addConstraint(constraintFlightsTo, stats)
+        # constraint on hasHotel
+        constraintHasHotel = """
+        CREATE CONSTRAINT cns_hasHotel IF NOT EXISTS
         FOR ()-[r:HAS_HOTEL]-()
         REQUIRE r._id IS UNIQUE
         """
-        app.addIndex(indexHasHotel, stats)
+        app.addConstraint(constraintHasHotel, stats)
     
     def delRelIndexes(self, app, stats=False):
-        # drop index on flightsTo
+        # drop constraint on flightsTo
         dropFlightsTo = """
-        DROP CONSTRAINT idx_flightsTo IF EXISTS
+        DROP CONSTRAINT cns_flightsTo IF EXISTS
         """
-        app.dropIndex(dropFlightsTo, stats)
-        # drop index on hasHotel
+        app.dropConstraint(dropFlightsTo, stats)
+        # drop constraint on hasHotel
         dropHasHotel = """
-        DROP CONSTRAINT idx_hasHotel IF EXISTS
+        DROP CONSTRAINT cns_hasHotel IF EXISTS
         """
-        app.dropIndex(dropHasHotel, stats)
+        app.dropConstraint(dropHasHotel, stats)
 
 class FlightHotelScenarioUCPlain(FlightHotelScenarioUC):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -88,20 +88,20 @@ class FlightHotelScenarioUCPlain(FlightHotelScenarioUC):
         self.rules = [rule1]
 
     def addNodeIndexes(self, app, stats=False):
-        # index on _dummy
-        indexDummy = """
-        CREATE CONSTRAINT idx_dummy IF NOT EXISTS
+        # constraint on _dummy
+        constraintDummy = """
+        CREATE CONSTRAINT cns_dummy IF NOT EXISTS
         FOR (n:_dummy)
         REQUIRE n._id IS UNIQUE
         """
-        app.addIndex(indexDummy, stats)
+        app.addConstraint(constraintDummy, stats)
     
     def delNodeIndexes(self, app, stats=False):
-        # drop index on _dummy
+        # drop constraint on _dummy
         dropDummy = """
-        DROP CONSTRAINT idx_dummy IF EXISTS
+        DROP CONSTRAINT cns_dummy IF EXISTS
         """
-        app.dropIndex(dropDummy, stats)
+        app.dropConstraint(dropDummy, stats)
 
 class FlightHotelScenarioUCConflicting(FlightHotelScenarioUC):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -148,21 +148,20 @@ class FlightHotelScenarioUCConflicting(FlightHotelScenarioUC):
         self.rules = [rule1]
 
     def addNodeIndexes(self, app, stats=False):
-        # index on _dummy
-        indexDummy = """
-        CREATE CONSTRAINT idx_dummy IF NOT EXISTS
+        # constraint on _dummy
+        constraintDummy = """
+        CREATE CONSTRAINT cns_dummy IF NOT EXISTS
         FOR (n:_dummy)
         REQUIRE n._id IS UNIQUE
         """
-        app.addIndex(indexDummy, stats)
+        app.addConstraint(constraintDummy, stats)
     
     def delNodeIndexes(self, app, stats=False):
-        # drop index on _dummy
+        # drop constraint on _dummy
         dropDummy = """
-        DROP CONSTRAINT idx_dummy IF EXISTS
+        DROP CONSTRAINT cns_dummy IF EXISTS
         """
-        app.dropIndex(dropDummy, stats)
-
+        app.dropConstraint(dropDummy, stats)
 
 class FlightHotelScenarioUCSeparateIndexes(FlightHotelScenarioUC):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -205,44 +204,44 @@ class FlightHotelScenarioUCSeparateIndexes(FlightHotelScenarioUC):
         self.rules = [rule1]
 
     def addNodeIndexes(self, app, stats=False):
-        # index on location
-        indexLocation = """
-        CREATE CONSTRAINT idx_location IF NOT EXISTS
+        # constraint on location
+        constraintLocation = """
+        CREATE CONSTRAINT cns_location IF NOT EXISTS
         FOR (n:Location)
         REQUIRE n._id IS UNIQUE
         """
-        app.addIndex(indexLocation, stats)
-        # index on travel
-        indexTravel = """
-        CREATE CONSTRAINT idx_travel IF NOT EXISTS
+        app.addConstraint(constraintLocation, stats)
+        # constraint on travel
+        constraintTravel = """
+        CREATE CONSTRAINT cns_travel IF NOT EXISTS
         FOR (n:Travel)
         REQUIRE n._id IS UNIQUE
         """
-        app.addIndex(indexTravel, stats)
-        # index on hotel2
-        indexHotel2 = """
-        CREATE CONSTRAINT idx_hotel2 IF NOT EXISTS
+        app.addConstraint(constraintTravel, stats)
+        # constraint on hotel2
+        constraintHotel2 = """
+        CREATE CONSTRAINT cns_hotel2 IF NOT EXISTS
         FOR (n:Hotel2)
         REQUIRE n._id IS UNIQUE
         """
-        app.addIndex(indexHotel2, stats)
+        app.addConstraint(constraintHotel2, stats)
     
     def delNodeIndexes(self, app, stats=False):
-        # drop index on location
+        # drop constraint on location
         dropLocation = """
-        DROP CONSTRAINT idx_location IF EXISTS
+        DROP CONSTRAINT cns_location IF EXISTS
         """
-        app.dropIndex(dropLocation, stats)
-        # drop index on travel
+        app.dropConstraint(dropLocation, stats)
+        # drop constraint on travel
         dropTravel = """
-        DROP CONSTRAINT idx_travel IF EXISTS
+        DROP CONSTRAINT cns_travel IF EXISTS
         """
-        app.dropIndex(dropTravel, stats)
-        # drop index on hotel2
+        app.dropConstraint(dropTravel, stats)
+        # drop constraint on hotel2
         dropHotel2 = """
-        DROP CONSTRAINT idx_hotel2 IF EXISTS
+        DROP CONSTRAINT cns_hotel2 IF EXISTS
         """
-        app.dropIndex(dropHotel2, stats)
+        app.dropConstraint(dropHotel2, stats)
 
 class FlightHotelScenarioUCCDoverSI(FlightHotelScenarioUCSeparateIndexes):
     def __init__(self, prefix, size = 100, lstring = 5):
