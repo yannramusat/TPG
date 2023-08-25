@@ -3,7 +3,7 @@ from figures.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 
-class FigureComparisonIndexesPersonAddressM1(Figure):
+class FigureComparisonIndexesPersonAddressM2(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
         super().__init__(app, prefix, values, nbLaunches, showStats)
         # results 
@@ -25,67 +25,67 @@ class FigureComparisonIndexesPersonAddressM1(Figure):
         self.results_CDoverPlain = []
 
     def compute(self):
-        # execute the alternative implementation of the scenario PersonAddress (M1) with Separate indexes
-        from scenarios.personaddressm1 import PersonAddressScenarioSeparateIndexesM1
+        # execute the alternative implementation of the scenario PersonAddress (M2) with Separate indexes
+        from scenarios.personaddressm2 import PersonAddressScenarioSeparateIndexesM2
         for i in self.x:
-            scenario = PersonAddressScenarioSeparateIndexesM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioSeparateIndexesM2(self.prefix, size=i)
             self.results_Sep_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioSeparateIndexesM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioSeparateIndexesM2(self.prefix, size=i)
             self.results_Sep_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         for i in self.x:
-            scenario = PersonAddressScenarioSeparateIndexesM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioSeparateIndexesM2(self.prefix, size=i)
             self.results_Sep_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioSeparateIndexesM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioSeparateIndexesM2(self.prefix, size=i)
             self.results_Sep.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
-        # execute the plain implementation of the scenario PersonAddress (M1)
-        from scenarios.personaddressm1 import PersonAddressScenarioPlainM1
+        # execute the plain implementation of the scenario PersonAddress (M2)
+        from scenarios.personaddressm2 import PersonAddressScenarioPlainM2
         for i in self.x:
-            scenario = PersonAddressScenarioPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioPlainM2(self.prefix, size=i)
             self.results_Plain_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioPlainM2(self.prefix, size=i)
             self.results_Plain_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         for i in self.x:
-            scenario = PersonAddressScenarioPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioPlainM2(self.prefix, size=i)
             self.results_Plain_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioPlainM2(self.prefix, size=i)
             self.results_Plain.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
-        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M1) based on Separate index
-        from scenarios.personaddressm1 import PersonAddressScenarioCDoverSIM1
+        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M2) based on Separate index
+        from scenarios.personaddressm2 import PersonAddressScenarioCDoverSIM2
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverSIM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverSIM2(self.prefix, size=i)
             self.results_CDoverSI_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverSIM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverSIM2(self.prefix, size=i)
             self.results_CDoverSI_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverSIM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverSIM2(self.prefix, size=i)
             self.results_CDoverSI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True)) 
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverSIM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverSIM2(self.prefix, size=i)
             self.results_CDoverSI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
-        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M1) based on Plain implementation
-        from scenarios.personaddressm1 import PersonAddressScenarioCDoverPlainM1
+        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M2) based on Plain implementation
+        from scenarios.personaddressm2 import PersonAddressScenarioCDoverPlainM2
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverPlainM2(self.prefix, size=i)
             self.results_CDoverPlain_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverPlainM2(self.prefix, size=i)
             self.results_CDoverPlain_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverPlainM2(self.prefix, size=i)
             self.results_CDoverPlain_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverPlainM2(self.prefix, size=i)
             self.results_CDoverPlain.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
     
     def plot(self):
-        # Figure for exhaustive comparison of indexes | PersonAddress (M1) scenario
+        # Figure for exhaustive comparison of indexes | PersonAddress (M2) scenario
         fig1, axs = plt.subplots(2, 2, layout="constrained") 
-        fig1.suptitle("PersonAddress scenario - First rule only", fontsize=16)
+        fig1.suptitle("PersonAddress scenario - Second rule only", fontsize=16)
         # Axes Separate indexes
         axs[0, 0].plot(self.x, self.results_Sep_NI_RI, label="Indexes on Nodes and Relationships")
         axs[0, 0].plot(self.x, self.results_Sep_NI, label="Indexes on Nodes only")
@@ -128,7 +128,7 @@ class FigureComparisonIndexesPersonAddressM1(Figure):
         axs[1, 1].legend()
 
     def print_cmd(self):
-        print("## Figure for exhaustive comparison of indexes | PersonAddress (M1) scenario")
+        print("## Figure for exhaustive comparison of indexes | PersonAddress (M2) scenario")
         print("# Separate indexes alternative")
         print(f"{self.results_Sep_NI_RI=}")
         print(f"{self.results_Sep_NI=}")
@@ -150,7 +150,7 @@ class FigureComparisonIndexesPersonAddressM1(Figure):
         print(f"{self.results_CDoverPlain_RI=}")
         print(f"{self.results_CDoverPlain=}")
 
-class FigureComparisonAlternativeApproachesPersonAddressM1(Figure):
+class FigureComparisonAlternativeApproachesPersonAddressM2(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
         super().__init__(app, prefix, values, nbLaunches, showStats)
         # results
@@ -160,32 +160,32 @@ class FigureComparisonAlternativeApproachesPersonAddressM1(Figure):
         self.results_CDoverPlain_long = []
 
     def compute(self):
-        # execute the alternative implementation of the scenario PersonAddress (M1) with Separate indexes
-        from scenarios.personaddressm1 import PersonAddressScenarioSeparateIndexesM1
+        # execute the alternative implementation of the scenario PersonAddress (M2) with Separate indexes
+        from scenarios.personaddressm2 import PersonAddressScenarioSeparateIndexesM2
         for i in self.x:
-            scenario = PersonAddressScenarioSeparateIndexesM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioSeparateIndexesM2(self.prefix, size=i)
             self.results_Sep_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-        # execute the plain implementation of the scenario PersonAddress (M1)
-        from scenarios.personaddressm1 import PersonAddressScenarioPlainM1
+        # execute the plain implementation of the scenario PersonAddress (M2)
+        from scenarios.personaddressm2 import PersonAddressScenarioPlainM2
         for i in self.x:
-            scenario = PersonAddressScenarioPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioPlainM2(self.prefix, size=i)
             self.results_Plain_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M1) based on Separate index
-        from scenarios.personaddressm1 import PersonAddressScenarioCDoverSIM1
+        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M2) based on Separate index
+        from scenarios.personaddressm2 import PersonAddressScenarioCDoverSIM2
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverSIM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverSIM2(self.prefix, size=i)
             self.results_CDoverSI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M1) based on Plain implementation
-        from scenarios.personaddressm1 import PersonAddressScenarioCDoverPlainM1
+        # execute the alternative implementation with Conflict Detection of the scenario PersonAddress (M2) based on Plain implementation
+        from scenarios.personaddressm2 import PersonAddressScenarioCDoverPlainM2
         for i in self.x:
-            scenario = PersonAddressScenarioCDoverPlainM1(self.prefix, size=i)
+            scenario = PersonAddressScenarioCDoverPlainM2(self.prefix, size=i)
             self.results_CDoverPlain_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
 
     def plot(self):
         # plot results using matplotlib
         import matplotlib.pyplot as plt
         import numpy as np
-        # Figure for comparing alternative implementations | PersonAddress (M1) scenario
+        # Figure for comparing alternative implementations | PersonAddress (M2) scenario
         fig2, ax = plt.subplots(layout="constrained")
         ax.plot(self.x, self.results_Sep_long, label="Separate indexes alternative")
         ax.plot(self.x, self.results_Plain_long, label="Plain implementation")
@@ -197,7 +197,7 @@ class FigureComparisonAlternativeApproachesPersonAddressM1(Figure):
         ax.legend()
 
     def print_cmd(self):
-        print("## Figure for comparing alternative implementations | PersonAddress (M1) scenario")
+        print("## Figure for comparing alternative implementations | PersonAddress (M2) scenario")
         print("# Comparison of alternative implementations")
         print(f"{self.results_Sep_long=}")
         print(f"{self.results_Plain_long=}")
