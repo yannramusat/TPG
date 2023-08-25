@@ -191,7 +191,7 @@ class FigureComparisonAlternativeApproachesPersonAddressM2(Figure):
         ax.plot(self.x, self.results_Plain_long, label="Plain implementation")
         ax.plot(self.x, self.results_CDoverSI_long, label="Conflict Detection over Separate indexes")
         ax.plot(self.x, self.results_CDoverPlain_long, label="Conflict Detection over Plain implementation")
-        ax.set_title("Comparison of alternative implementations | PersonAddress (M1) scenario")
+        ax.set_title("Comparison of alternative implementations | PersonAddress (M2) scenario")
         ax.set_xlabel("number of rows per input relation")
         ax.set_ylabel("time (ms)")
         ax.legend()
