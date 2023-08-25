@@ -85,7 +85,7 @@ class FigureComparisonIndexesPersonAddressRev(Figure):
     def plot(self):
         # Figure for exhaustive comparison of indexes | PersonAddress (Rev) scenario
         fig1, axs = plt.subplots(2, 2, layout="constrained") 
-        fig1.suptitle("PersonAddress scenario - Reverse rule ordering", fontsize=16)
+        fig1.suptitle("PersonAddress scenario - Reverse rule order", fontsize=16)
         # Axes Separate indexes
         axs[0, 0].plot(self.x, self.results_Sep_NI_RI, label="Indexes on Nodes and Relationships")
         axs[0, 0].plot(self.x, self.results_Sep_NI, label="Indexes on Nodes only")
@@ -197,7 +197,7 @@ class FigureComparisonAlternativeApproachesPersonAddressRev(Figure):
         ax.legend()
 
     def print_cmd(self):
-        print("## Figure for comparing alternative implementations | PersonAddress scenario")
+        print("## Figure for comparing alternative implementations | PersonAddress (Rev) scenario")
         print("# Comparison of alternative implementations")
         print(f"{self.results_Sep_long=}")
         print(f"{self.results_Plain_long=}")

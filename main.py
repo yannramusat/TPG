@@ -26,6 +26,7 @@ if __name__ == "__main__":
     from figures.flighthoteluc import *
     from figures.personaddressm1 import *
     from figures.personaddressm2 import *
+    from figures.personaddressrev import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -39,8 +40,11 @@ if __name__ == "__main__":
         #FigureComparisonIndexesPersonAddressM1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddressM1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
         
-        FigureComparisonIndexesPersonAddressM2(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonIndexesPersonAddressM2(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         FigureComparisonAlternativeApproachesPersonAddressM2(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+        
+        FigureComparisonIndexesPersonAddressRev(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonAlternativeApproachesPersonAddressRev(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
