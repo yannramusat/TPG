@@ -151,8 +151,9 @@ class FigureComparisonConstraintsFlightHotelUC(Figure):
         print(f"{self.results_CDoverPlain=}")
 
 class FigureComparisonAlternativeApproachesFlightHotelUC(Figure):
-    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
+    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True, withConflicts=False):
         super().__init__(app, prefix, values, nbLaunches, showStats)
+        self.withConflicts = withConflicts
         # results
         self.results_Sep_long = []
         self.results_Plain_long = []
@@ -172,11 +173,12 @@ class FigureComparisonAlternativeApproachesFlightHotelUC(Figure):
         for i in self.x:
             scenario = FlightHotelScenarioPlain(self.prefix, size=i)
             self.results_Plain_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-        # execute the conflicting variant of the transformation
-        from scenarios.flighthotel import FlightHotelScenarioConflicting
-        for i in self.x:
-            scenario = FlightHotelScenarioConflicting(self.prefix, size=i)
-            self.results_Conflicting_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # optionally execute the conflicting variant of the transformation
+        if self.withConflicts:
+            from scenarios.flighthotel import FlightHotelScenarioConflicting
+            for i in self.x:
+                scenario = FlightHotelScenarioConflicting(self.prefix, size=i)
+                self.results_Conflicting_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         # execute the alternative implementation of the scenario FlightHotel (UC) with Separate indexes
         from scenarios.flighthoteluc import FlightHotelScenarioUCSeparateIndexes
         for i in self.x:
@@ -187,11 +189,12 @@ class FigureComparisonAlternativeApproachesFlightHotelUC(Figure):
         for i in self.x:
             scenario = FlightHotelScenarioUCPlain(self.prefix, size=i)
             self.results_Plain_long_UC.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
-        # execute the conflicting variant of the transformation (UC)
-        from scenarios.flighthoteluc import FlightHotelScenarioUCConflicting
-        for i in self.x:
-            scenario = FlightHotelScenarioUCConflicting(self.prefix, size=i)
-            self.results_Conflicting_long_UC.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # optionally execute the conflicting variant of the transformation (UC)
+        if self.withConflicts:
+            from scenarios.flighthoteluc import FlightHotelScenarioUCConflicting
+            for i in self.x:
+                scenario = FlightHotelScenarioUCConflicting(self.prefix, size=i)
+                self.results_Conflicting_long_UC.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
  
     def plot(self):
         # plot results using matplotlib
@@ -201,10 +204,12 @@ class FigureComparisonAlternativeApproachesFlightHotelUC(Figure):
         fig2, ax = plt.subplots(layout="constrained")
         ax.plot(self.x, self.results_Sep_long, label="Separate indexes alternative")
         ax.plot(self.x, self.results_Plain_long, label="Plain implementation")
-        ax.plot(self.x, self.results_Conflicting_long, label="Variant with conflicts")
+        if self.withConflicts:
+            ax.plot(self.x, self.results_Conflicting_long, label="Variant with conflicts")
         ax.plot(self.x, self.results_Sep_long_UC, label="Separate indexes (UC)")
         ax.plot(self.x, self.results_Plain_long_UC, label="Plain implementation (UC)")
-        ax.plot(self.x, self.results_Conflicting_long_UC, label="Variant with conflicts (UC)")
+        if self.withConflicts:
+            ax.plot(self.x, self.results_Conflicting_long_UC, label="Variant with conflicts (UC)")
         ax.set_title("Comparison of Uniqueness Constraints vs Indexes | FlightHotel scenario")
         ax.set_xlabel("number of rows per input relation")
         ax.set_ylabel("time (ms)")
@@ -215,7 +220,9 @@ class FigureComparisonAlternativeApproachesFlightHotelUC(Figure):
         print("# Comparison of alternative implementations")
         print(f"{self.results_Sep_long=}")
         print(f"{self.results_Plain_long=}")
-        print(f"{self.results_Conflicting_long=}")
+        if self.withConflicts:
+            print(f"{self.results_Conflicting_long=}")
         print(f"{self.results_Sep_long_UC=}")
         print(f"{self.results_Plain_long_UC=}")
-        print(f"{self.results_Conflicting_long_UC=}")
+        if self.withConflicts:
+            print(f"{self.results_Conflicting_long_UC=}")
