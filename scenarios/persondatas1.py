@@ -2,7 +2,7 @@ import os
 from app import App
 from scenarios.scenario import InputRelation, InputSchema, TransformationRule, Scenario
 
-class PersonDataScenario(Scenario):
+class PersonDataScenarioS1(Scenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # csv#1
         rel_person_cmd = "MERGE (n:Person {name: row[1], address: row[2]})"
@@ -48,7 +48,7 @@ class PersonDataScenario(Scenario):
         """
         app.dropIndex(dropHasPlace, stats)
 
-class PersonDataScenarioPlain(PersonDataScenario):
+class PersonDataScenarioS1Plain(PersonDataScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
@@ -99,7 +99,7 @@ class PersonDataScenarioPlain(PersonDataScenario):
         """
         app.dropIndex(dropDummy, stats)
 
-class PersonDataScenarioCDoverPlain(PersonDataScenarioPlain):
+class PersonDataScenarioS1CDoverPlain(PersonDataScenarioPlain):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
