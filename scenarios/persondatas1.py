@@ -61,7 +61,7 @@ class PersonDataScenarioPlain(PersonDataScenario):
         MERGE (x:_dummy { 
             _id: "(" + p.name + ")" 
         })
-        SET x:person2,
+        SET x:Person2,
             x.name = p.address
         MERGE (y:_dummy { 
             _id: "(" + a.city + ")" 
@@ -106,86 +106,61 @@ class PersonDataScenarioCDoverPlain(PersonDataScenarioPlain):
 
         # rule#1 using our framework
         rule1 = TransformationRule("""
-        MATCH (f:Flight)
-        MATCH (h:Hotel)
-        WHERE f.fid = h.flid
-        MERGE (l:_dummy { 
-            _id: "(" + f.src + ")" 
+        MATCH (p:Person)
+        MATCH (a:Address)
+        MATCH (pl:Place)
+        MERGE (x:_dummy { 
+            _id: "(" + p.name + ")" 
         })
         ON CREATE
-            SET l:Location,
-                l.name = f.src
+            SET x:Person2,
+                x.name = p.address
         ON MATCH
-            SET l:Location,
-                l.name =
+            SET x:Person2,
+                x.name =
                 CASE
-                    WHEN l.name <> f.src
+                    WHEN x.name <> p.address
                         THEN "Conflict detected!"
                     ELSE
-                        f.src
+                        p.address
                 END
-        MERGE (j:_dummy { 
-            _id: "(" + f.dest + ")" 
+        MERGE (y:_dummy { 
+            _id: "(" + a.city + ")" 
         })
         ON CREATE
-            SET j:Location,
-                j.name = f.dest
+            SET y:City,
+                y.city = a.city
         ON MATCH
-            SET j:Location,
-                j.name =
+            SET y:City,
+                y.city =
                 CASE
-                    WHEN j.name <> f.dest
+                    WHEN y.city <> a.city
                         THEN "Conflict detected!"
                     ELSE
-                        f.dest
+                        a.city
                 END
-        MERGE (t:_dummy {
-            _id: "(" + f.src + "," + f.dest + ")"
+        
+        MERGE (z:_dummy {
+            _id: "(" + pl.zip + ")"
         })
         ON CREATE
-            SET t:Travel,
-                t.from = f.src,
-                t.to = f.dest
+            SET z:Zip,
+                z.zip = pl.zip
         ON MATCH
-            SET t:Travel,
-                t.from =
+            SET z:Zip,
+                z.zip =
                 CASE
-                    WHEN t.from <> f.src
+                    WHEN z.zip <> pl.zip
                         THEN "Conflict detected!"
                     ELSE
-                        f.src
-                END,
-                t.to =
-                CASE
-                    WHEN t.to <> f.dest
-                        THEN "Conflict detected!"
-                    ELSE
-                        f.dest
+                        pl.zip
                 END
-        MERGE (m:_dummy {
-            _id: "(h(" + h.hid + "))"
-        })
-        ON CREATE
-            SET m:Hotel2,
-                m.name = h.hid
-        ON MATCH
-            SET m:Hotel2,
-                m.name =
-                CASE
-                    WHEN m.name <> h.hid
-                        THEN "Conflict detected!"
-                    ELSE
-                        h.hid
-                END
-        MERGE (l)-[ft:FLIGHTS_TO {
-            _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
-        }]->(t)
-        MERGE (t)-[ft2:FLIGHTS_TO {
-            _id: "(FLIGHTS_TO:" + elementId(t) + "," + elementId(j) + ")"
-        }]->(j)
-        MERGE (t)-[hh:HAS_HOTEL {
-            _id: "(HAS_HOTEL:" + elementId(t) + "," + elementId(m) + ")"
-        }]->(m)
+        MERGE (x)-[ha:HAS_ADDRESS {
+            _id: "(HAS_ADDRESS:" + elementId(x) + "," + elementId(y) + ")"
+        }]->(y)
+        MERGE (x)-[hp:HAS_PLACE {
+            _id: "(HAS_PLACE:" + elementId(x) + "," + elementId(z) + ")"
+        }]->(z)
         """)
         # transformation rules
         self.rules = [rule1]
