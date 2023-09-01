@@ -59,7 +59,7 @@ class PersonDataScenarioS1Plain(PersonDataScenarioS1):
         MATCH (a:Address) WHERE a.occ = p.name
         MATCH (pl:Place) WHERE pl.occ = p.name
         MERGE (x:_dummy { 
-            _id: "(" + p.name + ")" 
+            _id: "(" + elementId(p) + ")" 
         })
         SET x:Person2,
             x.name = p.address
@@ -110,7 +110,7 @@ class PersonDataScenarioS1CDoverPlain(PersonDataScenarioS1Plain):
         MATCH (a:Address) WHERE a.occ = p.name
         MATCH (pl:Place) WHERE pl.occ = p.name
         MERGE (x:_dummy { 
-            _id: "(" + p.name + ")" 
+            _id: "(" + elementId(p) + ")" 
         })
         ON CREATE
             SET x:Person2,

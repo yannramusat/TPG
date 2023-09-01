@@ -21,10 +21,10 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000, 100_000] 
 
     # tmp debug PersonData
-    from scenarios.persondatas1 import *
-    scenario = PersonDataScenarioS1Plain(prefix, size=100)
+    from scenarios.persondatas2 import *
+    scenario = PersonDataScenarioS2Plain(prefix, size=100)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
-    scenario = PersonDataScenarioS1CDoverPlain(prefix, size=100)
+    scenario = PersonDataScenarioS2CDoverPlain(prefix, size=100)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
     
     # choose which figures to use and their parameters
