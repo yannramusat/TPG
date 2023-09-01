@@ -1,0 +1,52 @@
+# Configuration File for iBench - vPGt experiments
+
+# Output Path Prefixes
+SchemaPathPrefix=tmp_persondata
+InstancePathPrefix=tmp_persondata
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 0
+Scenarios.ADDATTRIBUTE = 0
+Scenarios.ADDDELATTRIBUTE = 0
+Scenarios.HORIZPARTITION = 0
+Scenarios.VERTPARTITION = 0
+Scenarios.VERTPARTITIONHASA = 0
+Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.VERTPARTITIONISAAUTHORITY = 0
+
+# User Defined Primitives
+LoadScenarios.NumScenarios = 1
+LoadScenarios.0.File =  persondata.xml
+LoadScenarios.0.Name = fh
+LoadScenarios.0.Inst = 1
+
+# Parameters that define the shape of the schema and basic scenarios
+ConfigOptions.NumOfSubElements = 5
+ConfigOptionsDeviation.NumOfSubElements = 2
+ConfigOptions.ReuseSourcePerc = 0
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
+
+# Random number generator and max values, DataGenerator and MappingLang
+RandomSeed = 9787
+RepElementCount = 50000
+MaxStringLength = 5
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+MappingLanguage = SOtgds
+
+# Optional activation/deactivation of output options
+OutputOption.HTMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = true
+OutputOption.HTMLMapping = false
+OutputOption.TrampXML = false
+OutputOption.ErrorsAndExplanations = false
+OutputOption.Clio = false
+
+# Optional activation/deactivation of output parts of the Tramp XML document
+TrampXMLOutput.Correspondences = true
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true
