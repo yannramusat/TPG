@@ -48,7 +48,7 @@ class PersonDataScenarioS1(Scenario):
         """
         app.dropIndex(dropHasPlace, stats)
 
-class PersonDataScenarioS1Plain(PersonDataScenario):
+class PersonDataScenarioS1Plain(PersonDataScenarioS1):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
@@ -56,8 +56,8 @@ class PersonDataScenarioS1Plain(PersonDataScenario):
         # rule#1 using our framework
         rule1 = TransformationRule("""
         MATCH (p:Person)
-        MATCH (a:Address)
-        MATCH (pl:Place)
+        MATCH (a:Address) WHERE a.occ = p.name
+        MATCH (pl:Place) WHERE pl.occ = p.name
         MERGE (x:_dummy { 
             _id: "(" + p.name + ")" 
         })
@@ -99,7 +99,7 @@ class PersonDataScenarioS1Plain(PersonDataScenario):
         """
         app.dropIndex(dropDummy, stats)
 
-class PersonDataScenarioS1CDoverPlain(PersonDataScenarioPlain):
+class PersonDataScenarioS1CDoverPlain(PersonDataScenarioS1Plain):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
@@ -107,8 +107,8 @@ class PersonDataScenarioS1CDoverPlain(PersonDataScenarioPlain):
         # rule#1 using our framework
         rule1 = TransformationRule("""
         MATCH (p:Person)
-        MATCH (a:Address)
-        MATCH (pl:Place)
+        MATCH (a:Address) WHERE a.occ = p.name
+        MATCH (pl:Place) WHERE pl.occ = p.name
         MERGE (x:_dummy { 
             _id: "(" + p.name + ")" 
         })

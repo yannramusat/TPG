@@ -50,6 +50,7 @@ class PersonDataScenarioS2Plain(PersonDataScenario):
 
         # rule#1 using our framework
         rule1 = TransformationRule("""
+        TODO
         """)
         # transformation rules
         self.rules = [rule1]
@@ -77,6 +78,7 @@ class PersonDataScenarioS2CDoverPlain(PersonDataScenarioPlain):
 
         # rule#1 using our framework
         rule1 = TransformationRule("""
+        TODO
         """)
         # transformation rules
         self.rules = [rule1]
