@@ -19,6 +19,11 @@ if __name__ == "__main__":
     relIndexes = True
     x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000]
+    
+    # temporary testing of dta1
+    from scenarios.dta1 import *
+    scenario = DBLPToAmalgam1Plain(prefix, size=100)
+    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose which figures to use and their parameters
     from figures.personaddress import *
@@ -50,7 +55,7 @@ if __name__ == "__main__":
 
         #FigureComparisonFlightHotelSplit(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
         
-        FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    

@@ -5,7 +5,7 @@ from scenarios.scenario import InputRelation, InputSchema, TransformationRule, S
 class DBLPToAmalgam1(Scenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # csv#1
-        rel_dinproceedings_cmd = "MERGE (n:DInProceedings {
+        rel_dinproceedings_cmd = """MERGE (n:DInProceedings {
             pid: row[1], 
             title: row[2],
             pages: row[3],
@@ -14,11 +14,11 @@ class DBLPToAmalgam1(Scenario):
             cdrom: row[6],
             month: row[7],
             year: row[8]
-        })"
-        param_string = "dba1/dinproceedings"+str(size)+"-"+str(lstring)+".csv"
+        })"""
+        param_string = "dta1/dinproceedings"+str(size)+"-"+str(lstring)+".csv"
         rel_dinproceedings = InputRelation(os.path.join(prefix, param_string), rel_dinproceedings_cmd)
         # csv#2
-        rel_darticle_cmd = "MERGE (n:DArticle {
+        rel_darticle_cmd = """MERGE (n:DArticle {
             pid: row[1], 
             title: row[2], 
             pages: row[3], 
@@ -29,21 +29,22 @@ class DBLPToAmalgam1(Scenario):
             journal: row[8], 
             number: row[9], 
             url: row[10]
-        })"
-        param_string = "dba1/darticle"+str(size)+"-"+str(lstring)+".csv"
+        })"""
+        param_string = "dta1/darticle"+str(size)+"-"+str(lstring)+".csv"
         rel_darticle = InputRelation(os.path.join(prefix, param_string), rel_darticle_cmd)
         # csv#3
-        rel_pubauthors_cmd = "MERGE (n:PubAuthors {
+        rel_pubauthors_cmd = """MERGE (n:PubAuthors {
             pid: row[1],
             author: row[2]
-        })"
-        param_string = "dba1/pubauthors"+str(size)+"-"+str(lstring)+".csv"
+        })"""
+        param_string = "dta1/pubauthors"+str(size)+"-"+str(lstring)+".csv"
         rel_pubauthors = InputRelation(os.path.join(prefix, param_string), rel_pubauthors_cmd)
 
         # source schema
         self.schema = InputSchema([
             rel_dinproceedings, 
-            rel_darticle
+            rel_darticle,
+            rel_pubauthors
         ])
     
     def addRelIndexes(self, app, stats=False):
@@ -76,7 +77,7 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
         SET x:InProceedings,
             x.pid = "SK1(" + dip.pid + ")",
             x.title = dip.title,
-            x.bktitle = dip.booktitle
+            x.bktitle = dip.booktitle,
             x.year = dip.year,
             x.month = dip.month,
             x.pages = dip.pages,
@@ -92,7 +93,7 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
         MATCH (dip:DInProceedings)
         MATCH (pa:PubAuthors)
         WHERE pa.pid = dip.pid
-        MATCH (a:_dummy {
+        MERGE (a:_dummy {
             _id: "(" + pa.author + ")"
         })
         SET a:Author,
@@ -103,7 +104,7 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
         SET x:InProceedings,
             x.pid = "SK1(" + dip.pid + ")",
             x.title = dip.title,
-            x.bktitle = dip.booktitle
+            x.bktitle = dip.booktitle,
             x.year = dip.year,
             x.month = dip.month,
             x.pages = dip.pages,
