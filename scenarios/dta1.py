@@ -354,9 +354,67 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
             _id: "(BOOK_PUBLISHED:" + elementId(b) + "," + elementId(au) + ")"
         }]-(au)
         """)
+        # rule#9 using our framework
+        rule9 = TransformationRule("""
+        MATCH (t:PhDThesis)
+        MERGE (au:_dummy {
+            _id: "(" + t.author + ")"
+        })
+        SET au:Author,
+            au.name = t.author
+        MERGE (m:_dummy {
+            _id: "(" + elementId(t) + ")"
+        })
+        SET m:Misc,
+            m.miscid = "SK36(" + t.author + "," + t.title + ")",
+            m.title = t.title,
+            m.howpub = "SK37(" + t.author + "," + t.title + ")",
+            m.confloc = "SK38(" + t.author + "," + t.title + ")",
+            m.year = t.year,
+            m.month = t.month,
+            m.pages = "SK39(" + t.author + "," + t.title + ")",
+            m.vol = "SK40(" + t.author + "," + t.title + ")",
+            m.num = t.number,
+            m.loc = "SK41(" + t.author + "," + t.title + ")",
+            m.class = "SK42(" + t.author + "," + t.title + ")",
+            m.note = "SK43(" + t.author + "," + t.title + ")",
+            m.annote = t.school
+        MERGE (m)-[:MISC_PUBLISHED {
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
+        # rule#10 using our framework
+        rule10 = TransformationRule("""
+        MATCH (t:MasterThesis)
+        MERGE (au:_dummy {
+            _id: "(" + t.author + ")"
+        })
+        SET au:Author,
+            au.name = t.author
+        MERGE (m:_dummy {
+            _id: "(" + elementId(t) + ")"
+        })
+        SET m:Misc,
+            m.miscid = "SK44(" + t.author + "," + t.title + ")",
+            m.title = t.title,
+            m.howpub = "SK45(" + t.author + "," + t.title + ")",
+            m.confloc = "SK46(" + t.author + "," + t.title + ")",
+            m.year = t.year,
+            m.month = "SK47(" + t.author + "," + t.title + ")",
+            m.pages = "SK48(" + t.author + "," + t.title + ")",
+            m.vol = "SK49(" + t.author + "," + t.title + ")",
+            m.num = "SK50(" + t.author + "," + t.title + ")",
+            m.loc = "SK51(" + t.author + "," + t.title + ")",
+            m.class = "SK52(" + t.author + "," + t.title + ")",
+            m.note = "SK53(" + t.author + "," + t.title + ")",
+            m.annote = t.school
+        MERGE (m)-[:MISC_PUBLISHED {
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
 
         # transformation rules
-        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
