@@ -112,6 +112,13 @@ class DBLPToAmalgam1(Scenario):
         ON (r._id)
         """
         app.addIndex(indexMiscPublished, stats)
+        # index on articlePublished
+        indexArticlePublished = """
+        CREATE INDEX idx_articlePublished IF NOT EXISTS
+        FOR ()-[r:ARTICLE_PUBLISHED]-()
+        ON (r._id)
+        """
+        app.addIndex(indexArticlePublished, stats)
     
     def delRelIndexes(self, app, stats=False):
         # drop index on inProcPublished
@@ -124,6 +131,11 @@ class DBLPToAmalgam1(Scenario):
         DROP INDEX idx_miscPublished IF EXISTS
         """
         app.dropIndex(dropMiscPublished, stats)
+        # drop index on articlePublished
+        dropArticlePublished = """
+        DROP INDEX idx_articlePublished IF EXISTS
+        """
+        app.dropIndex(dropArticlePublished, stats)
 
 class DBLPToAmalgam1Plain(DBLPToAmalgam1):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -230,9 +242,59 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
             _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(a) + ")"
         }]-(a)
         """)
+        # rule#5 using our framework
+        rule5 = TransformationRule("""
+        MATCH (da:DArticle)
+        MERGE (a:_dummy { 
+            _id: "(" + elementId(da) + ")" 
+        })
+        SET a:Article,
+            a.articleid = "SK22(" + da.pid + ")",
+            a.title = da.title,
+            a.journal = da.journal,
+            a.year = da.year,
+            a.month = da.month,
+            a.pages = da.pages,
+            a.vol = da.volume,
+            a.num = da.number, 
+            a.loc = "SK23(" + da.pid + ")", 
+            a.class = "SK24(" + da.pid + ")",
+            a.note = "SK25(" + da.pid + ")",
+            a.annote = "SK26(" + da.pid + ")"
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule("""
+        MATCH (da:DArticle)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = da.pid
+        MERGE (au:_dummy {
+            _id: "(" + pa.author + ")"
+        })
+        SET au:Author,
+            au.name = pa.author
+        MERGE (a:_dummy { 
+            _id: "(" + elementId(da) + ")" 
+        })
+        SET a:Article,
+            a.articleid = "SK22(" + da.pid + ")",
+            a.title = da.title,
+            a.journal = da.journal,
+            a.year = da.year,
+            a.month = da.month,
+            a.pages = da.pages,
+            a.vol = da.volume,
+            a.num = da.number, 
+            a.loc = "SK23(" + da.pid + ")", 
+            a.class = "SK24(" + da.pid + ")",
+            a.note = "SK25(" + da.pid + ")",
+            a.annote = "SK26(" + da.pid + ")"
+        MERGE (a)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(a) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
 
         # transformation rules
-        self.rules = [rule1, rule2, rule3, rule4]
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
