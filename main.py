@@ -21,9 +21,9 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000]
     
     # temporary testing playground for dta1
-    from scenarios.dta1 import *
-    scenario = DBLPToAmalgam1Plain(prefix, size=100)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
+    #from scenarios.dta1 import *
+    #scenario = DBLPToAmalgam1Plain(prefix, size=100)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
 
     # choose which figures to use and their parameters
     from figures.personaddress import *
@@ -34,6 +34,7 @@ if __name__ == "__main__":
     from figures.personaddressrev import *
     from figures.flighthotelsplit import *
     from figures.persondata import *
+    from figures.dta1 import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -56,6 +57,9 @@ if __name__ == "__main__":
         #FigureComparisonFlightHotelSplit(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
         
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+
+        FigureComparisonIndexesDTA1(app, prefix=prefix, values=[100], nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=[100], nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
