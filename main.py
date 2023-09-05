@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # temporary testing of dta1
     from scenarios.dta1 import *
     scenario = DBLPToAmalgam1Plain(prefix, size=100)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
 
     # choose which figures to use and their parameters
     from figures.personaddress import *

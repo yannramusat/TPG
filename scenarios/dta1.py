@@ -105,13 +105,25 @@ class DBLPToAmalgam1(Scenario):
         ON (r._id)
         """
         app.addIndex(indexInProcPublished, stats)
+        # index on miscPublished
+        indexMiscPublished = """
+        CREATE INDEX idx_miscPublished IF NOT EXISTS
+        FOR ()-[r:MISC_PUBLISHED]-()
+        ON (r._id)
+        """
+        app.addIndex(indexMiscPublished, stats)
     
     def delRelIndexes(self, app, stats=False):
         # drop index on inProcPublished
         dropInProcPublished = """
-        DROP INDEX idx_inProcPulished IF EXISTS
+        DROP INDEX idx_inProcPublished IF EXISTS
         """
         app.dropIndex(dropInProcPublished, stats)
+        # drop index on miscPublished
+        dropMiscPublished = """
+        DROP INDEX idx_miscPublished IF EXISTS
+        """
+        app.dropIndex(dropMiscPublished, stats)
 
 class DBLPToAmalgam1Plain(DBLPToAmalgam1):
     def __init__(self, prefix, size = 100, lstring = 5):
@@ -168,9 +180,59 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
             _id: "(IN_PROC_PUBLISHED:" + elementId(x) + "," + elementId(a) + ")"
         }]-(a)
         """)
+        # rule#3 using our framework
+        rule3 = TransformationRule("""
+        MATCH (w:WWW)
+        MERGE (m:_dummy {
+            _id: "(" + elementId(w) + ")"
+        })
+        SET m:Misc,
+            m.miscid = "SK11(" + w.pid + ")",
+            m.howpub = "SK12(" + w.pid + ")",
+            m.confloc = "SK13(" + w.pid + ")",
+            m.year = w.year,
+            m.month = "SK14(" + w.pid + ")",
+            m.pages = "SK15(" + w.pid + ")",
+            m.vol = "SK16(" + w.pid + ")",
+            m.num = "SK17(" + w.pid + ")",
+            m.loc = "SK18(" + w.pid + ")",
+            m.class ="SK19(" + w.pid + ")",
+            m.note = "SK20(" + w.pid + ")",
+            m.annote = "SK21(" + w.pid + ")"
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule("""
+        MATCH (w:WWW)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = w.pid
+        MERGE (a:_dummy {
+            _id: "(" + pa.author + ")"
+        })
+        SET a:Author,
+            a.name = pa.author
+        MERGE (m:_dummy {
+            _id: "(" + elementId(w) + ")"
+        })
+        SET m:Misc,
+            m.miscid = "SK11(" + w.pid + ")",
+            m.howpub = "SK12(" + w.pid + ")",
+            m.confloc = "SK13(" + w.pid + ")",
+            m.year = w.year,
+            m.month = "SK14(" + w.pid + ")",
+            m.pages = "SK15(" + w.pid + ")",
+            m.vol = "SK16(" + w.pid + ")",
+            m.num = "SK17(" + w.pid + ")",
+            m.loc = "SK18(" + w.pid + ")",
+            m.class ="SK19(" + w.pid + ")",
+            m.note = "SK20(" + w.pid + ")",
+            m.annote = "SK21(" + w.pid + ")"
+        MERGE (m)-[:MISC_PUBLISHED {
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(a) + ")"
+        }]-(a)
+        """)
 
         # transformation rules
-        self.rules = [rule1, rule2]
+        self.rules = [rule1, rule2, rule3, rule4]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
