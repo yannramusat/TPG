@@ -39,12 +39,62 @@ class DBLPToAmalgam1(Scenario):
         })"""
         param_string = "dta1/pubauthors"+str(size)+"-"+str(lstring)+".csv"
         rel_pubauthors = InputRelation(os.path.join(prefix, param_string), rel_pubauthors_cmd)
+        # csv#4
+        rel_dbook_cmd = """MERGE (n:DBook {
+            pid: row[1],
+            editor: row[2],
+            title: row[3],
+            publisher: row[4],
+            year: row[5],
+            isbn: row[6],
+            cdrom: row[7],
+            citel: row[8],
+            url: row[9]
+        })"""
+        param_string = "dta1/dbook"+str(size)+"-"+str(lstring)+".csv"
+        rel_dbook = InputRelation(os.path.join(prefix, param_string), rel_dbook_cmd)
+        # csv#5
+        rel_masterthesis_cmd = """MERGE (n:MasterThesis {
+            author: row[1],
+            title: row[2],
+            year: row[3],
+            school: row[4]
+        })"""
+        param_string = "dta1/masterthesis"+str(size)+"-"+str(lstring)+".csv"
+        rel_masterthesis = InputRelation(os.path.join(prefix, param_string), rel_masterthesis_cmd)
+        # csv#6
+        rel_phdthesis_cmd = """MERGE (n:PhDThesis {
+            author: row[1],
+            title: row[2],
+            year: row[3],
+            series: row[4],
+            number: row[5],
+            month: row[6],
+            school: row[7],
+            publisher: row[8],
+            isbn: row[9]
+        })"""
+        param_string = "dta1/phdthesis"+str(size)+"-"+str(lstring)+".csv"
+        rel_phdthesis = InputRelation(os.path.join(prefix, param_string), rel_phdthesis_cmd)
+        # csv#7
+        rel_www_cmd = """MERGE (n:WWW {
+            pid: row[1],
+            title: row[2],
+            year: row[3],
+            url: row[4]
+        })"""
+        param_string = "dta1/www"+str(size)+"-"+str(lstring)+".csv"
+        rel_www = InputRelation(os.path.join(prefix, param_string), rel_www_cmd)
 
         # source schema
         self.schema = InputSchema([
             rel_dinproceedings, 
             rel_darticle,
-            rel_pubauthors
+            rel_pubauthors,
+            rel_dbook,
+            rel_masterthesis,
+            rel_phdthesis,
+            rel_www
         ])
     
     def addRelIndexes(self, app, stats=False):
@@ -118,6 +168,7 @@ class DBLPToAmalgam1Plain(DBLPToAmalgam1):
             _id: "(IN_PROC_PUBLISHED:" + elementId(x) + "," + elementId(a) + ")"
         }]-(a)
         """)
+
         # transformation rules
         self.rules = [rule1, rule2]
 
