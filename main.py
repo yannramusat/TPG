@@ -18,7 +18,7 @@ if __name__ == "__main__":
     nodeIndexes = True
     relIndexes = True
     x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
-    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000]
+    y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     
     # temporary testing playground for dta1
     #from scenarios.dta1 import *
@@ -58,8 +58,8 @@ if __name__ == "__main__":
         
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        FigureComparisonIndexesDTA1(app, prefix=prefix, values=[100], nbLaunches=nbLaunches, showStats=showStats),
-        FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=[100], nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    

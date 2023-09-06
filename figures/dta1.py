@@ -84,7 +84,8 @@ class FigureComparisonIndexesDTA1(Figure):
     
     def plot(self):
         # Figure for exhaustive comparison of indexes | DTA1 scenario
-        fig1, axs = plt.subplots(2, 2, layout="constrained") 
+        #fig1, axs = plt.subplots(2, 2, layout="constrained") 
+        fig1, ax = plt.subplots(layout="constrained") 
         fig1.suptitle("DBLPToAmalgam1 scenario", fontsize=16)
         # Axes Separate indexes
         #axs[0, 0].plot(self.x, self.results_Sep_NI_RI, label="Indexes on Nodes and Relationships")
@@ -97,15 +98,16 @@ class FigureComparisonIndexesDTA1(Figure):
         #axs[0, 0].set_yscale("log")
         #axs[0, 0].legend()
         # Axes Plain implementation
-        axs[0, 1].plot(self.x, self.results_Plain_NI_RI, label="Indexes on Nodes and Relationships")
-        axs[0, 1].plot(self.x, self.results_Plain_NI, label="Indexes on Nodes only")
-        axs[0, 1].plot(self.x, self.results_Plain_RI, label="Indexes on Relationships only") 
-        axs[0, 1].plot(self.x, self.results_Plain, label="Without indexes")
-        axs[0, 1].set_title("Plain implementation")
-        axs[0, 1].set_xlabel("number of rows per input relation")
-        axs[0, 1].set_ylabel("time (ms)")
-        axs[0, 1].set_yscale("log")
-        axs[0, 1].legend()
+        #axs[0, 1]
+        ax.plot(self.x, self.results_Plain_NI_RI, label="Indexes on Nodes and Relationships")
+        ax.plot(self.x, self.results_Plain_NI, label="Indexes on Nodes only")
+        ax.plot(self.x, self.results_Plain_RI, label="Indexes on Relationships only") 
+        ax.plot(self.x, self.results_Plain, label="Without indexes")
+        ax.set_title("Plain implementation")
+        ax.set_xlabel("number of rows per input relation")
+        ax.set_ylabel("time (ms)")
+        ax.set_yscale("log")
+        ax.legend()
         # Axes Conflict Detection over Separate indexes
         #axs[1, 0].plot(self.x, self.results_CDoverSI_NI_RI, label="Indexes on Nodes and Relationships")
         #axs[1, 0].plot(self.x, self.results_CDoverSI_NI, label="Indexes on Nodes only")
