@@ -62,7 +62,7 @@ class PersonDataScenarioS1Plain(PersonDataScenarioS1):
             _id: "(" + elementId(p) + ")" 
         })
         SET x:Person2,
-            x.name = p.address
+            x.address = p.address
         MERGE (y:_dummy { 
             _id: "(" + a.city + ")" 
         })
@@ -114,12 +114,12 @@ class PersonDataScenarioS1CDoverPlain(PersonDataScenarioS1Plain):
         })
         ON CREATE
             SET x:Person2,
-                x.name = p.address
+                x.address = p.address
         ON MATCH
             SET x:Person2,
-                x.name =
+                x.address =
                 CASE
-                    WHEN x.name <> p.address
+                    WHEN x.address <> p.address
                         THEN "Conflict detected!"
                     ELSE
                         p.address
