@@ -20,10 +20,10 @@ if __name__ == "__main__":
     x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     
-    # temporary testing playground for dta1
-    #from scenarios.dta1 import *
-    #scenario = DBLPToAmalgam1Plain(prefix, size=100)
-    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
+    # temporary testing playground for a1ta3
+    from scenarios.a1ta3 import *
+    scenario = Amalgam1ToAmalgam3Plain(prefix, size=100)
+    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
 
     # choose which figures to use and their parameters
     from figures.personaddress import *
@@ -58,8 +58,8 @@ if __name__ == "__main__":
         
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
-        FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
