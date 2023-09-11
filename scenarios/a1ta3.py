@@ -145,6 +145,41 @@ class Amalgam1ToAmalgam3(Scenario):
         })"""
         param_string = "a1ta3/articlepublished"+str(size)+"-"+str(lstring)+".csv"
         rel_articlepublished = InputRelation(os.path.join(prefix, param_string), rel_articlepublished_cmd)
+        # csv#11
+        rel_techpublished_cmd = """MERGE (n:TechPublished {
+            tech: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/techpublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_techpublished = InputRelation(os.path.join(prefix, param_string), rel_techpublished_cmd)
+        # csv#12
+        rel_bookpublished_cmd = """MERGE (n:BookPublished {
+            book: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/bookpublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_bookpublished = InputRelation(os.path.join(prefix, param_string), rel_bookpublished_cmd)
+        # csv#13
+        rel_incollpublished_cmd = """MERGE (n:InCollPublished {
+            col: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/incollpublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_incollpublished = InputRelation(os.path.join(prefix, param_string), rel_incollpublished_cmd)
+        # csv#14
+        rel_miscpublished_cmd = """MERGE (n:MiscPublished {
+            misc: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/miscpublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_miscpublished = InputRelation(os.path.join(prefix, param_string), rel_miscpublished_cmd)
+        # csv#15
+        rel_manualpublished_cmd = """MERGE (n:ManualPublished {
+            manual: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/manualpublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_manualpublished = InputRelation(os.path.join(prefix, param_string), rel_manualpublished_cmd)
 
         # source schema
         self.schema = InputSchema([
@@ -157,7 +192,12 @@ class Amalgam1ToAmalgam3(Scenario):
             rel_manual,
             rel_author,
             rel_inprocpublished,
-            rel_articlepublished
+            rel_articlepublished,
+            rel_techpublished,
+            rel_bookpublished,
+            rel_incollpublished,
+            rel_miscpublished,
+            rel_manualpublished
         ])
     
     def addRelIndexes(self, app, stats=False):
