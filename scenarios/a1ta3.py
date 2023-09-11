@@ -2,99 +2,138 @@ import os
 from app import App
 from scenarios.scenario import InputRelation, InputSchema, TransformationRule, Scenario
 
-class DBLPToAmalgam1(Scenario):
+class Amalgam1ToAmalgam3(Scenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # csv#1
-        rel_dinproceedings_cmd = """MERGE (n:DInProceedings {
-            pid: row[1], 
+        rel_inproceedings_cmd = """MERGE (n:InProceedings {
+            inprocid: row[1], 
             title: row[2],
-            pages: row[3],
-            booktitle: row[4],
-            url: row[5],
-            cdrom: row[6],
-            month: row[7],
-            year: row[8]
+            bktitle: row[3],
+            year: row[4],
+            month: row[5],
+            pages: row[6],
+            vol: row[7],
+            num: row[8],
+            loc: row[9],
+            class: row[10],
+            note: row[11],
+            annote: row[12]
         })"""
-        param_string = "dta1/dinproceedings"+str(size)+"-"+str(lstring)+".csv"
-        rel_dinproceedings = InputRelation(os.path.join(prefix, param_string), rel_dinproceedings_cmd)
+        param_string = "a1ta3/inproceedings"+str(size)+"-"+str(lstring)+".csv"
+        rel_inproceedings = InputRelation(os.path.join(prefix, param_string), rel_inproceedings_cmd)
         # csv#2
-        rel_darticle_cmd = """MERGE (n:DArticle {
-            pid: row[1], 
-            title: row[2], 
-            pages: row[3], 
-            cdrom: row[4], 
-            month: row[5], 
-            year: row[6], 
-            volume: row[7], 
-            journal: row[8], 
-            number: row[9], 
-            url: row[10]
+        rel_article_cmd = """MERGE (n:Article {
+            articleid: row[1], 
+            title: row[2],
+            journal: row[3],
+            year: row[4],
+            month: row[5],
+            pages: row[6],
+            vol: row[7],
+            num: row[8],
+            loc: row[9],
+            class: row[10],
+            note: row[11],
+            annote: row[12]
         })"""
-        param_string = "dta1/darticle"+str(size)+"-"+str(lstring)+".csv"
-        rel_darticle = InputRelation(os.path.join(prefix, param_string), rel_darticle_cmd)
+        param_string = "a1ta3/article"+str(size)+"-"+str(lstring)+".csv"
+        rel_article = InputRelation(os.path.join(prefix, param_string), rel_article_cmd)
         # csv#3
-        rel_pubauthors_cmd = """MERGE (n:PubAuthors {
-            pid: row[1],
-            author: row[2]
+        rel_techreport_cmd = """MERGE (n:TechReport {
+            techid: row[1],
+            title: row[2],
+            inst: row[3],
+            year: row[4],
+            month: row[5],
+            pages: row[6],
+            vol: row[7],
+            num: row[8],
+            loc: row[9],
+            class: row[10],
+            note: row[11],
+            annote: row[12]
         })"""
-        param_string = "dta1/pubauthors"+str(size)+"-"+str(lstring)+".csv"
-        rel_pubauthors = InputRelation(os.path.join(prefix, param_string), rel_pubauthors_cmd)
+        param_string = "a1ta3/techreport"+str(size)+"-"+str(lstring)+".csv"
+        rel_techreport = InputRelation(os.path.join(prefix, param_string), rel_techreport_cmd)
         # csv#4
-        rel_dbook_cmd = """MERGE (n:DBook {
-            pid: row[1],
-            editor: row[2],
-            title: row[3],
-            publisher: row[4],
-            year: row[5],
-            isbn: row[6],
-            cdrom: row[7],
-            citel: row[8],
-            url: row[9]
+        rel_book_cmd = """MERGE (n:Book {
+            bookid: row[1],
+            title: row[2],
+            publisher: row[3],
+            year: row[4],
+            month: row[5],
+            pages: row[6],
+            vol: row[7],
+            num: row[8],
+            loc: row[9],
+            class: row[10],
+            note: row[11],
+            annote: row[12]
         })"""
-        param_string = "dta1/dbook"+str(size)+"-"+str(lstring)+".csv"
-        rel_dbook = InputRelation(os.path.join(prefix, param_string), rel_dbook_cmd)
+        param_string = "a1ta3/book"+str(size)+"-"+str(lstring)+".csv"
+        rel_book = InputRelation(os.path.join(prefix, param_string), rel_book_cmd)
         # csv#5
-        rel_masterthesis_cmd = """MERGE (n:MasterThesis {
-            author: row[1],
+        rel_incollection_cmd = """MERGE (n:InCollection {
+            colid: row[1],
             title: row[2],
-            year: row[3],
-            school: row[4]
+            bktitle: row[3],
+            year: row[4],
+            month: row[5],
+            pages: row[6],
+            vol: row[7],
+            num: row[8],
+            loc: row[9],
+            class: row[10],
+            note: row[11],
+            annote: row[12]
         })"""
-        param_string = "dta1/masterthesis"+str(size)+"-"+str(lstring)+".csv"
-        rel_masterthesis = InputRelation(os.path.join(prefix, param_string), rel_masterthesis_cmd)
+        param_string = "a1ta3/incollection"+str(size)+"-"+str(lstring)+".csv"
+        rel_incollection = InputRelation(os.path.join(prefix, param_string), rel_incollection_cmd)
         # csv#6
-        rel_phdthesis_cmd = """MERGE (n:PhDThesis {
-            author: row[1],
+        rel_misc_cmd = """MERGE (n:Misc {
+            miscid: row[1],
             title: row[2],
-            year: row[3],
-            series: row[4],
-            number: row[5],
+            howpub: row[3],
+            confloc: row[4],
+            year: row[5],
             month: row[6],
-            school: row[7],
-            publisher: row[8],
-            isbn: row[9]
+            pages: row[7],
+            vol: row[8],
+            num: row[9],
+            loc: row[10],
+            class: row[11],
+            note: row[12],
+            annote: row[13]
         })"""
-        param_string = "dta1/phdthesis"+str(size)+"-"+str(lstring)+".csv"
-        rel_phdthesis = InputRelation(os.path.join(prefix, param_string), rel_phdthesis_cmd)
+        param_string = "a1ta3/misc"+str(size)+"-"+str(lstring)+".csv"
+        rel_misc = InputRelation(os.path.join(prefix, param_string), rel_misc_cmd)
         # csv#7
-        rel_www_cmd = """MERGE (n:WWW {
-            pid: row[1],
+        rel_manual_cmd = """MERGE (n:Manual {
+            manid: row[1],
             title: row[2],
-            year: row[3],
-            url: row[4]
+            org: row[3],
+            year: row[4],
+            month: row[5],
+            pages: row[6],
+            vol: row[7],
+            num: row[8],
+            loc: row[9],
+            class: row[10],
+            note: row[11],
+            annote: row[12]
         })"""
-        param_string = "dta1/www"+str(size)+"-"+str(lstring)+".csv"
-        rel_www = InputRelation(os.path.join(prefix, param_string), rel_www_cmd)
+        param_string = "a1ta3/manual"+str(size)+"-"+str(lstring)+".csv"
+        rel_manual = InputRelation(os.path.join(prefix, param_string), rel_manual_cmd)
 
         # source schema
         self.schema = InputSchema([
-            rel_dinproceedings, 
-            rel_darticle,
-            rel_pubauthors,
-            rel_dbook,
-            rel_masterthesis,
-            rel_phdthesis,
-            rel_www
+            rel_inproceedings, 
+            rel_article,
+            rel_techreport,
+            rel_book,
+            rel_incollection,
+            rel_misc,
+            rel_manual
         ])
     
     def addRelIndexes(self, app, stats=False):
@@ -173,7 +212,7 @@ class DBLPToAmalgam1(Scenario):
             print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
         return avg_time 
 
-class DBLPToAmalgam1Plain(DBLPToAmalgam1):
+class Amalgam1ToAmalgam3Plain(DBLPToAmalgam1):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
