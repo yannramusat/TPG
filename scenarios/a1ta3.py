@@ -124,6 +124,27 @@ class Amalgam1ToAmalgam3(Scenario):
         })"""
         param_string = "a1ta3/manual"+str(size)+"-"+str(lstring)+".csv"
         rel_manual = InputRelation(os.path.join(prefix, param_string), rel_manual_cmd)
+        # csv#8
+        rel_author_cmd = """MERGE (n:Author {
+            authid: row[1],
+            name: row[2]
+        })"""
+        param_string = "a1ta3/author"+str(size)+"-"+str(lstring)+".csv"
+        rel_author = InputRelation(os.path.join(prefix, param_string), rel_author_cmd)
+        # csv#9
+        rel_inprocpublished_cmd = """MERGE (n:InProcPublished {
+            inproc: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/inprocpublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_inprocpublished = InputRelation(os.path.join(prefix, param_string), rel_inprocpublished_cmd)
+        # csv#10
+        rel_articlepublished_cmd = """MERGE (n:ArticlePublished {
+            article: row[1],
+            auth: row[2]
+        })"""
+        param_string = "a1ta3/articlepublished"+str(size)+"-"+str(lstring)+".csv"
+        rel_articlepublished = InputRelation(os.path.join(prefix, param_string), rel_articlepublished_cmd)
 
         # source schema
         self.schema = InputSchema([
@@ -133,60 +154,26 @@ class Amalgam1ToAmalgam3(Scenario):
             rel_book,
             rel_incollection,
             rel_misc,
-            rel_manual
+            rel_manual,
+            rel_author,
+            rel_inprocpublished,
+            rel_articlepublished
         ])
     
     def addRelIndexes(self, app, stats=False):
-        # index on inProcPublished
-        indexInProcPublished = """
-        CREATE INDEX idx_inProcPublished IF NOT EXISTS
-        FOR ()-[r:IN_PROC_PUBLISHED]-()
+        # index on articleAuthor
+        indexArticleAuthor = """
+        CREATE INDEX idx_articleAuthor IF NOT EXISTS
+        FOR ()-[r:ARTICLE_AUTHOR]-()
         ON (r._id)
         """
-        app.addIndex(indexInProcPublished, stats)
-        # index on miscPublished
-        indexMiscPublished = """
-        CREATE INDEX idx_miscPublished IF NOT EXISTS
-        FOR ()-[r:MISC_PUBLISHED]-()
-        ON (r._id)
-        """
-        app.addIndex(indexMiscPublished, stats)
-        # index on articlePublished
-        indexArticlePublished = """
-        CREATE INDEX idx_articlePublished IF NOT EXISTS
-        FOR ()-[r:ARTICLE_PUBLISHED]-()
-        ON (r._id)
-        """
-        app.addIndex(indexArticlePublished, stats)
-        # index on bookPublished
-        indexBookPublished = """
-        CREATE INDEX idx_bookPublished IF NOT EXISTS
-        FOR ()-[r:BOOK_PUBLISHED]-()
-        ON (r._id)
-        """
-        app.addIndex(indexBookPublished, stats)
+        app.addIndex(indexArticleAuthor, stats)
     
     def delRelIndexes(self, app, stats=False):
-        # drop index on inProcPublished
-        dropInProcPublished = """
-        DROP INDEX idx_inProcPublished IF EXISTS
+        # drop index on articleAuthor
+        dropArticleAuthor = """
+        DROP INDEX idx_articleAuthor IF EXISTS
         """
-        app.dropIndex(dropInProcPublished, stats)
-        # drop index on miscPublished
-        dropMiscPublished = """
-        DROP INDEX idx_miscPublished IF EXISTS
-        """
-        app.dropIndex(dropMiscPublished, stats)
-        # drop index on articlePublished
-        dropArticlePublished = """
-        DROP INDEX idx_articlePublished IF EXISTS
-        """
-        app.dropIndex(dropArticlePublished, stats)
-        # drop index on bookPublished
-        dropBookPublished = """
-        DROP INDEX idx_bookPublished IF EXISTS
-        """
-        app.dropIndex(dropBookPublished, stats)
 
     def run(self, app, launches = 5, stats=False, nodeIndex=True, relIndex=True, shuffle=False):
         ttime = 0.0
