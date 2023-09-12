@@ -263,15 +263,126 @@ class Amalgam1ToAmalgam3Plain(Amalgam1ToAmalgam3):
             x.pages = ip.pages,
             x.month = ip.month,
             x.year = ip.year,
-            x.refkey = "SK2(" + ip.inprocid = ")",
+            x.refkey = "SK2(" + ip.inprocid + ")",
             x.note = ip.note,
-            x.remarks = "SK3(" + ip.inprocid = ")",
-            x.refs = "SK4(" + ip.inprocid = ")",
-            x.xxxrefs = "SK5(" + ip.inprocid = ")",
-            x.fullxxxrefs = "SK6(" + ip.inprocid = ")",
-            x.oldkey = "SK7(" + ip.inprocid = ")",
-            x.abstract = "SK8(" + ip.inprocid = ")",
-            x.preliminary = "SK9(" + ip.inprocid = ")"
+            x.remarks = "SK3(" + ip.inprocid + ")",
+            x.refs = "SK4(" + ip.inprocid + ")",
+            x.xxxrefs = "SK5(" + ip.inprocid + ")",
+            x.fullxxxrefs = "SK6(" + ip.inprocid + ")",
+            x.oldkey = "SK7(" + ip.inprocid + ")",
+            x.abstract = "SK8(" + ip.inprocid + ")",
+            x.preliminary = "SK9(" + ip.inprocid + ")"
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        MERGE (x)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule("""
+        MATCH (ap:ArticlePublished)
+        MATCH (art:Article)
+        WHERE ap.article = art.articleid
+        MATCH (a:Author)
+        WHERE ap.auth = a.authid 
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(art) + ")" 
+        })
+        SET x:TArticle,
+            x.articleid = "SK11(" + art.articleid + ")",
+            x.title = art.title,
+            x.vol = art.vol,
+            x.num = art.num,
+            x.pages = art.pages,
+            x.month = art.month,
+            x.year = art.year,
+            x.refkey = "SK12(" + art.articleid + ")",
+            x.note = art.note,
+            x.remarks = "SK13(" + art.articleid + ")",
+            x.refs = "SK14(" + art.articleid + ")",
+            x.xxxrefs = "SK15(" + art.articleid + ")",
+            x.fullxxxrefs = "SK16(" + art.articleid + ")",
+            x.oldkey = "SK17(" + art.articleid + ")",
+            x.abstract = "SK18(" + art.articleid + ")",
+            x.preliminary = "SK19(" + art.articleid + ")"
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        MERGE (x)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#3 using our framework
+        rule3 = TransformationRule("""
+        MATCH (tp:TechPublished)
+        MATCH (t:TechReport)
+        WHERE tp.tech = t.techid
+        MATCH (a:Author)
+        WHERE tp.auth = a.authid 
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(t) + ")" 
+        })
+        SET x:TArticle,
+            x.articleid = "SK21(" + t.techid + ")",
+            x.title = t.title,
+            x.vol = t.vol,
+            x.num = t.num,
+            x.pages = t.pages,
+            x.month = t.month,
+            x.year = t.year,
+            x.refkey = "SK22(" + t.techid + ")",
+            x.note = t.note,
+            x.remarks = "SK23(" + t.techid + ")",
+            x.refs = "SK24(" + t.techid + ")",
+            x.xxxrefs = "SK25(" + t.techid + ")",
+            x.fullxxxrefs = "SK26(" + t.techid + ")",
+            x.oldkey = "SK27(" + t.techid + ")",
+            x.abstract = "SK28(" + t.techid + ")",
+            x.preliminary = "SK29(" + t.techid + ")"
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        MERGE (x)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule("""
+        MATCH (bp:BookPublished)
+        MATCH (b:Book)
+        WHERE bp.book = b.bookid
+        MATCH (a:Author)
+        WHERE bp.auth = a.authid 
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(b) + ")" 
+        })
+        SET x:TArticle,
+            x.articleid = "SK31(" + b.bookid + ")",
+            x.title = b.title,
+            x.vol = b.vol,
+            x.num = b.num,
+            x.pages = b.pages,
+            x.month = b.month,
+            x.year = b.year,
+            x.refkey = "SK32(" + b.bookid + ")",
+            x.note = b.note,
+            x.remarks = "SK33(" + b.bookid + ")",
+            x.refs = "SK34(" + b.bookid + ")",
+            x.xxxrefs = "SK35(" + b.bookid + ")",
+            x.fullxxxrefs = "SK36(" + b.bookid + ")",
+            x.oldkey = "SK37(" + b.bookid + ")",
+            x.abstract = "SK38(" + b.bookid + ")",
+            x.preliminary = "SK39(" + b.bookid + ")"
         MERGE (y:_dummy {
             _id: "(" + a.authid + ")"
         })
@@ -284,7 +395,7 @@ class Amalgam1ToAmalgam3Plain(Amalgam1ToAmalgam3):
         """)
 
         # transformation rules
-        self.rules = [rule1]
+        self.rules = [rule1, rule2, rule3, rule4]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
