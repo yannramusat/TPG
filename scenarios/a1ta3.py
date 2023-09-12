@@ -393,9 +393,130 @@ class Amalgam1ToAmalgam3Plain(Amalgam1ToAmalgam3):
             _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
         }]-(y)
         """)
+        # rule#5 using our framework
+        rule5 = TransformationRule("""
+        MATCH (icp:InCollPublished)
+        MATCH (i:InCollection)
+        WHERE icp.col = i.colid
+        MATCH (a:Author)
+        WHERE icp.auth = a.authid 
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(i) + ")" 
+        })
+        SET x:TArticle,
+            x.articleid = "SK41(" + i.colid + ")",
+            x.title = i.title,
+            x.vol = i.vol,
+            x.num = i.num,
+            x.pages = i.pages,
+            x.month = i.month,
+            x.year = i.year,
+            x.refkey = "SK42(" + i.colid + ")",
+            x.note = i.note,
+            x.remarks = "SK43(" + i.colid + ")",
+            x.refs = "SK44(" + i.colid + ")",
+            x.xxxrefs = "SK45(" + i.colid + ")",
+            x.fullxxxrefs = "SK46(" + i.colid + ")",
+            x.oldkey = "SK47(" + i.colid + ")",
+            x.abstract = "SK48(" + i.colid + ")",
+            x.preliminary = "SK49(" + i.colid + ")"
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        MERGE (x)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule("""
+        MATCH (mp:MiscPublished)
+        MATCH (m:Misc)
+        WHERE mp.misc = m.miscid
+        MATCH (a:Author)
+        WHERE mp.auth = a.authid 
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(m) + ")" 
+        })
+        SET x:TArticle,
+            x.articleid = "SK51(" + m.miscid + ")",
+            x.title = m.title,
+            x.vol = m.vol,
+            x.num = m.num,
+            x.pages = m.pages,
+            x.month = m.month,
+            x.year = m.year,
+            x.refkey = "SK52(" + m.miscid + ")",
+            x.note = m.note,
+            x.remarks = "SK53(" + m.miscid + ")",
+            x.refs = "SK54(" + m.miscid + ")",
+            x.xxxrefs = "SK55(" + m.miscid + ")",
+            x.fullxxxrefs = "SK56(" + m.miscid + ")",
+            x.oldkey = "SK57(" + m.miscid + ")",
+            x.abstract = "SK58(" + m.miscid + ")",
+            x.preliminary = "SK59(" + m.miscid + ")"
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        MERGE (x)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule("""
+        MATCH (mp:ManualPublished)
+        MATCH (m:Manual)
+        WHERE mp.manual = m.manid
+        MATCH (a:Author)
+        WHERE mp.auth = a.authid 
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(m) + ")" 
+        })
+        SET x:TArticle,
+            x.articleid = "SK61(" + m.manid + ")",
+            x.title = m.title,
+            x.vol = m.vol,
+            x.num = m.num,
+            x.pages = m.pages,
+            x.month = m.month,
+            x.year = m.year,
+            x.refkey = "SK62(" + m.manid + ")",
+            x.note = m.note,
+            x.remarks = "SK63(" + m.manid + ")",
+            x.refs = "SK64(" + m.manid + ")",
+            x.xxxrefs = "SK65(" + m.manid + ")",
+            x.fullxxxrefs = "SK66(" + m.manid + ")",
+            x.oldkey = "SK67(" + m.manid + ")",
+            x.abstract = "SK68(" + m.manid + ")",
+            x.preliminary = "SK69(" + m.manid + ")"
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        MERGE (x)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule("""
+        MATCH (a:Author)
+        MERGE (y:_dummy {
+            _id: "(" + a.authid + ")"
+        })
+        SET y:Auth,
+            y.authorid = a.authid,
+            y.name = a.name
+        """)
 
         # transformation rules
-        self.rules = [rule1, rule2, rule3, rule4]
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
