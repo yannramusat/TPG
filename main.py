@@ -21,9 +21,9 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     
     # temporary testing playground for a1ta3
-    from scenarios.a1ta3 import *
-    scenario = Amalgam1ToAmalgam3Plain(prefix, size=100)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
+    #from scenarios.a1ta3 import *
+    #scenario = Amalgam1ToAmalgam3Plain(prefix, size=100)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=True)
 
     # choose which figures to use and their parameters
     from figures.personaddress import *
@@ -35,6 +35,7 @@ if __name__ == "__main__":
     from figures.flighthotelsplit import *
     from figures.persondata import *
     from figures.dta1 import *
+    from figures.a1ta3 import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -60,6 +61,9 @@ if __name__ == "__main__":
 
         #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+
+        FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
