@@ -43,6 +43,89 @@ class FlightHotelScenario(Scenario):
         """
         app.dropIndex(dropHasHotel, stats)
 
+class FlightHotelScenarioBaseline(FlightHotelScenario):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # Cypher script; we store it as a rule, but it is not!
+        baseline_script = TransformationRule("""
+        MATCH (f:Flight)
+        MATCH (h:Hotel)
+        WHERE f.fid = h.flid
+        WITH h, collect(f) as Flights
+        MERGE (m:Hotel2 {name: h.hid})
+        WITH m, Flights
+        UNWIND Flights as f
+        WITH m, f
+        MERGE (l:Location {name: f.src})
+        MERGE (j:Location {name: f.dest})
+        MERGE (t:Travel {from: f.src, to: f.dest})
+        MERGE (l)-[:FLIGHTS_TO]->(t)
+        MERGE (t)-[:FLIGHTS_TO]->(j)
+        MERGE (t)-[:HAS_HOTEL]->(m)
+        """)
+        # easier to run the script as if it was a (single) rule
+        self.rules = [baseline_script]
+
+    def addNodeIndexes(self, app, stats=False):
+        # index on Hotel2/name
+        indexHotel2Name = """
+        CREATE INDEX idx_Hotel2Name IF NOT EXISTS
+        FOR (n:Hotel2)
+        ON (n.name)
+        """
+        app.addIndex(indexHotel2Name, stats)
+        
+        # index on Location/src
+        indexLocationSrc = """
+        CREATE INDEX idx_LocationSrc IF NOT EXISTS
+        FOR (n:Location)
+        ON (n.src)
+        """
+        app.addIndex(indexLocationSrc, stats)
+ 
+        # index on Location/dest
+        indexLocationDest = """
+        CREATE INDEX idx_LocationDest IF NOT EXISTS
+        FOR (n:Location)
+        ON (n.dest)
+        """
+        app.addIndex(indexLocationDest, stats)
+
+        # composite index on Travel/from/to
+        indexTravelFromTo = """
+        CREATE INDEX idx_TravelFromTo IF NOT EXISTS
+        FOR (n:Travel)
+        ON (n.from, n.to)
+        """
+        app.addIndex(indexTravelFromTo, stats)
+   
+    def delNodeIndexes(self, app, stats=False):
+        # drop index on Hotel2/name
+        dropHotel2Name = """
+        DROP INDEX idx_Hotel2Name IF EXISTS
+        """
+        app.dropIndex(dropHotel2Name, stats)
+
+        # drop index on Location/src
+        dropLocationSrc = """
+        DROP INDEX idx_LocationSrc IF EXISTS
+        """
+        app.dropIndex(dropLocationSrc, stats)
+
+        # drop index on Location/dest
+        dropLocationDest = """
+        DROP INDEX idx_LocationDest IF EXISTS
+        """
+        app.dropIndex(dropLocationDest, stats)
+
+        # drop composite index on Travel/from/to
+        dropTravelFromTo = """
+        DROP INDEX idx_TravelFromTo IF EXISTS
+        """
+        app.dropIndex(dropTravelFromTo, stats)
+        
 class FlightHotelScenarioPlain(FlightHotelScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
