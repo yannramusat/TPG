@@ -21,13 +21,13 @@ if __name__ == "__main__":
     x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     
-    # temporary testing playground for the baseline of FH
-    from scenarios.flighthotel import *
-    scenario = FlightHotelScenarioPlain(prefix, size=2000)
+    # temporary testing playground for the baseline of PA
+    from scenarios.personaddress import *
+    scenario = PersonAddressScenarioPlain(prefix, size=2000)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
-    scenario = FlightHotelScenarioBaseline(prefix, size=2000)
+    scenario = PersonAddressScenarioBaseline(prefix, size=2000)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False)
-    scenario = FlightHotelScenarioBaseline(prefix, size=2000)
+    scenario = PersonAddressScenarioBaseline(prefix, size=2000)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters

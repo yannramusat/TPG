@@ -31,6 +31,58 @@ class PersonAddressScenario(Scenario):
         """
         app.dropIndex(dropLivesAt, stats)
 
+class PersonAddressScenarioBaseline(PersonAddressScenario):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # Cypher script; we store it as a rule, but it is not!
+        baseline_script = TransformationRule("""
+        MATCH (a:Address)
+        CREATE (x:Person2 {address: a.zip})
+        MERGE (y:Address2 {zip: a.zip, city: a.city})
+        CREATE (x)-[:LIVES_AT]->(y)
+        WITH y, a.zip as AddressZip
+        MATCH (p:Person)
+        WHERE p.address = AddressZip
+        WITH y, p
+        MERGE (x:Person2 {name: p.name})
+        SET x.address = p.address
+        CREATE (x)-[:LIVES_AT]->(y)
+        """)
+        # easier to run the script as if it was a (single) rule
+        self.rules = [baseline_script]
+
+    def addNodeIndexes(self, app, stats=False):
+        # composite index on Address2/zip/city
+        indexAddress2ZipCity = """
+        CREATE INDEX idx_Address2ZipCity IF NOT EXISTS
+        FOR (n:Address2)
+        ON (n.zip, n.city)
+        """
+        app.addIndex(indexAddress2ZipCity, stats)
+ 
+        # index on Person2/name
+        indexPerson2Name = """
+        CREATE INDEX idx_Person2Name IF NOT EXISTS
+        FOR (n:Person2)
+        ON (n.name)
+        """
+        app.addIndex(indexPerson2Name, stats)
+
+    def delNodeIndexes(self, app, stats=False):
+        # drop composite index on Address2/zip/city
+        dropAddress2ZipCity = """
+        DROP INDEX idx_Address2ZipCity IF EXISTS
+        """
+        app.dropIndex(dropAddress2ZipCity, stats)
+ 
+        # drop index on Person2/name
+        dropPerson2Name = """
+        DROP INDEX idx_Person2Name IF EXISTS
+        """
+        app.dropIndex(dropPerson2Name, stats)
+ 
 class PersonAddressScenarioPlain(PersonAddressScenario):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
