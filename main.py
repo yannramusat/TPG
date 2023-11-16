@@ -25,8 +25,8 @@ if __name__ == "__main__":
     from scenarios.personaddress import *
     scenario = PersonAddressScenarioPlain(prefix, size=2000)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
-    scenario = PersonAddressScenarioBaseline(prefix, size=2000)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False)
+    #scenario = PersonAddressScenarioBaseline(prefix, size=2000)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False)
     scenario = PersonAddressScenarioBaseline(prefix, size=2000)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 

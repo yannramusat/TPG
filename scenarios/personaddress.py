@@ -45,7 +45,6 @@ class PersonAddressScenarioBaseline(PersonAddressScenario):
         WITH y, a.zip as AddressZip
         MATCH (p:Person)
         WHERE p.address = AddressZip
-        WITH y, p
         MERGE (x:Person2 {name: p.name})
         SET x.address = p.address
         CREATE (x)-[:LIVES_AT]->(y)
