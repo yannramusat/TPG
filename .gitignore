@@ -1,6 +1,7 @@
 # specific gitignore directives for this project
 input-ibench-config/old/
 results/
+outfigs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

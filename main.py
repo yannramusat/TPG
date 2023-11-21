@@ -22,13 +22,13 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     
     # temporary testing playground for the baseline of PA
-    from scenarios.personaddress import *
-    scenario = PersonAddressScenarioPlain(prefix, size=2000)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    #from scenarios.personaddress import *
+    #scenario = PersonAddressScenarioPlain(prefix, size=2000)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
     #scenario = PersonAddressScenarioBaseline(prefix, size=2000)
     #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=False, relIndex=False)
-    scenario = PersonAddressScenarioBaseline(prefix, size=2000)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    #scenario = PersonAddressScenarioBaseline(prefix, size=2000)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -69,6 +69,8 @@ if __name__ == "__main__":
 
         #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
+
+        FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    

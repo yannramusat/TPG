@@ -219,3 +219,49 @@ class FigureComparisonAlternativeApproachesFlightHotel(Figure):
         print(f"{self.results_CDoverSI_long=}")
         print(f"{self.results_CDoverPlain_long=}")
         print(f"{self.results_CDoverConflicting_long=}")
+
+class FigureComparisonBaselineFlightHotel(Figure):
+    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
+        super().__init__(app, prefix, values, nbLaunches, showStats)
+        # results
+        self.results_baseline_long = []
+        self.results_baseline_NI_long = []
+        self.results_PI_NI_long = []
+
+    def compute(self):
+        # execute the baseline implementation of the scenario FlightHotel
+        from scenarios.flighthotel import FlightHotelScenarioBaseline
+        for i in self.x:
+            scenario = FlightHotelScenarioBaseline(self.prefix, size=i)
+            self.results_baseline_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the baseline implementation of the scenario FlightHotel using Node indexes
+        from scenarios.flighthotel import FlightHotelScenarioBaseline
+        for i in self.x:
+            scenario = FlightHotelScenarioBaseline(self.prefix, size=i)
+            self.results_baseline_NI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # execute the plain implementation of the scenario FlighHotel using Node indexes
+        from scenarios.flighthotel import FlightHotelScenarioPlain
+        for i in self.x:
+            scenario = FlightHotelScenarioPlain(self.prefix, size=i)
+            self.results_PI_NI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+
+    def plot(self):
+        # plot results using matplotlib
+        import matplotlib.pyplot as plt
+        import numpy as np
+        # Figure for comparing with the baseline approach | FlightHotel scenario
+        fig2, ax = plt.subplots(layout="constrained", figsize=(4, 2.5))
+        ax.plot(self.x, self.results_baseline_long, label="B", marker="D") 
+        ax.plot(self.x, self.results_baseline_NI_long, label="B_NI", marker="s")
+        ax.plot(self.x, self.results_PI_NI_long, label="PI_NI", marker= "o")
+        ax.set_title("FlightHotel")
+        ax.set_xlabel("number of rows per input relation")
+        ax.set_ylabel("time (ms)")
+        ax.legend()
+        plt.savefig("outfigs/FigureComparisonBaselineFlightHotel.png")
+
+    def print_cmd(self):
+        print("## Figure for comparing with the baseline approach | FlightHotel scenario")
+        print(f"{self.results_baseline_long=}")
+        print(f"{self.results_baseline_NI_long=}")
+        print(f"{self.results_PI_NI_long=}")
