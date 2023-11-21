@@ -20,6 +20,7 @@ if __name__ == "__main__":
     relIndexes = True
     x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
+    z = [100, 200, 500, 1_000, 2_000, 5_000]
     
     # temporary testing playground for the baseline of PA
     #from scenarios.personaddress import *
@@ -70,7 +71,8 @@ if __name__ == "__main__":
         #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonBaselinePersonAddress(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    

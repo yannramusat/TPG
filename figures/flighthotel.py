@@ -255,8 +255,9 @@ class FigureComparisonBaselineFlightHotel(Figure):
         ax.plot(self.x, self.results_baseline_NI_long, label="B_NI", marker="s")
         ax.plot(self.x, self.results_PI_NI_long, label="PI_NI", marker= "o")
         ax.set_title("FlightHotel")
-        ax.set_xlabel("number of rows per input relation")
+        ax.set_xlabel("number of nodes of each type")
         ax.set_ylabel("time (ms)")
+        ax.set_yscale("log")
         ax.legend()
         plt.savefig("outfigs/FigureComparisonBaselineFlightHotel.png")
 

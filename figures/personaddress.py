@@ -203,3 +203,49 @@ class FigureComparisonAlternativeApproachesPersonAddress(Figure):
         print(f"{self.results_Plain_long=}")
         print(f"{self.results_CDoverSI_long=}")
         print(f"{self.results_CDoverPlain_long=}")
+
+class FigureComparisonBaselinePersonAddress(Figure):
+    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
+        super().__init__(app, prefix, values, nbLaunches, showStats)
+        # results
+        self.results_baseline_long = []
+        self.results_baseline_NI_long = []
+        self.results_PI_NI_long = []
+
+    def compute(self):
+        # execute the baseline implementation of the scenario PersonAddress
+        from scenarios.personaddress import PersonAddressScenarioBaseline
+        for i in self.x:
+            scenario = PersonAddressScenarioBaseline(self.prefix, size=i)
+            self.results_baseline_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the baseline implementation of the scenario PersonAddress using Node indexes
+        from scenarios.personaddress import PersonAddressScenarioBaseline
+        for i in self.x:
+            scenario = PersonAddressScenarioBaseline(self.prefix, size=i)
+            self.results_baseline_NI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # execute the plain implementation of the scenario PersonAddress using Node indexes
+        from scenarios.personaddress import PersonAddressScenarioPlain
+        for i in self.x:
+            scenario = PersonAddressScenarioPlain(self.prefix, size=i)
+            self.results_PI_NI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+
+    def plot(self):
+        # plot results using matplotlib
+        import matplotlib.pyplot as plt
+        import numpy as np
+        # Figure for comparing with the baseline approach | PersonAddress scenario
+        fig2, ax = plt.subplots(layout="constrained", figsize=(4, 2.5))
+        ax.plot(self.x, self.results_baseline_long, label="B", marker="D") 
+        ax.plot(self.x, self.results_baseline_NI_long, label="B_NI", marker="s")
+        ax.plot(self.x, self.results_PI_NI_long, label="PI_NI", marker= "o")
+        ax.set_title("PersonAddress")
+        ax.set_xlabel("number of nodes of each type")
+        ax.set_ylabel("time (ms)")
+        ax.legend()
+        plt.savefig("outfigs/FigureComparisonBaselinePersonAddress.png")
+
+    def print_cmd(self):
+        print("## Figure for comparing with the baseline approach | PersonAddress scenario")
+        print(f"{self.results_baseline_long=}")
+        print(f"{self.results_baseline_NI_long=}")
+        print(f"{self.results_PI_NI_long=}")
