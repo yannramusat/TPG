@@ -3,6 +3,136 @@ from figures.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 
+class FigureComparisonIndexesPersonData(Figure):
+    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
+        super().__init__(app, prefix, values, nbLaunches, showStats)
+        # results 
+        self.results_Sep_NI_RI = []
+        self.results_Sep_NI = []
+        self.results_Sep_RI = []
+        self.results_Sep = []
+        self.results_Plain_NI_RI = []
+        self.results_Plain_NI = []
+        self.results_Plain_RI = []
+        self.results_Plain = []
+        self.results_CDoverSI_NI_RI = []
+        self.results_CDoverSI_NI = []
+        self.results_CDoverSI_RI = []
+        self.results_CDoverSI = []
+        self.results_CDoverPlain_NI_RI = []
+        self.results_CDoverPlain_NI = []
+        self.results_CDoverPlain_RI = []
+        self.results_CDoverPlain = []
+
+    def compute(self):
+        # execute the alternative implementation of the scenario PersonData with Separate indexes
+        from scenarios.persondatas1 import PersonDataScenarioS1Sep
+        for i in self.x:
+            scenario = PersonDataScenarioS1Sep(self.prefix, size=i)
+            self.results_Sep_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1Sep(self.prefix, size=i)
+            self.results_Sep_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        for i in self.x:
+            scenario = PersonDataScenarioS1Sep(self.prefix, size=i)
+            self.results_Sep_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1Sep(self.prefix, size=i)
+            self.results_Sep.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the plain implementation of the scenario PersonData
+        from scenarios.persondatas1 import PersonDataScenarioS1Plain
+        for i in self.x:
+            scenario = PersonDataScenarioS1Plain(self.prefix, size=i)
+            self.results_Plain_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1Plain(self.prefix, size=i)
+            self.results_Plain_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        for i in self.x:
+            scenario = PersonDataScenarioS1Plain(self.prefix, size=i)
+            self.results_Plain_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1Plain(self.prefix, size=i)
+            self.results_Plain.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the alternative implementation with Conflict Detection of the scenario PersonData based on Separate index
+        from scenarios.persondatas1 import PersonDataScenarioS1CDoverSep
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverSep(self.prefix, size=i)
+            self.results_CDoverSI_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverSep(self.prefix, size=i)
+            self.results_CDoverSI_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverSep(self.prefix, size=i)
+            self.results_CDoverSI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True)) 
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverSep(self.prefix, size=i)
+            self.results_CDoverSI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the alternative implementation with Conflict Detection of the scenario PersonData based on Plain implementation
+        from scenarios.persondatas1 import PersonDataScenarioS1CDoverPlain
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverPlain(self.prefix, size=i)
+            self.results_CDoverPlain_NI_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverPlain(self.prefix, size=i)
+            self.results_CDoverPlain_NI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverPlain(self.prefix, size=i)
+            self.results_CDoverPlain_RI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=True))
+        for i in self.x:
+            scenario = PersonDataScenarioS1CDoverPlain(self.prefix, size=i)
+            self.results_CDoverPlain.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+    
+    def plot(self):
+        # Figure for exhaustive comparison of indexes | PersonData scenario
+        fig1, axs = plt.subplots(2, 2, layout="constrained", figsize=(6,5)) 
+        fig1.suptitle("PersonData", fontsize=14)
+        # Axes Separate indexes
+        axs[0, 0].plot(self.x, self.results_Sep_NI_RI, label="NI_RI", marker="D")
+        axs[0, 0].plot(self.x, self.results_Sep_NI, label="NI", marker="s")
+        axs[0, 0].plot(self.x, self.results_Sep_RI, label="RI", marker="o")
+        axs[0, 0].plot(self.x, self.results_Sep, label="WI", marker="x")
+        axs[0, 0].set_title("SI")
+        axs[0, 0].set_xlabel("number of nodes of each type")
+        axs[0, 0].set_ylabel("time (ms)")
+        axs[0, 0].set_yscale("log")
+        axs[0, 0].legend()
+        # Axes Plain implementation
+        axs[0, 1].plot(self.x, self.results_Plain_NI_RI, label="NI_RI", marker="D")
+        axs[0, 1].plot(self.x, self.results_Plain_NI, label="NI", marker="s")
+        axs[0, 1].plot(self.x, self.results_Plain_RI, label="RI", marker="o") 
+        axs[0, 1].plot(self.x, self.results_Plain, label="WI", marker="x")
+        axs[0, 1].set_title("PI")
+        axs[0, 1].set_xlabel("number of nodes of each type")
+        axs[0, 1].set_ylabel("time (ms)")
+        axs[0, 1].set_yscale("log")
+        #axs[0, 1].legend()
+        # Axes Conflict Detection over Separate indexes
+        axs[1, 0].plot(self.x, self.results_CDoverSI_NI_RI, label="NI_RI", marker="D")
+        axs[1, 0].plot(self.x, self.results_CDoverSI_NI, label="NI", marker="s")
+        axs[1, 0].plot(self.x, self.results_CDoverSI_RI, label="RI", marker="o") 
+        axs[1, 0].plot(self.x, self.results_CDoverSI, label="WI", marker="x")
+        axs[1, 0].set_title("CD/SI")
+        axs[1, 0].set_xlabel("number of nodes of each type")
+        axs[1, 0].set_ylabel("time (ms)")
+        axs[1, 0].set_yscale("log")
+        #axs[1, 0].legend()
+        # Axes Conflict Detection over Plain
+        axs[1, 1].plot(self.x, self.results_CDoverPlain_NI_RI, label="NI_RI", marker="D")
+        axs[1, 1].plot(self.x, self.results_CDoverPlain_NI, label="NI", marker="s")
+        axs[1, 1].plot(self.x, self.results_CDoverPlain_RI, label="RI", marker="o") 
+        axs[1, 1].plot(self.x, self.results_CDoverPlain, label="WI", marker="x")
+        axs[1, 1].set_title("CD/PI")
+        axs[1, 1].set_xlabel("number of nodes of each type")
+        axs[1, 1].set_ylabel("time (ms)")
+        axs[1, 1].set_yscale("log")
+        #axs[1, 1].legend()
+
+        axs[0, 0].set_ylim([20, 10_000])
+        axs[0, 1].set_ylim([20, 10_000])
+        axs[1, 0].set_ylim([20, 10_000])
+        axs[1, 1].set_ylim([20, 10_000])
+        plt.savefig("outfigs/FigureExhaustiveIndexesPersonData.png")
+
 class FigureLongRunPersonData(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
         super().__init__(app, prefix, values, nbLaunches, showStats)
