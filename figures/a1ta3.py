@@ -107,13 +107,15 @@ class FigureComparisonAlternativeApproachesA1TA3(Figure):
         import matplotlib.pyplot as plt
         import numpy as np
         # Figure for comparing alternative implementations | A1TA3 scenario
-        fig2, ax = plt.subplots(layout="constrained")
-        ax.plot(self.x, self.results_Plain_long, label="Plain implementation")
-        ax.plot(self.x, self.results_Shuffled_long, label="Plain implementation; Shuffled")
-        ax.set_title("Comparison of alternative implementations | Amalgam1ToAmalgam3 scenario")
-        ax.set_xlabel("number of rows per input relation")
+        fig2, ax = plt.subplots(layout="constrained", figsize=(6,3))
+        ax.plot(self.x, self.results_Plain_long, label="PI", marker="D")
+        ax.plot(self.x, self.results_Shuffled_long, label="PI; Shuffled", marker="s")
+        ax.set_title("Amalgam1ToAmalgam3")
+        ax.set_xlabel("number of nodes of each type")
         ax.set_ylabel("time (ms)")
         ax.legend()
+
+        plt.savefig("outfigs/FigureComparisonAlternativesA1TA3.png")
 
     def print_cmd(self):
         print("## Figure for comparing alternative implementations | A1TA3 scenario")
