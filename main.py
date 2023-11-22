@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
         #FigureComparisonFlightHotelSplit(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
         
-        FigureComparisonIndexesPersonData(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+##FigureComparisonIndexesPersonData(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
         #FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonBaselinePersonAddress(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonBaselinePersonData(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    

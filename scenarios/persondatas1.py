@@ -48,6 +48,62 @@ class PersonDataScenarioS1(Scenario):
         """
         app.dropIndex(dropHasPlace, stats)
 
+class PersonDataScenarioS1Baseline(PersonDataScenarioS1):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # Cypher script; we store it as a rule, but it is not!
+        baseline_script = TransformationRule("""
+        MATCH (p:Person)
+        MATCH (a:Address) WHERE a.occ = p.name
+        MATCH (pl:Place) WHERE pl.occ = p.name 
+        WITH p, collect(a) as Addresses, collect(pl) as Places
+        CREATE (p2:Person2 {address: p.address})
+        WITH p2, Addresses, Places
+        UNWIND Addresses as a
+        WITH p2, a, Places
+        MERGE (c:City {city: a.city})
+        MERGE (p2)-[:HAS_ADDRESS]->(c)
+        WITH p2, Places
+        UNWIND Places as p
+        WITH p2, p
+        MERGE (z:Zip {zip: p.zip})
+        MERGE (p2)-[:HAS_PLACE]->(z)
+        """)
+        # easier to run the script as if it was a (single) rule
+        self.rules = [baseline_script]
+
+    def addNodeIndexes(self, app, stats=False):
+        # index on City/city
+        indexCityCity = """
+        CREATE INDEX idx_CityCity IF NOT EXISTS
+        FOR (n:City)
+        ON (n.city)
+        """
+        app.addIndex(indexCityCity, stats)
+        
+        # index on Zip/zip
+        indexZipZip = """
+        CREATE INDEX idx_ZipZip IF NOT EXISTS
+        FOR (n:Zip)
+        ON (n.zip)
+        """
+        app.addIndex(indexZipZip, stats)
+   
+    def delNodeIndexes(self, app, stats=False):
+        # drop index on City/City
+        dropCityCity = """
+        DROP INDEX idx_CityCity IF EXISTS
+        """
+        app.dropIndex(dropCityCity, stats)
+
+        # drop index on Zip/Zip
+        dropZipZip = """
+        DROP INDEX idx_ZipZip IF EXISTS
+        """
+        app.dropIndex(dropZipZip, stats)
+
 class PersonDataScenarioS1Plain(PersonDataScenarioS1):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema

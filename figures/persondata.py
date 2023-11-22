@@ -133,6 +133,29 @@ class FigureComparisonIndexesPersonData(Figure):
         axs[1, 1].set_ylim([20, 10_000])
         plt.savefig("outfigs/FigureExhaustiveIndexesPersonData.png")
 
+    def print_cmd(self):
+        print("## Figure for exhaustive comparison of indexes | PersonData scenario")
+        print("# Separate indexes alternative")
+        print(f"{self.results_Sep_NI_RI=}")
+        print(f"{self.results_Sep_NI=}")
+        print(f"{self.results_Sep_RI=}")
+        print(f"{self.results_Sep=}")
+        print("# Plain implementation")
+        print(f"{self.results_Plain_NI_RI=}")
+        print(f"{self.results_Plain_NI=}")
+        print(f"{self.results_Plain_RI=}")
+        print(f"{self.results_Plain=}")
+        print("# Conflict Detection over Separate indexes")
+        print(f"{self.results_CDoverSI_NI_RI=}")
+        print(f"{self.results_CDoverSI_NI=}")
+        print(f"{self.results_CDoverSI_RI=}")
+        print(f"{self.results_CDoverSI=}")
+        print("# Conflict Detection over Plain")
+        print(f"{self.results_CDoverPlain_NI_RI=}")
+        print(f"{self.results_CDoverPlain_NI=}")
+        print(f"{self.results_CDoverPlain_RI=}")
+        print(f"{self.results_CDoverPlain=}")
+
 class FigureLongRunPersonData(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
         super().__init__(app, prefix, values, nbLaunches, showStats)
@@ -186,3 +209,49 @@ class FigureLongRunPersonData(Figure):
         print(f"{self.results_CD_S1_long=}")
         print(f"{self.results_Plain_S2_long=}")
         print(f"{self.results_CD_S2_long=}")
+
+class FigureComparisonBaselinePersonData(Figure):
+    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
+        super().__init__(app, prefix, values, nbLaunches, showStats)
+        # results
+        self.results_baseline_long = []
+        self.results_baseline_NI_long = []
+        self.results_PI_NI_long = []
+
+    def compute(self):
+        # execute the baseline implementation of the scenario PersonData
+        from scenarios.persondatas1 import PersonDataScenarioS1Baseline
+        for i in self.x:
+            scenario = PersonDataScenarioS1Baseline(self.prefix, size=i)
+            self.results_baseline_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=False, relIndex=False))
+        # execute the baseline implementation of the scenario PersonData using Node indexes
+        from scenarios.persondatas1 import PersonDataScenarioS1Baseline
+        for i in self.x:
+            scenario = PersonDataScenarioS1Baseline(self.prefix, size=i)
+            self.results_baseline_NI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # execute the plain implementation of the scenario PersonData using Node indexes
+        from scenarios.persondatas1 import PersonDataScenarioS1Plain
+        for i in self.x:
+            scenario = PersonDataScenarioS1Plain(self.prefix, size=i)
+            self.results_PI_NI_long.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+
+    def plot(self):
+        # plot results using matplotlib
+        import matplotlib.pyplot as plt
+        import numpy as np
+        # Figure for comparing with the baseline approach | PersonData scenario
+        fig2, ax = plt.subplots(layout="constrained", figsize=(4, 2.5))
+        ax.plot(self.x, self.results_baseline_long, label="B", marker="D") 
+        ax.plot(self.x, self.results_baseline_NI_long, label="B_NI", marker="s")
+        ax.plot(self.x, self.results_PI_NI_long, label="PI_NI", marker= "o")
+        ax.set_title("PersonData")
+        ax.set_xlabel("number of nodes of each type")
+        ax.set_ylabel("time (ms)")
+        ax.legend()
+        plt.savefig("outfigs/FigureComparisonBaselinePersonData.png")
+
+    def print_cmd(self):
+        print("## Figure for comparing with the baseline approach | PersonData scenario")
+        print(f"{self.results_baseline_long=}")
+        print(f"{self.results_baseline_NI_long=}")
+        print(f"{self.results_PI_NI_long=}")
