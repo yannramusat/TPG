@@ -68,7 +68,7 @@ if __name__ == "__main__":
         #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
