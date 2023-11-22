@@ -95,7 +95,7 @@ class FigureComparisonIndexesPersonData(Figure):
         axs[0, 0].set_xlabel("number of nodes of each type")
         axs[0, 0].set_ylabel("time (ms)")
         axs[0, 0].set_yscale("log")
-        axs[0, 0].legend()
+        axs[0, 0].legend(loc="best", ncol=2, fontsize="10")
         # Axes Plain implementation
         axs[0, 1].plot(self.x, self.results_Plain_NI_RI, label="NI_RI", marker="D")
         axs[0, 1].plot(self.x, self.results_Plain_NI, label="NI", marker="s")

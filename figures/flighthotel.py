@@ -95,7 +95,7 @@ class FigureComparisonIndexesFlightHotel(Figure):
         axs[0, 0].set_xlabel("number of nodes of each type")
         axs[0, 0].set_ylabel("time (ms)")
         axs[0, 0].set_yscale("log")
-        axs[0, 0].legend()
+        axs[0, 0].legend(loc="best", ncol=2, fontsize="10")
         # Axes Plain implementation
         axs[0, 1].plot(self.x, self.results_Plain_NI_RI, label="NI_RI", marker="D")
         axs[0, 1].plot(self.x, self.results_Plain_NI, label="NI", marker="s")
@@ -105,7 +105,7 @@ class FigureComparisonIndexesFlightHotel(Figure):
         axs[0, 1].set_xlabel("number of nodes of each type")
         axs[0, 1].set_ylabel("time (ms)")
         axs[0, 1].set_yscale("log")
-        axs[0, 1].legend()
+        #axs[0, 1].legend()
         # Axes Conflict Detection over Separate indexes
         axs[1, 0].plot(self.x, self.results_CDoverSI_NI_RI, label="NI_RI", marker="D")
         axs[1, 0].plot(self.x, self.results_CDoverSI_NI, label="NI", marker="s")
@@ -115,7 +115,7 @@ class FigureComparisonIndexesFlightHotel(Figure):
         axs[1, 0].set_xlabel("number of nodes of each type")
         axs[1, 0].set_ylabel("time (ms)")
         axs[1, 0].set_yscale("log")
-        axs[1, 0].legend()
+        #axs[1, 0].legend()
         # Axes Conflict Detection over Plain
         axs[1, 1].plot(self.x, self.results_CDoverPlain_NI_RI, label="NI_RI", marker="D")
         axs[1, 1].plot(self.x, self.results_CDoverPlain_NI, label="NI", marker="s")
@@ -125,7 +125,7 @@ class FigureComparisonIndexesFlightHotel(Figure):
         axs[1, 1].set_xlabel("number of nodes of each type")
         axs[1, 1].set_ylabel("time (ms)")
         axs[1, 1].set_yscale("log")
-        axs[1, 1].legend()
+        #axs[1, 1].legend()
 
         axs[0, 0].set_ylim([20, 10_000])
         axs[0, 1].set_ylim([20, 10_000])
