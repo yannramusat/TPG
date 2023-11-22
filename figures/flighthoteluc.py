@@ -201,19 +201,21 @@ class FigureComparisonAlternativeApproachesFlightHotelUC(Figure):
         import matplotlib.pyplot as plt
         import numpy as np
         # Figure for comparing alternative implementations | FlightHotel scenario
-        fig2, ax = plt.subplots(layout="constrained")
-        ax.plot(self.x, self.results_Sep_long, label="Separate indexes alternative")
-        ax.plot(self.x, self.results_Plain_long, label="Plain implementation")
+        fig2, ax = plt.subplots(layout="constrained", figsize=(6,5))
+        ax.plot(self.x, self.results_Sep_long, label="SI_NI", marker="D")
+        ax.plot(self.x, self.results_Plain_long, label="PI_NI", marker="s")
         if self.withConflicts:
             ax.plot(self.x, self.results_Conflicting_long, label="Variant with conflicts")
-        ax.plot(self.x, self.results_Sep_long_UC, label="Separate indexes (UC)")
-        ax.plot(self.x, self.results_Plain_long_UC, label="Plain implementation (UC)")
+        ax.plot(self.x, self.results_Sep_long_UC, label="SI_NUC", marker="o")
+        ax.plot(self.x, self.results_Plain_long_UC, label="PI_NUC", marker="x")
         if self.withConflicts:
             ax.plot(self.x, self.results_Conflicting_long_UC, label="Variant with conflicts (UC)")
-        ax.set_title("Comparison of Uniqueness Constraints vs Indexes | FlightHotel scenario")
+        ax.set_title("FlightHotel")
         ax.set_xlabel("number of rows per input relation")
         ax.set_ylabel("time (ms)")
         ax.legend()
+
+        plt.savefig("outfigs/FigureComparisonUCvsIndexesFlightHotel.png")
 
     def print_cmd(self):
         print("## Figure for comparing Uniqueness Constraints vs Indexes | FlightHotel scenario")
