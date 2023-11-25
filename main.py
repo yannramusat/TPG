@@ -23,9 +23,9 @@ if __name__ == "__main__":
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
     # temporary testing playground for CD over DTA1
-    from scenarios.dta1 import *
-    scenario = DBLPToAmalgam1CDoverSI(prefix, size=100)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    #from scenarios.dta1 import *
+    #scenario = DBLPToAmalgam1CDoverSI(prefix, size=100)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         #FigureComparisonIndexesPersonData(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
