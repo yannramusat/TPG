@@ -24,7 +24,7 @@ if __name__ == "__main__":
     
     # temporary testing playground for CD over DTA1
     from scenarios.dta1 import *
-    scenario = DBLPToAmalgam1CDoverPlain(prefix, size=100)
+    scenario = DBLPToAmalgam1CDoverSI(prefix, size=100)
     scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters

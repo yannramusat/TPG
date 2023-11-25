@@ -1248,7 +1248,6 @@ class DBLPToAmalgam1CDoverPlain(DBLPToAmalgam1Plain):
                     ELSE
                         "SK21(" + w.pid + ")"
                 END
-
         MERGE (m)-[:MISC_PUBLISHED {
             _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(a) + ")"
         }]-(a)
@@ -1483,7 +1482,6 @@ class DBLPToAmalgam1CDoverPlain(DBLPToAmalgam1Plain):
                     ELSE
                         "SK26(" + da.pid + ")"
                 END
-
         MERGE (a)-[:ARTICLE_PUBLISHED {
             _id: "(ARTICLE_PUBLISHED:" + elementId(a) + "," + elementId(au) + ")"
         }]-(au)
@@ -1718,7 +1716,6 @@ class DBLPToAmalgam1CDoverPlain(DBLPToAmalgam1Plain):
                     ELSE
                         "SK35(" + db.pid + ")"
                 END
-
         MERGE (b)-[:BOOK_PUBLISHED {
             _id: "(BOOK_PUBLISHED:" + elementId(b) + "," + elementId(au) + ")"
         }]-(au)
@@ -1993,4 +1990,1181 @@ class DBLPToAmalgam1CDoverPlain(DBLPToAmalgam1Plain):
         # transformation rules
         self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10]
 
+class DBLPToAmalgam1CDoverSI(DBLPToAmalgam1SeparateIndexes):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
 
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (dip:DInProceedings)
+        MERGE (x:InProceedings { 
+            _id: "(" + elementId(dip) + ")" 
+        })
+        ON CREATE
+            SET x.pid = "SK1(" + dip.pid + ")",
+                x.title = dip.title,
+                x.bktitle = dip.booktitle,
+                x.year = dip.year,
+                x.month = dip.month,
+                x.pages = dip.pages,
+                x.vol = "SK2(" + dip.booktitle + "," + dip.year + ")",
+                x.num = "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")", 
+                x.loc = "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")", 
+                x.class = "SK6(" + dip.pid + ")",
+                x.note = "SK7(" + dip.pid + ")",
+                x.annote = "SK8(" + dip.pid + ")"
+        ON MATCH
+            SET x.pid =
+                CASE
+                    WHEN x.pid <> "SK1(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + dip.pid + ")"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> dip.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.title
+                END,
+                x.bktitle =
+                CASE
+                    WHEN x.bktitle <> dip.booktitle
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.booktitle
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> dip.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.year
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> dip.month
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.month
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> dip.pages
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.pages
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> "SK2(" + dip.booktitle + "," + dip.year + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + dip.booktitle + "," + dip.year + ")"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                        THEN "Conflict detected!"
+                    ELSE    
+                        "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                END,
+                x.loc =
+                CASE
+                    WHEN x.loc <> "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                END,
+                x.class =
+                CASE
+                    WHEN x.class <> "SK6(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK6(" + dip.pid + ")"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> "SK7(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK7(" + dip.pid + ")"
+                END,
+                x.annote =
+                CASE
+                    WHEN x.annote <> "SK8(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK8(" + dip.pid + ")"
+                END
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule("""
+        MATCH (dip:DInProceedings)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = dip.pid
+        MERGE (a:Author {
+            _id: "(" + pa.author + ")"
+        })
+        ON CREATE
+            SET a.name = pa.author
+        ON MATCH
+            SET a.name =
+                CASE
+                    WHEN a.name <> pa.author
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author
+                END
+        MERGE (x:InProceedings { 
+            _id: "(" + elementId(dip) + ")" 
+        })
+        ON CREATE
+            SET x.pid = "SK1(" + dip.pid + ")",
+                x.title = dip.title,
+                x.bktitle = dip.booktitle,
+                x.year = dip.year,
+                x.month = dip.month,
+                x.pages = dip.pages,
+                x.vol = "SK2(" + dip.booktitle + "," + dip.year + ")",
+                x.num = "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")", 
+                x.loc = "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")", 
+                x.class = "SK6(" + dip.pid + ")",
+                x.note = "SK7(" + dip.pid + ")",
+                x.annote = "SK8(" + dip.pid + ")"
+        ON MATCH
+            SET x.pid =
+                CASE
+                    WHEN x.pid <> "SK1(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + dip.pid + ")"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> dip.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.title
+                END,
+                x.bktitle =
+                CASE
+                    WHEN x.bktitle <> dip.booktitle
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.booktitle
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> dip.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.year
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> dip.month
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.month
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> dip.pages
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.pages
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> "SK2(" + dip.booktitle + "," + dip.year + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + dip.booktitle + "," + dip.year + ")"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                        THEN "Conflict detected!"
+                    ELSE    
+                        "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                END,
+                x.loc =
+                CASE
+                    WHEN x.loc <> "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")"
+                END,
+                x.class =
+                CASE
+                    WHEN x.class <> "SK6(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK6(" + dip.pid + ")"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> "SK7(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK7(" + dip.pid + ")"
+                END,
+                x.annote =
+                CASE
+                    WHEN x.annote <> "SK8(" + dip.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK8(" + dip.pid + ")"
+                END
+        MERGE (x)-[:IN_PROC_PUBLISHED {
+            _id: "(IN_PROC_PUBLISHED:" + elementId(x) + "," + elementId(a) + ")"
+        }]-(a)
+        """)
+        # rule#3 using our framework
+        rule3 = TransformationRule("""
+        MATCH (w:WWW)
+        MERGE (m:Misc {
+            _id: "(" + elementId(w) + ")"
+        })
+        ON CREATE
+            SET m.miscid = "SK11(" + w.pid + ")",
+                m.howpub = "SK12(" + w.pid + ")",
+                m.confloc = "SK13(" + w.pid + ")",
+                m.year = w.year,
+                m.month = "SK14(" + w.pid + ")",
+                m.pages = "SK15(" + w.pid + ")",
+                m.vol = "SK16(" + w.pid + ")",
+                m.num = "SK17(" + w.pid + ")",
+                m.loc = "SK18(" + w.pid + ")",
+                m.class ="SK19(" + w.pid + ")",
+                m.note = "SK20(" + w.pid + ")",
+                m.annote = "SK21(" + w.pid + ")"
+        ON MATCH
+            SET m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK11(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK11(" + w.pid + ")"
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK12(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK12(" + w.pid + ")"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK13(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + w.pid + ")"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> w.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        w.year
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> "SK14(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK14(" + w.pid + ")"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK15(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + w.pid + ")"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK16(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK16(" + w.pid + ")"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> "SK17(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK17(" + w.pid + ")"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK18(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK18(" + w.pid + ")"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK19(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK19(" + w.pid + ")"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK20(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK20(" + w.pid + ")"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> "SK21(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK21(" + w.pid + ")"
+                END
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule("""
+        MATCH (w:WWW)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = w.pid
+        MERGE (a:Author {
+            _id: "(" + pa.author + ")"
+        })
+        ON CREATE
+            SET a.name = pa.author
+        ON MATCH
+            SET a.name =
+                CASE
+                    WHEN a.name <> pa.author
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author
+                END
+        MERGE (m:Misc {
+            _id: "(" + elementId(w) + ")"
+        })
+        ON CREATE
+            SET m.miscid = "SK11(" + w.pid + ")",
+                m.howpub = "SK12(" + w.pid + ")",
+                m.confloc = "SK13(" + w.pid + ")",
+                m.year = w.year,
+                m.month = "SK14(" + w.pid + ")",
+                m.pages = "SK15(" + w.pid + ")",
+                m.vol = "SK16(" + w.pid + ")",
+                m.num = "SK17(" + w.pid + ")",
+                m.loc = "SK18(" + w.pid + ")",
+                m.class ="SK19(" + w.pid + ")",
+                m.note = "SK20(" + w.pid + ")",
+                m.annote = "SK21(" + w.pid + ")"
+        ON MATCH
+            SET m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK11(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK11(" + w.pid + ")"
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK12(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK12(" + w.pid + ")"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK13(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + w.pid + ")"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> w.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        w.year
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> "SK14(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK14(" + w.pid + ")"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK15(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + w.pid + ")"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK16(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK16(" + w.pid + ")"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> "SK17(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK17(" + w.pid + ")"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK18(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK18(" + w.pid + ")"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK19(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK19(" + w.pid + ")"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK20(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK20(" + w.pid + ")"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> "SK21(" + w.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK21(" + w.pid + ")"
+                END
+        MERGE (m)-[:MISC_PUBLISHED {
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(a) + ")"
+        }]-(a)
+        """)
+        # rule#5 using our framework
+        rule5 = TransformationRule("""
+        MATCH (da:DArticle)
+        MERGE (a:Article { 
+            _id: "(" + elementId(da) + ")" 
+        })
+        ON CREATE
+            SET a.articleid = "SK22(" + da.pid + ")",
+                a.title = da.title,
+                a.journal = da.journal,
+                a.year = da.year,
+                a.month = da.month,
+                a.pages = da.pages,
+                a.vol = da.volume,
+                a.num = da.number, 
+                a.loc = "SK23(" + da.pid + ")", 
+                a.class = "SK24(" + da.pid + ")",
+                a.note = "SK25(" + da.pid + ")",
+                a.annote = "SK26(" + da.pid + ")"
+        ON MATCH
+            SET a.articleid =
+                CASE
+                    WHEN a.articleid <> "SK22(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK22(" + da.pid + ")"
+                END,
+                a.title =
+                CASE
+                    WHEN a.title <> da.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.title
+                END,
+                a.journal =
+                CASE
+                    WHEN a.journal <> da.journal
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.journal
+                END,
+                a.year =
+                CASE
+                    WHEN a.year <> da.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.year
+                END,
+                a.month =
+                CASE
+                    WHEN a.month <> da.month
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.month
+                END,
+                a.pages =
+                CASE
+                    WHEN a.pages <> da.pages
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.pages
+                END,
+                a.vol =
+                CASE
+                    WHEN a.vol <> da.volume
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.volume
+                END,
+                a.num =
+                CASE
+                    WHEN a.num <> da.number
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.number
+                END,
+                a.loc =
+                CASE
+                    WHEN a.loc <> "SK23(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK23(" + da.pid + ")"
+                END,
+                a.class =
+                CASE
+                    WHEN a.class <> "SK24(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK24(" + da.pid + ")"
+                END,
+                a.note =
+                CASE
+                    WHEN a.note <> "SK25(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK25(" + da.pid + ")"
+                END,
+                a.annote =
+                CASE
+                    WHEN a.annote <> "SK26(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK26(" + da.pid + ")"
+                END
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule("""
+        MATCH (da:DArticle)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = da.pid
+        MERGE (au:Author {
+            _id: "(" + pa.author + ")"
+        })
+        ON CREATE
+            SET au.name = pa.author
+        ON MATCH
+            SET au.name =
+                CASE
+                    WHEN au.name <> pa.author
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author
+                END
+        MERGE (a:Article { 
+            _id: "(" + elementId(da) + ")" 
+        })
+        ON CREATE
+            SET a.articleid = "SK22(" + da.pid + ")",
+                a.title = da.title,
+                a.journal = da.journal,
+                a.year = da.year,
+                a.month = da.month,
+                a.pages = da.pages,
+                a.vol = da.volume,
+                a.num = da.number, 
+                a.loc = "SK23(" + da.pid + ")", 
+                a.class = "SK24(" + da.pid + ")",
+                a.note = "SK25(" + da.pid + ")",
+                a.annote = "SK26(" + da.pid + ")"
+        ON MATCH
+            SET a.articleid =
+                CASE
+                    WHEN a.articleid <> "SK22(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK22(" + da.pid + ")"
+                END,
+                a.title =
+                CASE
+                    WHEN a.title <> da.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.title
+                END,
+                a.journal =
+                CASE
+                    WHEN a.journal <> da.journal
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.journal
+                END,
+                a.year =
+                CASE
+                    WHEN a.year <> da.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.year
+                END,
+                a.month =
+                CASE
+                    WHEN a.month <> da.month
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.month
+                END,
+                a.pages =
+                CASE
+                    WHEN a.pages <> da.pages
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.pages
+                END,
+                a.vol =
+                CASE
+                    WHEN a.vol <> da.volume
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.volume
+                END,
+                a.num =
+                CASE
+                    WHEN a.num <> da.number
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.number
+                END,
+                a.loc =
+                CASE
+                    WHEN a.loc <> "SK23(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK23(" + da.pid + ")"
+                END,
+                a.class =
+                CASE
+                    WHEN a.class <> "SK24(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK24(" + da.pid + ")"
+                END,
+                a.note =
+                CASE
+                    WHEN a.note <> "SK25(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK25(" + da.pid + ")"
+                END,
+                a.annote =
+                CASE
+                    WHEN a.annote <> "SK26(" + da.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK26(" + da.pid + ")"
+                END
+        MERGE (a)-[:ARTICLE_PUBLISHED {
+            _id: "(ARTICLE_PUBLISHED:" + elementId(a) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule("""
+        MATCH (db:DBook)
+        MERGE (b:Book { 
+            _id: "(" + elementId(db) + ")" 
+        })
+        ON CREATE
+            SET b.bookID = "SK27(" + db.pid + ")",
+                b.title = db.title,
+                b.publisher = db.publisher,
+                b.year = db.year,
+                b.month = "SK28(" + db.pid + ")",
+                b.pages = "SK29(" + db.pid + ")",
+                b.vol = "SK30(" + db.pid + ")",
+                b.num = "SK31(" + db.pid + ")", 
+                b.loc = "SK32(" + db.pid + ")", 
+                b.class = "SK33(" + db.pid + ")",
+                b.note = "SK34(" + db.pid + ")",
+                b.annote = "SK35(" + db.pid + ")"
+        ON MATCH
+            SET b.bookID =
+                CASE
+                    WHEN b.bookID <> "SK27(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK27(" + db.pid + ")"
+                END,
+                b.title =
+                CASE
+                    WHEN b.title <> db.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.title
+                END,
+                b.publisher =
+                CASE
+                    WHEN b.publisher <> db.publisher
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.publisher
+                END,
+                b.year =
+                CASE
+                    WHEN b.year <> db.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.year
+                END,
+                b.month =
+                CASE
+                    WHEN b.month <> "SK28(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK28(" + db.pid + ")"
+                END,
+                b.pages =
+                CASE
+                    WHEN b.pages <> "SK29(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK29(" + db.pid + ")"
+                END,
+                b.vol =
+                CASE
+                    WHEN b.vol <> "SK30(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK30(" + db.pid + ")"
+                END,
+                b.num =
+                CASE
+                    WHEN b.num <> "SK31(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK31(" + db.pid + ")"
+                END,
+                b.loc =
+                CASE
+                    WHEN b.loc <> "SK32(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK32(" + db.pid + ")"
+                END,
+                b.class =
+                CASE
+                    WHEN b.class <> "SK33(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK33(" + db.pid + ")"
+                END,
+                b.note =
+                CASE
+                    WHEN b.note <> "SK34(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK34(" + db.pid + ")"
+                END,
+                b.annote =
+                CASE
+                    WHEN b.annote <> "SK35(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK35(" + db.pid + ")"
+                END
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule("""
+        MATCH (db:DBook)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = db.pid
+        MERGE (au:Author {
+            _id: "(" + pa.author + ")"
+        })
+        ON CREATE
+            SET au.name = pa.author
+        ON MATCH
+            SET au.name =
+                CASE
+                    WHEN au.name <> pa.author
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author
+                END
+        MERGE (b:Book { 
+            _id: "(" + elementId(db) + ")" 
+        })
+        ON CREATE
+            SET b.bookID = "SK27(" + db.pid + ")",
+                b.title = db.title,
+                b.publisher = db.publisher,
+                b.year = db.year,
+                b.month = "SK28(" + db.pid + ")",
+                b.pages = "SK29(" + db.pid + ")",
+                b.vol = "SK30(" + db.pid + ")",
+                b.num = "SK31(" + db.pid + ")", 
+                b.loc = "SK32(" + db.pid + ")", 
+                b.class = "SK33(" + db.pid + ")",
+                b.note = "SK34(" + db.pid + ")",
+                b.annote = "SK35(" + db.pid + ")"
+        ON MATCH
+            SET b.bookID =
+                CASE
+                    WHEN b.bookID <> "SK27(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK27(" + db.pid + ")"
+                END,
+                b.title =
+                CASE
+                    WHEN b.title <> db.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.title
+                END,
+                b.publisher =
+                CASE
+                    WHEN b.publisher <> db.publisher
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.publisher
+                END,
+                b.year =
+                CASE
+                    WHEN b.year <> db.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.year
+                END,
+                b.month =
+                CASE
+                    WHEN b.month <> "SK28(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK28(" + db.pid + ")"
+                END,
+                b.pages =
+                CASE
+                    WHEN b.pages <> "SK29(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK29(" + db.pid + ")"
+                END,
+                b.vol =
+                CASE
+                    WHEN b.vol <> "SK30(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK30(" + db.pid + ")"
+                END,
+                b.num =
+                CASE
+                    WHEN b.num <> "SK31(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK31(" + db.pid + ")"
+                END,
+                b.loc =
+                CASE
+                    WHEN b.loc <> "SK32(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK32(" + db.pid + ")"
+                END,
+                b.class =
+                CASE
+                    WHEN b.class <> "SK33(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK33(" + db.pid + ")"
+                END,
+                b.note =
+                CASE
+                    WHEN b.note <> "SK34(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK34(" + db.pid + ")"
+                END,
+                b.annote =
+                CASE
+                    WHEN b.annote <> "SK35(" + db.pid + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK35(" + db.pid + ")"
+                END
+        MERGE (b)-[:BOOK_PUBLISHED {
+            _id: "(BOOK_PUBLISHED:" + elementId(b) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
+        # rule#9 using our framework
+        rule9 = TransformationRule("""
+        MATCH (t:PhDThesis)
+        MERGE (au:Author {
+            _id: "(" + t.author + ")"
+        })
+        ON CREATE
+            SET au.name = t.author
+        ON MATCH
+            SET au.name =
+                CASE
+                    WHEN au.name <> t.author
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.author
+                END
+        MERGE (m:Misc {
+            _id: "(" + elementId(t) + ")"
+        })
+        ON CREATE
+            SET m.miscid = "SK36(" + t.author + "," + t.title + ")",
+                m.title = t.title,
+                m.howpub = "SK37(" + t.author + "," + t.title + ")",
+                m.confloc = "SK38(" + t.author + "," + t.title + ")",
+                m.year = t.year,
+                m.month = t.month,
+                m.pages = "SK39(" + t.author + "," + t.title + ")",
+                m.vol = "SK40(" + t.author + "," + t.title + ")",
+                m.num = t.number,
+                m.loc = "SK41(" + t.author + "," + t.title + ")",
+                m.class = "SK42(" + t.author + "," + t.title + ")",
+                m.note = "SK43(" + t.author + "," + t.title + ")",
+                m.annote = t.school
+        ON MATCH
+            SET m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK36(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK36(" + t.author + "," + t.title + ")"
+                END,
+                m.title =
+                CASE
+                    WHEN m.title <> t.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.title
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK37(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK37(" + t.author + "," + t.title + ")"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK38(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK38(" + t.author + "," + t.title + ")"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> t.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.year
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> t.month
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.month
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK39(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK39(" + t.author + "," + t.title + ")"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK40(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK40(" + t.author + "," + t.title + ")"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> t.number
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.number
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK41(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK41(" + t.author + "," + t.title + ")"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK42(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK42(" + t.author + "," + t.title + ")"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK43(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK43(" + t.author + "," + t.title + ")"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> t.school
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.school
+                END
+        MERGE (m)-[:MISC_PUBLISHED {
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
+        # rule#10 using our framework
+        rule10 = TransformationRule("""
+        MATCH (t:MasterThesis)
+        MERGE (au:Author {
+            _id: "(" + t.author + ")"
+        })
+        ON CREATE
+            SET au.name = t.author
+        ON MATCH
+            SET au.name =
+                CASE
+                    WHEN au.name <> t.author
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.author
+                END
+        MERGE (m:Misc {
+            _id: "(" + elementId(t) + ")"
+        })
+        ON CREATE
+            SET m.miscid = "SK44(" + t.author + "," + t.title + ")",
+                m.title = t.title,
+                m.howpub = "SK45(" + t.author + "," + t.title + ")",
+                m.confloc = "SK46(" + t.author + "," + t.title + ")",
+                m.year = t.year,
+                m.month = "SK47(" + t.author + "," + t.title + ")",
+                m.pages = "SK48(" + t.author + "," + t.title + ")",
+                m.vol = "SK49(" + t.author + "," + t.title + ")",
+                m.num = "SK50(" + t.author + "," + t.title + ")",
+                m.loc = "SK51(" + t.author + "," + t.title + ")",
+                m.class = "SK52(" + t.author + "," + t.title + ")",
+                m.note = "SK53(" + t.author + "," + t.title + ")",
+                m.annote = t.school
+        ON MATCH
+            SET m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK44(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK44(" + t.author + "," + t.title + ")"
+                END,
+                m.title =
+                CASE
+                    WHEN m.title <> t.title
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.title
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK45(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK45(" + t.author + "," + t.title + ")"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK46(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK46(" + t.author + "," + t.title + ")"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> t.year
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.year
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> "SK47(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK47(" + t.author + "," + t.title + ")"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK48(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK48(" + t.author + "," + t.title + ")"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK49(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK49(" + t.author + "," + t.title + ")"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> "SK50(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK50(" + t.author + "," + t.title + ")"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK51(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK51(" + t.author + "," + t.title + ")"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK52(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK52(" + t.author + "," + t.title + ")"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK53(" + t.author + "," + t.title + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK53(" + t.author + "," + t.title + ")"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> t.school
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.school
+                END
+        MERGE (m)-[:MISC_PUBLISHED {
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(au) + ")"
+        }]-(au)
+        """)
+
+        # transformation rules
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10]
