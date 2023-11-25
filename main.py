@@ -22,10 +22,10 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
-    # temporary testing playground for CD over A1TA3
-    #from scenarios.a1ta3 import *
-    #scenario = Amalgam1ToAmalgam3CDoverPlain(prefix, size=100)
-    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    # temporary testing playground for CD over DTA1
+    from scenarios.dta1 import *
+    scenario = DBLPToAmalgam1CDoverPlain(prefix, size=100)
+    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
