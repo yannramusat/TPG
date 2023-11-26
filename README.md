@@ -34,7 +34,7 @@ This software is configured to connect to `localhost` with the default port and 
     ├── figures                 # Source code for figure generation
     ├── input-ibench-config     # Configuration files for iBench
     ├── output-ibench-data      # CSV data
-    ├── scenarios               # Cypher scripts per scenarios
+    ├── scenarios               # Cypher scripts implementing the transformations
     └── ...
 
 ## Installation & Run experiments
@@ -56,12 +56,12 @@ deactivate
 
 ## Specs
 
-We are running the experiments on the following system: 
+We ran the experiments on the following system: 
 * HP EliteBook 840 G3 (L3C67AV)
 * Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz
 * 32GiB system memory (2133 MHz)
 
-And we are using the following toolchain:
+And used the following toolchain:
 * java-openJDK-17
 * Neo4j Community Edition 5.9.0
 * Neo4j Python Driver 5.9.0
