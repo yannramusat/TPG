@@ -6,8 +6,9 @@
 
 ### iBench
 
-We made iBench an optional dependency by providing the input data for each scenario under `output-ibench-data`.
-You can install **iBench** from our [fork](https://github.com/nodejs/node](https://github.com/yannramusat/ibench). (We patched the build process.)
+We made iBench an optional dependency by providing the input data for each scenario under the folder `output-ibench-data`.
+
+You can install iBench from our [fork](https://github.com/yannramusat/ibench). (We patched the build process.)
 
 ### Neo4j Installation & Configuration
 
@@ -28,7 +29,17 @@ Start the server by typing: `sudo /opt/neo4j/bin/neo4j start`.\
 
 This software is configured to connect to `localhost` with the default port and with no authentication.
 
+## Folder Structure
+    .
+    ├── figures                 # Source code for figure generation
+    ├── input-ibench-config     # Configuration files for iBench
+    ├── output-ibench-data      # CSV data
+    ├── scenarios               # Cypher scripts per scenarios
+    └── ...
+
 ## Installation & Run experiments
+
+First, uncomment from `main.py` the figure(s) that you want to generate.
 
 ### Using venv
 
@@ -55,13 +66,7 @@ And we are using the following toolchain:
 * Neo4j Community Edition 5.9.0
 * Neo4j Python Driver 5.9.0
 
-## Folder Structure
-    .
-    ├── figures                 # Source code for figure generation
-    ├── input-ibench-config     # Configuration files for iBench
-    ├── output-ibench-data      # CSV data
-    ├── scenarios               # Cypher scripts per scenarios
-    └── ...
+
 
 
 
