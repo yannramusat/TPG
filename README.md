@@ -1,14 +1,14 @@
 # Transforming Property Graphs
 
-Declarative transformation of property graphs.
+Declarative property graph transformations.
 
 ## Prerequisites
 
 ### iBench
 
-We made iBench an optional dependency by providing the input data for each scenario under the folder `output-ibench-data`.
+We made iBench an optional dependency by providing input data for each scenario in the folder `output-ibench-data`.
 
-You can install iBench from our [fork](https://github.com/yannramusat/ibench). (We patched the build process.)
+You can install iBench from our [fork](https://github.com/yannramusat/ibench). (We patched the build process of the official [repository](https://github.com/RJMillerLab/ibench).)
 
 ### Neo4j Installation & Configuration
 
