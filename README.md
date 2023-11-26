@@ -1,6 +1,6 @@
 # Transforming Property Graphs
 
-## About project
+Declarative transformation of property graphs.
 
 ## Prerequisites
 
