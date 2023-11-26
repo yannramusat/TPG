@@ -1,4 +1,4 @@
-# vPGt
+# Transforming Property Graphs
 
 ## About project
 
@@ -51,6 +51,14 @@ And we are using the following toolchain:
 * java-openJDK-17
 * Neo4j Community Edition 5.9.0
 * Neo4j Python Driver 5.9.0
+
+## Project's structure
+    .
+    ├── figures                 # Source code for figure generation
+    ├── input-ibench-config     # Configuration files for iBench
+    ├── output-ibench-data      # CSV data
+    ├── scenarios               # Scripts for the transformations
+    └── ...
 
 
 
