@@ -6,6 +6,9 @@
 
 ### iBench
 
+We made iBench an optional dependency by providing the input data for each scenario under `output-ibench-data`.
+You can install **iBench** from our [fork](https://github.com/nodejs/node](https://github.com/yannramusat/ibench). (We patched the build process.)
+
 ### Neo4j Installation & Configuration
 
 We are connecting to a local Neo4j Community Edition instance to perform the experiments. 
@@ -52,12 +55,12 @@ And we are using the following toolchain:
 * Neo4j Community Edition 5.9.0
 * Neo4j Python Driver 5.9.0
 
-## Project's structure
+## Folder Structure
     .
     ├── figures                 # Source code for figure generation
     ├── input-ibench-config     # Configuration files for iBench
     ├── output-ibench-data      # CSV data
-    ├── scenarios               # Scripts for the transformations
+    ├── scenarios               # Cypher scripts per scenarios
     └── ...
 
 
