@@ -18,6 +18,7 @@ if __name__ == "__main__":
     showStats = True
     nodeIndexes = True
     relIndexes = True
+    w = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000]
     x = [100, 200, 500, 1_000]#, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000]
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     z = [100, 200, 500, 1_000, 2_000, 5_000]
@@ -38,6 +39,7 @@ if __name__ == "__main__":
     from figures.persondata import *
     from figures.dta1 import *
     from figures.a1ta3 import *
+    from figures.overheadCD import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -62,7 +64,7 @@ if __name__ == "__main__":
         #FigureComparisonIndexesPersonData(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
-        FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
@@ -71,6 +73,8 @@ if __name__ == "__main__":
         #FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonBaselinePersonAddress(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonBaselinePersonData(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
+
+        FigureOverheadCD(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats), 
     ]
     
     # compute results    
