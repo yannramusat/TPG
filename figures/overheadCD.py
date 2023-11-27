@@ -91,7 +91,9 @@ class FigureOverheadCD(Figure):
         ax.set_title("Incurred overhead of Conflict Detection")
         ax.set_xlabel("number of rows per input relation")
         ax.set_ylabel("ratio {CD/PI} / {PI}")
-        ax.legend(loc="best")
+        ax.legend(loc="best", fontsize="10")
+        
+        plt.savefig("outfigs/FigureOverheadCD.png")
 
     def print_cmd(self):
         print("## Figure for computing the overhead of performing conflict detection")
