@@ -149,8 +149,10 @@ class DBLPToAmalgam1(Scenario):
         """
         app.dropIndex(dropBookPublished, stats)
 
-    def run(self, app, launches = 5, stats=False, nodeIndex=True, relIndex=True, shuffle=False):
+    def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=True, shuffle=False, minmax=False):
         ttime = 0.0
+        min_rtime = float("inf")
+        max_rtime = 0
         for i in range(launches):
             self.prepare(app, stats=stats)
             # shuffle rules in place; if requested
@@ -163,7 +165,14 @@ class DBLPToAmalgam1(Scenario):
                 self.addNodeIndexes(app, stats=stats)
             if(relIndex):
                 self.addRelIndexes(app, stats=stats)
-            ttime += self.transform(app, stats=stats)
+            # statistics about runtime
+            rtime = self.transform(app, stats=stats)
+            ttime += rtime
+            if(rtime < min_rtime):
+                min_rtime = rtime
+            if(rtime > max_rtime):
+                max_rtime = rtime
+            # resume to classic run procedure
             if(nodeIndex):
                 self.delNodeIndexes(app, stats=stats)
             if(relIndex):
@@ -171,7 +180,10 @@ class DBLPToAmalgam1(Scenario):
         avg_time = ttime / launches
         if(stats):
             print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
-        return avg_time 
+        if(minmax):
+            return (min_rtime, avg_time, max_rtime)
+        else:
+            return avg_time
 
 class DBLPToAmalgam1Plain(DBLPToAmalgam1):
     def __init__(self, prefix, size = 100, lstring = 5):
