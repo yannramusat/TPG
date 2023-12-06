@@ -44,8 +44,8 @@ First, uncomment from `main.py` the figure(s) that you want to generate.
 ### Using venv
 
 ```
-git clone git@github.com:yannramusat/vPGt.git
-cd vPGt
+git clone git@github.com:yannramusat/TPG.git
+cd TPG
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
