@@ -137,6 +137,33 @@ class GUSToBIOSQLPlain(GUSToBIOSQL):
         # input schema
         super().__init__(prefix, size, lstring)
 
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (gtn:GUSTaxonName)
+        MATCH (gt:GUSTaxon)
+        WHERE gtn.taxonID = gt.taxonID
+        MERGE(x:_dummy {
+            _id: "(" + gtn.taxonID + ")"
+        })
+        SET x:BIOSQLTaxonName,
+            x.name = gtn.name,
+            x.nameClass = gtn.nameClass
+        MERGE (y:_dummy { 
+            _id: "(" + elementId(gt) + ")" 
+        })
+        SET y:BIOSQLTaxon,
+            y.taxonID = gt.taxonID,
+            y.ncbiTaxonID = gt.ncbiTaxonID,
+            y.parentTaxonID = gt.parentTaxonID,
+            y.nodeRank = gt.rank,
+            y.geneticCode = gt.geneticCodeID,
+            y.mitoGeneticCode = gt.mitochondialGeneticCodeID,
+            y.leftValue = "SK1(" + gt.taxonID + ")",
+            y.rightValue = "SK2(" + gt.taxonID + ")" 
+        MERGE (x)-[:TAXON_HAS_NAME {
+            _id: "(TAXON_HAS_NAME:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
         # rule#2 using our framework
         rule2 = TransformationRule("""
         MATCH (gt:GUSTaxon)
@@ -153,9 +180,66 @@ class GUSToBIOSQLPlain(GUSToBIOSQL):
             x.leftValue = "SK1(" + gt.taxonID + ")",
             x.rightValue = "SK2(" + gt.taxonID + ")" 
         """)
+        # rule#3 using our framework
+        rule3 = TransformationRule("""
+        MATCH (gg:GUSGene)
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(gg) + ")" 
+        })
+        SET x:BIOSQLBioEntry,
+            x.bioEntryID = gg.geneID,
+            x.bioDatabaseEntry = "SK3(" + gg.geneSymbol + ")",
+            x.taxonID = "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")", 
+            x.name = gg.name,
+            x.accession = gg.geneSymbol,
+            x.identifier = gg.sequenceOntologyID,
+            x.division = gg.geneCategoryID,
+            x.description = gg.description,
+            x.version = "SK5(" + gg.geneID + "," + gg.reviewStatusID + ")" 
+        MERGE (y:_dummy { 
+            _id: "(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" 
+        })
+        SET y:BIOSQLTaxon,
+            y.taxonID = "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")", 
+            y.ncbiTaxonID = "SK6(" + gg.geneID + ")",
+            y.parentTaxonID = "SK7(" + gg.geneID + ")",
+            y.nodeRank = "SK8(" + gg.geneID + ")",
+            y.geneticCode = "SK9(" + gg.geneID + ")",
+            y.mitoGeneticCode = "SK10(" + gg.geneID + ")",
+            y.leftValue = "SK11(" + gg.geneID + ")",
+            y.rightValue ="SK12(" + gg.geneID + ")"
+        MERGE (x)-[:HAS_TAXON {
+            _id: "(HAS_TAXON:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule("""
+        MATCH (ggs:GUSGeneSynonym)
+        MATCH (gg:GUSGene)
+        WHERE ggs.geneID = gg.geneID
+        MERGE (x:_dummy {
+            _id: "(" + ggs.geneSynonymID  + ")"
+        })
+        SET x:BIOSQLTermSynonym,
+            x.synonym = ggs.geneSynonymID,
+            x.termID = ggs.geneID
+        MERGE (y:_dummy {
+            _id: "(" + elementID(gg) + ")"
+        })
+        SET y:BIOSQLTerm,
+            y.termID = gg.geneID,
+            y.name = gg.name,
+            y.definition = gg.description,
+            y.identifier = "SK13(" + gg.geneID + ")",
+            y.isObsolete = ggs.isObsolete,
+            y.ontologyID = "SK15(" + gg.sequenceOntologyID + ")"
+        MERGE (x)-[:HAS_SYNONYM {
+            _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
 
         # transformation rules
-        self.rules = [rule2]
+        self.rules = [rule1, rule2, rule3, rule4]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
