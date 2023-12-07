@@ -23,10 +23,10 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
-    # temporary testing playground for CD over DTA1
-    #from scenarios.dta1 import *
-    #scenario = DBLPToAmalgam1CDoverSI(prefix, size=100)
-    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    # temporary testing playground for GTB
+    from scenarios.gtb import *
+    scenario = GUSToBIOSQLPlain(prefix, size=100)
+    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -65,10 +65,10 @@ if __name__ == "__main__":
         #FigureLongRunPersonData(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureComparisonIndexesDTA1(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
-        FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
+        #FigureComparisonAlternativeApproachesDTA1(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
 
         #FigureComparisonIndexesA1TA3(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
-        FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
+        #FigureComparisonAlternativeApproachesA1TA3(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
 
         #FigureComparisonBaselineFlightHotel(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonBaselinePersonAddress(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
