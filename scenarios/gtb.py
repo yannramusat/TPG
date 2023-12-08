@@ -96,6 +96,58 @@ class GUSToBIOSQL(Scenario):
             rel_gustaxonname
         ])
 
+    def addRelIndexes(self, app, stats=False):
+        # index on taxonHasName
+        indexTaxonHasName = """
+        CREATE INDEX idx_taxonHasName IF NOT EXISTS
+        FOR ()-[r:TAXON_HAS_NAME]-()
+        ON (r._id)
+        """
+        app.addIndex(indexTaxonHasName, stats)
+        # index on hasTaxon
+        indexHasTaxon = """
+        CREATE INDEX idx_hasTaxon IF NOT EXISTS
+        FOR ()-[r:HAS_TAXON]-()
+        ON (r._id)
+        """
+        app.addIndex(indexHasTaxon, stats)
+        # index on hasSynonym
+        indexHasSynonym = """
+        CREATE INDEX idx_hasSynonym IF NOT EXISTS
+        FOR ()-[r:HAS_SYNONYM]-()
+        ON (r._id)
+        """
+        app.addIndex(indexHasSynonym, stats)
+        # index on termRelationship
+        indexTermRelationship = """
+        CREATE INDEX idx_termRelationship IF NOT EXISTS
+        FOR ()-[r:TERM_RELATIONSHIP]-()
+        ON (r._id)
+        """
+        app.addIndex(indexTermRelationship, stats)
+    
+    def delRelIndexes(self, app, stats=False):
+        # drop index on taxonHasName
+        dropTaxonHasName = """
+        DROP INDEX idx_taxonHasName IF EXISTS
+        """
+        app.dropIndex(dropTaxonHasName, stats)
+        # drop index on hasTaxon
+        dropHasTaxon = """
+        DROP INDEX idx_hasTaxon IF EXISTS
+        """
+        app.dropIndex(dropHasTaxon, stats)
+        # drop index on hasSynonym
+        dropHasSynonym = """
+        DROP INDEX idx_hasSynonym IF EXISTS
+        """
+        app.dropIndex(dropHasSynonym, stats)
+        # drop index on termRelationship
+        dropTermRelationship = """
+        DROP INDEX idx_termRelationship IF EXISTS
+        """
+        app.dropIndex(dropTermRelationship, stats)
+
     def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=True, shuffle=False, minmax=False):
         ttime = 0.0
         min_rtime = float("inf")
@@ -218,7 +270,7 @@ class GUSToBIOSQLPlain(GUSToBIOSQL):
         MATCH (gg:GUSGene)
         WHERE ggs.geneID = gg.geneID
         MERGE (x:_dummy {
-            _id: "(" + ggs.geneSynonymID  + ")"
+            _id: "(" + elementID(ggs)  + ")"
         })
         SET x:BIOSQLTermSynonym,
             x.synonym = ggs.geneSynonymID,
@@ -237,9 +289,96 @@ class GUSToBIOSQLPlain(GUSToBIOSQL):
             _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
         }]-(y)
         """)
+        # rule#5 using our framework
+        rule5 = TransformationRule("""
+        MATCH (ggt:GUSGoTerm) 
+        MATCH (x:_dummy {
+            _id: elementID(ggt) 
+        })
+        SET x:BIOSQLTerm,
+            x.termID = ggt.goTermID,
+            x.name = ggt.name,
+            x.definition = ggt.definition,
+            x.identifier = ggt.goID,
+            x.isObsolete = ggt.isObsolete,
+            x.ontologyID = "SK15(" + ggt.goTermID + ")"
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule("""
+        MATCH (ggs:GUSGoSynonym)
+        MATCH (ggt:GUSGoTerm)
+        WHERE ggs.goTermID = ggt.goTermID
+        MERGE (x:_dummy {
+            _id: "(" + elementID(ggs)  + ")"
+        })
+        SET x:BIOSQLTermSynonym,
+            x.synonym = ggs.goSynonymID,
+            x.termID = ggs.goTermID
+        MERGE (y:_dummy {
+            _id: "(" + elementID(ggt) + ")"
+        })
+        SET y:BIOSQLTerm,
+            y.termID = ggt.goTermID,
+            y.name = ggt.name,
+            y.definition = ggt.definition,
+            y.identifier = ggt.goID,
+            y.isObsolete = ggt.isObsolete,
+            y.ontologyID = "SK15(" + ggt.goTermID + ")"
+        MERGE (x)-[:HAS_SYNONYM {
+            _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule("""
+        MATCH (ggr:GUSGoRelationship)
+        MATCH (ggt1:GUSGoTerm)
+        MATCH (ggt2:GUSGoTerm)
+        MERGE (x:_dummy {
+            _id: "(" + elementID(ggt1) + ")"
+        })
+        SET x:BIOSQLTerm,
+            x.termID = ggt1.goTermID,
+            x.name = ggt1.name,
+            x.definition = ggt1.definition,
+            x.identifier = ggt1.goID,
+            x.isObsolete = ggt1.isObsolete,
+            x.ontologyID = "SK21(" + ggt1.goTermID + ")"
+        MERGE (y:_dummy {
+            _id: "(" + elementID(ggt2) + ")"
+        })
+        SET y:BIOSQLTerm,
+            y.termID = ggt2.goTermID,
+            y.name = ggt2.name,
+            y.definition = ggt2.definition,
+            y.identifier = ggt2.goID,
+            y.isObsolete = ggt2.isObsolete,
+            y.ontologyID = "SK22(" + ggt2.goTermID + ")"
+        MERGE (x)-[z:TERM_RELATIONSHIP {
+            _id: "(TERM_RELATIONSHIP:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        SET z.termRelationshipID = ggr.goRelationshipID,
+            z.subjectTermID = ggr.parentTermID,
+            z.predicateTermID = ggr.goRelationshipTypeID,
+            z.objectTermID = ggr.childTermID,
+            z.ontologyID = "SK20(" + ggr.goRelationshipID + ")" 
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule("""
+        MATCH (gg:GUSGene)
+        MATCH (x:_dummy {
+            _id: elementID(gg) 
+        })
+        SET x:BIOSQLTerm,
+            x.termID = gg.geneID,
+            x.name = gg.name,
+            x.definition = gg.description,
+            x.identifier = "SK13(" + gg.geneID + ")", 
+            x.isObsolete = "SK18(" + gg.geneID + "," + gg.reviewStatusID + ")",
+            x.ontologyID = "SK14(" + gg.sequenceOntologyID + ")"
+        """)
 
         # transformation rules
-        self.rules = [rule1, rule2, rule3, rule4]
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
 
     def addNodeIndexes(self, app, stats=False):
         # index on _dummy
