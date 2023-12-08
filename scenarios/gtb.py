@@ -650,3 +650,336 @@ class GUSToBIOSQLSeparateIndexes(GUSToBIOSQL):
         DROP INDEX idx_BIOSQLTerm IF EXISTS
         """
         app.dropIndex(dropBIOSQLTerm, stats)
+
+class GUSToBIOSQLCDoverPlain(GUSToBIOSQLPlain):
+    def __init__(self, prefix, size = 100, lstring = 5):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule("""
+        MATCH (gtn:GUSTaxonName)
+        MATCH (gt:GUSTaxon)
+        WHERE gtn.taxonID = gt.taxonID
+        MERGE(x:_dummy {
+            _id: "(" + gtn.taxonID + ")"
+        })
+        ON CREATE
+            SET x:BIOSQLTaxonName,
+                x.name = gtn.name,
+                x.nameClass = gtn.nameClass
+        ON MATCH
+            SET x:BIOSQLTaxonName,
+                x.name =
+                CASE
+                    WHEN x.name <> gtn.name
+                        THEN "Conflict detected!"
+                    ELSE
+                        gtn.name
+                END,
+                x.nameClass =
+                CASE
+                    WHEN x.nameClass <> gtn.nameClass
+                        THEN "Conflict detected!"
+                    ELSE
+                        gtn.nameClass
+                END
+        MERGE (y:_dummy { 
+            _id: "(" + elementId(gt) + ")" 
+        })
+        ON CREATE
+            SET y:BIOSQLTaxon,
+                y.taxonID = gt.taxonID,
+                y.ncbiTaxonID = gt.ncbiTaxonID,
+                y.parentTaxonID = gt.parentTaxonID,
+                y.nodeRank = gt.rank,
+                y.geneticCode = gt.geneticCodeID,
+                y.mitoGeneticCode = gt.mitochondialGeneticCodeID,
+                y.leftValue = "SK1(" + gt.taxonID + ")",
+                y.rightValue = "SK2(" + gt.taxonID + ")" 
+        ON MATCH
+            SET y:BIOSQLTaxon,
+                y.taxonID =
+                CASE
+                    WHEN y.taxonID <> gt.taxonID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.taxonID
+                END,
+                y.ncbiTaxonID =
+                CASE
+                    WHEN y.ncbiTaxonID <> gt.ncbiTaxonID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.ncbiTaxonID
+                END,
+                y.parentTaxonID =
+                CASE
+                    WHEN y.parentTaxonID <> gt.parentTaxonID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.parentTaxonID
+                END,
+                y.nodeRank =
+                CASE
+                    WHEN y.nodeRank <> gt.rank
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.rank
+                END,
+                y.geneticCode =
+                CASE
+                    WHEN y.geneticCode <> gt.geneticCodeID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.geneticCodeID
+                END,
+                y.mitoGeneticCode =
+                CASE
+                    WHEN y.mitoGeneticCode <> gt.mitochondrialGeneticCode
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.mitochondrialGeneticCode
+                END,
+                y.leftValue =
+                CASE
+                    WHEN y.leftValue <> "SK1(" + gt.taxonID + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + gt.taxonID + ")"
+                END,
+                y.rightValue =
+                CASE
+                    WHEN y.rightValue <> "SK2(" + gt.taxonID + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + gt.taxonID + ")"
+                END
+        MERGE (x)-[:TAXON_HAS_NAME {
+            _id: "(TAXON_HAS_NAME:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule("""
+        MATCH (gt:GUSTaxon)
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(gt) + ")" 
+        })
+        ON CREATE
+            SET x:BIOSQLTaxon,
+                x.taxonID = gt.taxonID,
+                x.ncbiTaxonID = gt.ncbiTaxonID,
+                x.parentTaxonID = gt.parentTaxonID,
+                x.nodeRank = gt.rank,
+                x.geneticCode = gt.geneticCodeID,
+                x.mitoGeneticCode = gt.mitochondialGeneticCodeID,
+                x.leftValue = "SK1(" + gt.taxonID + ")",
+                x.rightValue = "SK2(" + gt.taxonID + ")" 
+        ON MATCH
+            SET x:BIOSQLTaxon,
+                x.taxonID =
+                CASE
+                    WHEN x.taxonID <> gt.taxonID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.taxonID
+                END,
+                x.ncbiTaxonID =
+                CASE
+                    WHEN x.ncbiTaxonID <> gt.ncbiTaxonID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.ncbiTaxonID
+                END,
+                x.parentTaxonID =
+                CASE
+                    WHEN x.parentTaxonID <> gt.parentTaxonID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.parentTaxonID
+                END,
+                x.nodeRank =
+                CASE
+                    WHEN x.nodeRank <> gt.rank
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.rank
+                END,
+                x.geneticCode =
+                CASE
+                    WHEN x.geneticCode <> gt.geneticCodeID
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.geneticCodeID
+                END,
+                x.mitoGeneticCode =
+                CASE
+                    WHEN x.mitoGeneticCode <> gt.mitochondrialGeneticCode
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.mitochondrialGeneticCode
+                END,
+                x.leftValue =
+                CASE
+                    WHEN x.leftValue <> "SK1(" + gt.taxonID + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + gt.taxonID + ")"
+                END,
+                x.rightValue =
+                CASE
+                    WHEN x.rightValue <> "SK2(" + gt.taxonID + ")"
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + gt.taxonID + ")"
+                END
+        """)
+        # rule#3 using our framework
+        rule3 = TransformationRule("""
+        MATCH (gg:GUSGene)
+        MERGE (x:_dummy { 
+            _id: "(" + elementId(gg) + ")" 
+        })
+        SET x:BIOSQLBioEntry,
+            x.bioEntryID = gg.geneID,
+            x.bioDatabaseEntry = "SK3(" + gg.geneSymbol + ")",
+            x.taxonID = "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")", 
+            x.name = gg.name,
+            x.accession = gg.geneSymbol,
+            x.identifier = gg.sequenceOntologyID,
+            x.division = gg.geneCategoryID,
+            x.description = gg.description,
+            x.version = "SK5(" + gg.geneID + "," + gg.reviewStatusID + ")" 
+        MERGE (y:_dummy { 
+            _id: "(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" 
+        })
+        SET y:BIOSQLTaxon,
+            y.taxonID = "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")", 
+            y.ncbiTaxonID = "SK6(" + gg.geneID + ")",
+            y.parentTaxonID = "SK7(" + gg.geneID + ")",
+            y.nodeRank = "SK8(" + gg.geneID + ")",
+            y.geneticCode = "SK9(" + gg.geneID + ")",
+            y.mitoGeneticCode = "SK10(" + gg.geneID + ")",
+            y.leftValue = "SK11(" + gg.geneID + ")",
+            y.rightValue ="SK12(" + gg.geneID + ")"
+        MERGE (x)-[:HAS_TAXON {
+            _id: "(HAS_TAXON:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule("""
+        MATCH (ggs:GUSGeneSynonym)
+        MATCH (gg:GUSGene)
+        WHERE ggs.geneID = gg.geneID
+        MERGE (x:_dummy {
+            _id: "(" + elementID(ggs)  + ")"
+        })
+        SET x:BIOSQLTermSynonym,
+            x.synonym = ggs.geneSynonymID,
+            x.termID = ggs.geneID
+        MERGE (y:_dummy {
+            _id: "(" + elementID(gg) + ")"
+        })
+        SET y:BIOSQLTerm,
+            y.termID = gg.geneID,
+            y.name = gg.name,
+            y.definition = gg.description,
+            y.identifier = "SK13(" + gg.geneID + ")",
+            y.isObsolete = ggs.isObsolete,
+            y.ontologyID = "SK15(" + gg.sequenceOntologyID + ")"
+        MERGE (x)-[:HAS_SYNONYM {
+            _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#5 using our framework
+        rule5 = TransformationRule("""
+        MATCH (ggt:GUSGoTerm) 
+        MATCH (x:_dummy {
+            _id: "(" + elementID(ggt) + ")"
+        })
+        SET x:BIOSQLTerm,
+            x.termID = ggt.goTermID,
+            x.name = ggt.name,
+            x.definition = ggt.definition,
+            x.identifier = ggt.goID,
+            x.isObsolete = ggt.isObsolete,
+            x.ontologyID = "SK15(" + ggt.goTermID + ")"
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule("""
+        MATCH (ggs:GUSGoSynonym)
+        MATCH (ggt:GUSGoTerm)
+        WHERE ggs.goTermID = ggt.goTermID
+        MERGE (x:_dummy {
+            _id: "(" + elementID(ggs)  + ")"
+        })
+        SET x:BIOSQLTermSynonym,
+            x.synonym = ggs.goSynonymID,
+            x.termID = ggs.goTermID
+        MERGE (y:_dummy {
+            _id: "(" + elementID(ggt) + ")"
+        })
+        SET y:BIOSQLTerm,
+            y.termID = ggt.goTermID,
+            y.name = ggt.name,
+            y.definition = ggt.definition,
+            y.identifier = ggt.goID,
+            y.isObsolete = ggt.isObsolete,
+            y.ontologyID = "SK15(" + ggt.goTermID + ")"
+        MERGE (x)-[:HAS_SYNONYM {
+            _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule("""
+        MATCH (ggr:GUSGoRelationship)
+        MATCH (ggt1:GUSGoTerm)
+        MATCH (ggt2:GUSGoTerm)
+        MERGE (x:_dummy {
+            _id: "(" + elementID(ggt1) + ")"
+        })
+        SET x:BIOSQLTerm,
+            x.termID = ggt1.goTermID,
+            x.name = ggt1.name,
+            x.definition = ggt1.definition,
+            x.identifier = ggt1.goID,
+            x.isObsolete = ggt1.isObsolete,
+            x.ontologyID = "SK21(" + ggt1.goTermID + ")"
+        MERGE (y:_dummy {
+            _id: "(" + elementID(ggt2) + ")"
+        })
+        SET y:BIOSQLTerm,
+            y.termID = ggt2.goTermID,
+            y.name = ggt2.name,
+            y.definition = ggt2.definition,
+            y.identifier = ggt2.goID,
+            y.isObsolete = ggt2.isObsolete,
+            y.ontologyID = "SK22(" + ggt2.goTermID + ")"
+        MERGE (x)-[z:TERM_RELATIONSHIP {
+            _id: "(TERM_RELATIONSHIP:" + elementId(x) + "," + elementId(y) + ")"
+        }]-(y)
+        SET z.termRelationshipID = ggr.goRelationshipID,
+            z.subjectTermID = ggr.parentTermID,
+            z.predicateTermID = ggr.goRelationshipTypeID,
+            z.objectTermID = ggr.childTermID,
+            z.ontologyID = "SK20(" + ggr.goRelationshipID + ")" 
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule("""
+        MATCH (gg:GUSGene)
+        MATCH (x:_dummy {
+            _id: "(" + elementID(gg) + ")"
+        })
+        SET x:BIOSQLTerm,
+            x.termID = gg.geneID,
+            x.name = gg.name,
+            x.definition = gg.description,
+            x.identifier = "SK13(" + gg.geneID + ")", 
+            x.isObsolete = "SK18(" + gg.geneID + "," + gg.reviewStatusID + ")",
+            x.ontologyID = "SK14(" + gg.sequenceOntologyID + ")"
+        """)
+
+        # transformation rules
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
+
+

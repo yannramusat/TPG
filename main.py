@@ -25,7 +25,7 @@ if __name__ == "__main__":
     
     # temporary testing playground for GTB
     #from scenarios.gtb import *
-    #scenario = GUSToBIOSQLSeparateIndexes(prefix, size=100)
+    #scenario = GUSToBIOSQLCDoverPlain(prefix, size=100)
     #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
