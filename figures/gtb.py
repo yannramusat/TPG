@@ -43,7 +43,7 @@ class FigureComparisonAlternativeApproachesGTB(Figure):
         Shuffled_err=np.row_stack((Shuffled_min_err, Shuffled_max_err))
 
         # Figure for comparing alternative implementations | GTB scenario
-        fig2, ax = plt.subplots(layout="constrained", figsize=(6,3))
+        fig2, ax = plt.subplots(layout="constrained", figsize=(4,3))
         trans1 = Affine2D().translate(-0.05, 0.0) + ax.transData
         trans2 = Affine2D().translate(+0.05, 0.0) + ax.transData
         #ax.plot(x, results_Plain, label="PI", marker="D", color="blue")
@@ -54,6 +54,8 @@ class FigureComparisonAlternativeApproachesGTB(Figure):
         ax.set_xlabel("number of nodes of each type")
         ax.set_ylabel("time (ms)")
         ax.set_yscale("log")
+        from matplotlib.ticker import NullFormatter
+        ax.yaxis.set_minor_formatter(NullFormatter())
         ax.legend(loc="best")
 
         plt.savefig("outfigs/FigureComparisonAlternativesGTB.png")
