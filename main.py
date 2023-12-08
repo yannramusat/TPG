@@ -24,9 +24,9 @@ if __name__ == "__main__":
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
     # temporary testing playground for GTB
-    from scenarios.gtb import *
-    scenario = GUSToBIOSQLSeparateIndexes(prefix, size=100)
-    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    #from scenarios.gtb import *
+    #scenario = GUSToBIOSQLSeparateIndexes(prefix, size=100)
+    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -40,6 +40,7 @@ if __name__ == "__main__":
     from figures.dta1 import *
     from figures.a1ta3 import *
     from figures.overheadCD import *
+    from figures.gtb import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -74,7 +75,9 @@ if __name__ == "__main__":
         #FigureComparisonBaselinePersonAddress(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonBaselinePersonData(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
 
-        #FigureOverheadCD(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats), 
+        #FigureOverheadCD(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
+
+        FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
     ]
     
     # compute results    
