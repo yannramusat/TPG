@@ -1448,7 +1448,7 @@ class GUSToBIOSQLCDoverPlain(GUSToBIOSQLPlain):
         # transformation rules
         self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
 
-class GUSToBIOSQLCDoverSI(GUSToBIOSQLseparateIndexes):
+class GUSToBIOSQLCDoverSI(GUSToBIOSQLSeparateIndexes):
     def __init__(self, prefix, size = 100, lstring = 5):
         # input schema
         super().__init__(prefix, size, lstring)
