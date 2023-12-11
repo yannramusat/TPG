@@ -24,9 +24,9 @@ if __name__ == "__main__":
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
     # temporary testing playground for GTB
-    #from scenarios.gtb import *
-    #scenario = GUSToBIOSQLCDoverPlain(prefix, size=100)
-    #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
+    from scenarios.gtb import *
+    scenario = GUSToBIOSQLCDoverPlain(prefix, size=100)
+    scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
         #FigureOverheadCD(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
 
-        FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
+        #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
     ]
     
     # compute results    
