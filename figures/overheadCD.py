@@ -107,3 +107,44 @@ class FigureOverheadCD(Figure):
         print(f"{self.results_dta1_CD_PI=}")
         print(f"{self.results_a1ta3_PI=}")
         print(f"{self.results_a1ta3_CD_PI=}")
+
+class FigureOverheadCDGTB(Figure):
+    def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True):
+        super().__init__(app, prefix, values, nbLaunches, showStats)
+        # results
+        self.results_gtb_PI = []
+        self.results_gtb_CD_PI = []
+
+    def compute(self):
+        # execute PI_NI for GUSToBIOSQL
+        from scenarios.gtb import GUSToBIOSQLPlain
+        for i in self.x:
+            scenario = GUSToBIOSQLPlain(self.prefix, size=i)
+            self.results_gtb_PI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+        # execute CD/PI_NI for GUSToBIOSQL
+        from scenarios.gtb import GUSToBIOSQLCDoverPlain
+        for i in self.x:
+            scenario = GUSToBIOSQLCDoverPlain(self.prefix, size=i)
+            self.results_gtb_CD_PI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
+
+    def plot(self):
+        # plot results using matplotlib
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        ratioGTB = [a/b for a,b in zip(self.results_gtb_CD_PI, self.results_gtb_PI)]
+
+        # Figure for computing the overhead of performing conflict detection
+        fig2, ax = plt.subplots(layout="constrained", figsize=(6,5))
+        ax.plot(self.x, ratioGTB, label="GUSToBIOSQL", marker="P")
+        ax.set_title("Incurred overhead of Conflict Detection")
+        ax.set_xlabel("number of rows per input relation")
+        ax.set_ylabel("ratio {CD/PI} / {PI}")
+        ax.legend(loc="best", fontsize="10")
+        
+        plt.savefig("outfigs/FigureOverheadCDGTB.png")
+
+    def print_cmd(self):
+        print("## Figure for computing the overhead of performing conflict detection")
+        print(f"{self.results_gtb_PI=}")
+        print(f"{self.results_gtb_CD_PI=}")
