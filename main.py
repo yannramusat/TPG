@@ -76,10 +76,10 @@ if __name__ == "__main__":
         #FigureComparisonBaselinePersonData(app, prefix=prefix, values=z, nbLaunches=nbLaunches, showStats=showStats),
 
         #FigureOverheadCD(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
-
+        #FigureOverheadCDGTB(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
+        
+        FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
-
-        FigureOverheadCDGTB(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
     ]
     
     # compute results    
