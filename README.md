@@ -39,7 +39,7 @@ This software is configured to connect to `localhost` with the default port and 
     ├── input-ibench-config      # Configuration files for iBench
     ├── output-ibench-data       # Input data (CSV format)
     ├── scenarios                # Cypher scripts implementing the transformations
-    ├── TPG_Appendix.pdf         # The appendix file
+    ├── TPG_Appendix.pdf         # The file containing the Appendix
     └── ...
 
 ## Installation & Run experiments
