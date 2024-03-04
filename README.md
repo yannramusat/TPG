@@ -2,6 +2,10 @@
 
 Declarative property graph transformations.
 
+## Introduction
+1. This repository contains the Appendix of our paper. 
+2. This repository contains the datasets and the source code for our experiments.
+
 ## Prerequisites
 
 ### iBench
@@ -31,10 +35,11 @@ This software is configured to connect to `localhost` with the default port and 
 
 ## Folder Structure
     .
-    ├── figures                 # Source code for figure generation
-    ├── input-ibench-config     # Configuration files for iBench
-    ├── output-ibench-data      # CSV data
-    ├── scenarios               # Cypher scripts implementing the transformations
+    ├── figures                  # Source code for figure generation
+    ├── input-ibench-config      # Configuration files for iBench
+    ├── output-ibench-data       # Input data (CSV format)
+    ├── scenarios                # Cypher scripts implementing the transformations
+    ├── Appendix.pdf             # The file containing the Appendix
     └── ...
 
 ## Installation & Run experiments
