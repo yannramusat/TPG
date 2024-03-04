@@ -591,7 +591,7 @@ class FlightHotelScenarioCDoverConflicting(FlightHotelScenarioConflicting):
         # transformation rules
         self.rules = [rule1]
 
-class FlightHotelScenarioRandom(FlightHotelScenarioPlain):
+class FlightHotelScenarioRandomConflicts(FlightHotelScenarioCDoverPlain):
     def __init__(self, prefix, size = 100, lstring = 5, prob_conflict = 50):
         # input schema
         super().__init__(prefix, size, lstring)
@@ -601,9 +601,9 @@ class FlightHotelScenarioRandom(FlightHotelScenarioPlain):
         MATCH (f:Flight)
         MATCH (h:Hotel)
         WHERE f.fid = h.flid
-        MERGE (l:_dummy { 
+        MERGE (l:_dummy {{ 
             _id: "(" + f.src + ")" 
-        })
+        }})
         ON CREATE
             SET l:Location,
                 l.name = f.src + "1"
@@ -616,9 +616,9 @@ class FlightHotelScenarioRandom(FlightHotelScenarioPlain):
                     ELSE
                         f.src + "1"
                 END
-        MERGE (j:_dummy { 
+        MERGE (j:_dummy {{ 
             _id: "(" + f.dest + ")" 
-        })
+        }})
         ON CREATE
             SET j:Location,
                 j.name = f.dest + "1"
@@ -631,9 +631,9 @@ class FlightHotelScenarioRandom(FlightHotelScenarioPlain):
                     ELSE
                         f.dest + "1"
                 END
-        MERGE (t:_dummy {
+        MERGE (t:_dummy {{
             _id: "(" + f.src + "," + f.dest + ")"
-        })
+        }})
         ON CREATE
             SET t:Travel,
                 t.from = f.src + "1",
@@ -654,9 +654,9 @@ class FlightHotelScenarioRandom(FlightHotelScenarioPlain):
                     ELSE
                         f.dest + "1"
                 END
-        MERGE (m:_dummy {
+        MERGE (m:_dummy {{
             _id: "(h(" + h.hid + "))"
-        })
+        }})
         ON CREATE
             SET m:Hotel2,
                 m.name = h.hid + "1"
@@ -669,15 +669,15 @@ class FlightHotelScenarioRandom(FlightHotelScenarioPlain):
                     ELSE
                         h.hid + "1"
                 END
-        MERGE (l)-[ft:FLIGHTS_TO {
+        MERGE (l)-[ft:FLIGHTS_TO {{
             _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
-        }]->(t)
-        MERGE (t)-[ft2:FLIGHTS_TO {
+        }}]->(t)
+        MERGE (t)-[ft2:FLIGHTS_TO {{
             _id: "(FLIGHTS_TO:" + elementId(t) + "," + elementId(j) + ")"
-        }]->(j)
-        MERGE (t)-[hh:HAS_HOTEL {
+        }}]->(j)
+        MERGE (t)-[hh:HAS_HOTEL {{
             _id: "(HAS_HOTEL:" + elementId(t) + "," + elementId(m) + ")"
-        }]->(m)
+        }}]->(m)
         """)
         # transformation rules
         self.rules = [rule1]

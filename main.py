@@ -41,6 +41,7 @@ if __name__ == "__main__":
     from figures.a1ta3 import *
     from figures.overheadCD import *
     from figures.gtb import *
+    from figures.flighthotelrand import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -78,8 +79,10 @@ if __name__ == "__main__":
         #FigureOverheadCD(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
         #FigureOverheadCDGTB(app, prefix=prefix, values=w, nbLaunches=nbLaunches, showStats=showStats),
         
-        FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
+        #FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
+
+        FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[1000], nbLaunches=nbLaunches, showStats=showStats, probs=[50]),
     ]
     
     # compute results    
