@@ -3,7 +3,7 @@ from figures.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 
-class FigureFlightHotelRandomConflicts(Figure):
+class FigurePersonAddressRandomConflicts(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True, probs = [50]):
         super().__init__(app, prefix, values, nbLaunches, showStats)
         self.probs = probs
@@ -13,11 +13,11 @@ class FigureFlightHotelRandomConflicts(Figure):
         self.results_shuffle_rand_max = []
 
     def compute(self):
-        # execute the scenario FlightHotel with random generation of conflict
-        from scenarios.flighthotel import FlightHotelScenarioRandomConflicts
+        # execute the scenario PersonAddress with random generation of conflict
+        from scenarios.PersonAddress import PersonAddressScenarioRandomConflicts
         for p in self.probs:
             for i in self.x:
-                scenario = FlightHotelScenarioRandomConflicts(self.prefix, size=i, prob_conflict = p)
+                scenario = PersonAddressScenarioRandomConflicts(self.prefix, size=i, prob_conflict = p)
                 (rmin, ravg, rmax) = scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False, minmax=True)
                 self.results_shuffle_rand_min.append(rmin)
                 self.results_shuffle_rand.append(ravg)
@@ -29,10 +29,10 @@ class FigureFlightHotelRandomConflicts(Figure):
 
         shuffle_rand_err=np.row_stack((shuffle_rand_min_err, shuffle_rand_max_err))
 
-        # Figure for evaluating the impact of the frequency of conflicts | FlightHotel scenario
+        # Figure for evaluating the impact of the frequency of conflicts | PersonAddress scenario
         fig2, ax = plt.subplots(layout="constrained", figsize=(4,3))
         ax.errorbar([str(p) for p in self.probs], self.results_shuffle_rand, yerr=shuffle_rand_err, fmt='.', linewidth=1, capsize=5, label="PI; Randomized order", color="red")
-        ax.set_title("FlightHotel")
+        ax.set_title("PersonAddress")
         ax.set_xlabel("probability of conflicts (%)")
         ax.set_ylabel("time (ms)")
         ax.set_yscale("log")
@@ -40,10 +40,10 @@ class FigureFlightHotelRandomConflicts(Figure):
         #ax.yaxis.set_minor_formatter(NullFormatter())
         ax.legend(loc="best")
         
-        plt.savefig("outfigs/FigureExhaustiveRandomFH.png")
+        plt.savefig("outfigs/FigureExhaustiveRandomPA.png")
 
     def print_cmd(self):
-        print("## Figure for evaluating the impact of the frequency of conflicts | FlightHotel scenario")
+        print("## Figure for evaluating the impact of the frequency of conflicts | PersonAddress scenario")
         print(f"{self.results_shuffle_rand_min=}")
         print(f"{self.results_shuffle_rand=}")
         print(f"{self.results_shuffle_rand_max=}")

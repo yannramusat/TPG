@@ -681,3 +681,39 @@ class FlightHotelScenarioRandomConflicts(FlightHotelScenarioCDoverPlain):
         """)
         # transformation rules
         self.rules = [rule1]
+    
+    def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=False, shuffle=True, minmax=True):
+        ttime = 0.0
+        min_rtime = float("inf")
+        max_rtime = 0
+        for i in range(launches):
+            self.prepare(app, stats=stats)
+            # shuffle rules in place; if requested
+            if shuffle:
+                import random
+                random.shuffle(self.rules)
+                print(f"The rules have been shuffled.")
+            # resume to the classic run procedure
+            if(nodeIndex):
+                self.addNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.addRelIndexes(app, stats=stats)
+            # statistics about runtime
+            rtime = self.transform(app, stats=stats)
+            ttime += rtime
+            if(rtime < min_rtime):
+                min_rtime = rtime
+            if(rtime > max_rtime):
+                max_rtime = rtime
+            # resume to classic run procedure
+            if(nodeIndex):
+                self.delNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.delRelIndexes(app, stats=stats)
+        avg_time = ttime / launches
+        if(stats):
+            print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
+        if(minmax):
+            return (min_rtime, avg_time, max_rtime)
+        else:
+            return avg_time

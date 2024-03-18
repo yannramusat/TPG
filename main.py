@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # sudo docker run --name neo4jVol -p 7474:7474 -p 7687:7687 -v ~/research/vPGt/output-ibench-data:/var/lib/neo4j/import --env NEO4J_AUTH=none neo4j:5.16.0-community
     prefix = "file:///"
     # then sudo chown -R yann:yann output-ibench-data if necessary
-    nbLaunches = 5
+    nbLaunches = 20
     showStats = True
     nodeIndexes = True
     relIndexes = True
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         #FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
 
-        FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 50, 100]),
+        FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
     ]
     
     # compute results    

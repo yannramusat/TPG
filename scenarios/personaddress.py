@@ -409,3 +409,140 @@ class PersonAddressScenarioCDoverPlain(PersonAddressScenarioPlain):
         """)
         # transformation rules
         self.rules = [rule1, rule2]
+
+class PersonAddressScenarioRandomConflicts(PersonAddressScenarioCDoverPlain):
+    def __init__(self, prefix, size = 100, lstring = 5, prob_conflict = 50):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule(f"""
+        MATCH (a:Address)
+        MERGE (x:_dummy {{
+            _id: "(" + a.zip + "," + a.city + ")"
+        }})
+        ON CREATE
+            SET x:Person2,
+                x.address = a.zip + "1"
+        ON MATCH
+            SET x:Person2,
+                x.address =
+                CASE
+                    WHEN x.address <> a.zip + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE a.zip + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + elementId(a) + ")"
+        }})
+        ON CREATE
+            SET y:Address2,
+                y.zip = a.zip + "1",
+                y.city = a.city + "1"
+        ON MATCH
+            SET y:Address2,
+                y.zip =
+                CASE
+                    WHEN y.zip <> a.zip + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE a.zip + "1"
+                END,
+                y.city =
+                CASE
+                    WHEN y.city <> a.city + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE a.city + "1"
+                END
+        MERGE (x)-[v:LIVES_AT {{
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
+        }}]->(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule(f"""
+        MATCH (p:Person)
+        MATCH (a:Address)
+        WHERE p.address = a.zip
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(p) + ")"
+        }})
+        ON CREATE
+            SET x:Person2,
+                x.name = p.name + "1",
+                x.address = p.address + "1"
+        ON MATCH
+            SET x:Person2,
+                x.name =
+                CASE
+                    WHEN x.name <> p.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE p.name + "1"
+                END,
+                x.address =
+                CASE
+                    WHEN x.address <> p.address + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE p.address + "1"
+                END
+        MERGE (y:_dummy {{ 
+            _id: "(" + elementId(a) + ")"
+        }})
+        ON CREATE
+            SET y:Address2,
+                y.zip = a.zip + "1",
+                y.city = a.city + "1"
+        ON MATCH
+            SET y:Address2,
+                y.zip =
+                CASE
+                    WHEN y.zip <> a.zip + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE a.zip + "1"
+                END,
+                y.city =
+                CASE
+                    WHEN y.city <> a.city + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE a.city + "1"
+                END 
+        MERGE (x)-[v:LIVES_AT {{
+            _id: "(LIVES_AT:" + elementId(x) + "," + elementId(y) + ")"
+        }}]->(y)
+        """)
+        # transformation rules
+        self.rules = [rule1, rule2]
+
+    def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=False, shuffle=True, minmax=True):
+        ttime = 0.0
+        min_rtime = float("inf")
+        max_rtime = 0
+        for i in range(launches):
+            self.prepare(app, stats=stats)
+            # shuffle rules in place; if requested
+            if shuffle:
+                import random
+                random.shuffle(self.rules)
+                print(f"The rules have been shuffled.")
+            # resume to the classic run procedure
+            if(nodeIndex):
+                self.addNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.addRelIndexes(app, stats=stats)
+            # statistics about runtime
+            rtime = self.transform(app, stats=stats)
+            ttime += rtime
+            if(rtime < min_rtime):
+                min_rtime = rtime
+            if(rtime > max_rtime):
+                max_rtime = rtime
+            # resume to classic run procedure
+            if(nodeIndex):
+                self.delNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.delRelIndexes(app, stats=stats)
+        avg_time = ttime / launches
+        if(stats):
+            print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
+        if(minmax):
+            return (min_rtime, avg_time, max_rtime)
+        else:
+            return avg_time
