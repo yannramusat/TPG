@@ -31,7 +31,7 @@ class FigurePersonDataRandomConflicts(Figure):
 
         # Figure for evaluating the impact of the frequency of conflicts | PersonData scenario
         fig2, ax = plt.subplots(layout="constrained", figsize=(4,3))
-        ax.errorbar([str(p) for p in self.probs], self.results_shuffle_rand, yerr=shuffle_rand_err, fmt='.', linewidth=1, capsize=5, label="PI; Randomized order", color="red")
+        ax.errorbar([str(p) for p in self.probs], self.results_shuffle_rand, yerr=shuffle_rand_err, fmt='.', linewidth=1, capsize=5, label="CD/PI; Randomized order", color="red")
         ax.set_title("PersonData")
         ax.set_xlabel("likelihood of conflicts (%)")
         ax.set_ylabel("time (ms)")
