@@ -33,7 +33,7 @@ class FigurePersonAddressRandomConflicts(Figure):
         fig2, ax = plt.subplots(layout="constrained", figsize=(4,3))
         ax.errorbar([str(p) for p in self.probs], self.results_shuffle_rand, yerr=shuffle_rand_err, fmt='.', linewidth=1, capsize=5, label="PI; Randomized order", color="red")
         ax.set_title("PersonAddress")
-        ax.set_xlabel("probability of conflicts (%)")
+        ax.set_xlabel("likelihood of conflicts (%)")
         ax.set_ylabel("time (ms)")
         ax.set_yscale("log")
         #from matplotlib.ticker import NullFormatter

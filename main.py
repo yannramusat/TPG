@@ -28,7 +28,7 @@ if __name__ == "__main__":
     y = [100, 200, 500, 1_000, 2_000, 5_000, 10_000]#, 20_000, 50_000]
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
-    # temporary testing playground for GTB
+    # temporary testing playground for scale
     #from scenarios.gtb import *
     #scenario = GUSToBIOSQLCDoverPlain(prefix, size=100)
     #scenario.run(app, launches=nbLaunches, stats=showStats, nodeIndex=True, relIndex=False)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
         #FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
 
-        #FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[30, 40]),
         #FigurePersonAddressRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         #FigurePersonDataRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
     ]
