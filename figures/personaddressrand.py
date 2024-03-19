@@ -14,7 +14,7 @@ class FigurePersonAddressRandomConflicts(Figure):
 
     def compute(self):
         # execute the scenario PersonAddress with random generation of conflict
-        from scenarios.PersonAddress import PersonAddressScenarioRandomConflicts
+        from scenarios.personaddress import PersonAddressScenarioRandomConflicts
         for p in self.probs:
             for i in self.x:
                 scenario = PersonAddressScenarioRandomConflicts(self.prefix, size=i, prob_conflict = p)
