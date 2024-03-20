@@ -29,9 +29,9 @@ if __name__ == "__main__":
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
     # temporary testing playground for scale
-    from scenarios.flighthotelscale import *
-    scenario = FlightHotelScenarioCDoverPlainScale(prefix, size=1000, scale=3)
-    scenario.run(app, launches=3, stats=showStats, nodeIndex=True, relIndex=False)
+    #from scenarios.flighthotelscale import *
+    #scenario = FlightHotelScenarioCDoverPlainScale(prefix, size=1000, scale=3)
+    #scenario.run(app, launches=3, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
@@ -49,6 +49,7 @@ if __name__ == "__main__":
     from figures.flighthotelrand import *
     from figures.personaddressrand import *
     from figures.persondatarand import *
+    from figures.gtbrand import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -89,9 +90,10 @@ if __name__ == "__main__":
         #FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
 
-        #FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        # FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         #FigurePersonAddressRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         #FigurePersonDataRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        # FigureGTBRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
     ]
     
     # compute results    

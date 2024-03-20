@@ -2218,3 +2218,800 @@ class GUSToBIOSQLCDoverSI(GUSToBIOSQLSeparateIndexes):
 
         # transformation rules
         self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
+
+class GUSToBIOSQLRandomConflicts(GUSToBIOSQLCDoverPlain):
+    def __init__(self, prefix, size = 100, lstring = 5, prob_conflict = 50):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule(f"""
+        MATCH (gtn:GUSTaxonName)
+        MATCH (gt:GUSTaxon)
+        WHERE gtn.taxonID = gt.taxonID
+        MERGE(x:_dummy {{
+            _id: "(" + gtn.taxonID + ")"
+        }})
+        ON CREATE
+            SET x:BIOSQLTaxonName,
+                x.name = gtn.name + "1",
+                x.nameClass = gtn.nameClass + "1"
+        ON MATCH
+            SET x:BIOSQLTaxonName,
+                x.name =
+                CASE
+                    WHEN x.name <> gtn.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gtn.name + "1"
+                END,
+                x.nameClass =
+                CASE
+                    WHEN x.nameClass <> gtn.nameClass + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gtn.nameClass + "1"
+                END
+        MERGE (y:_dummy {{ 
+            _id: "(" + elementId(gt) + ")" 
+        }})
+        ON CREATE
+            SET y:BIOSQLTaxon,
+                y.taxonID = gt.taxonID + "1",
+                y.ncbiTaxonID = gt.ncbiTaxonID + "1",
+                y.parentTaxonID = gt.parentTaxonID + "1",
+                y.nodeRank = gt.rank + "1",
+                y.geneticCode = gt.geneticCodeID + "1",
+                y.mitoGeneticCode = gt.mitochondialGeneticCodeID + "1",
+                y.leftValue = "SK1(" + gt.taxonID + ")" + "1",
+                y.rightValue = "SK2(" + gt.taxonID + ")"  + "1"
+        ON MATCH
+            SET y:BIOSQLTaxon,
+                y.taxonID =
+                CASE
+                    WHEN y.taxonID <> gt.taxonID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.taxonID + "1"
+                END,
+                y.ncbiTaxonID =
+                CASE
+                    WHEN y.ncbiTaxonID <> gt.ncbiTaxonID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.ncbiTaxonID + "1"
+                END,
+                y.parentTaxonID =
+                CASE
+                    WHEN y.parentTaxonID <> gt.parentTaxonID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.parentTaxonID + "1"
+                END,
+                y.nodeRank =
+                CASE
+                    WHEN y.nodeRank <> gt.rank + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.rank + "1"
+                END,
+                y.geneticCode =
+                CASE
+                    WHEN y.geneticCode <> gt.geneticCodeID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.geneticCodeID + "1"
+                END,
+                y.mitoGeneticCode =
+                CASE
+                    WHEN y.mitoGeneticCode <> gt.mitochondrialGeneticCode + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.mitochondrialGeneticCode + "1"
+                END,
+                y.leftValue =
+                CASE
+                    WHEN y.leftValue <> "SK1(" + gt.taxonID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + gt.taxonID + ")" + "1"
+                END,
+                y.rightValue =
+                CASE
+                    WHEN y.rightValue <> "SK2(" + gt.taxonID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + gt.taxonID + ")" + "1"
+                END
+        MERGE (x)-[:TAXON_HAS_NAME {{
+            _id: "(TAXON_HAS_NAME:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule(f"""
+        MATCH (gt:GUSTaxon)
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(gt) + ")" 
+        }})
+        ON CREATE
+            SET x:BIOSQLTaxon,
+                x.taxonID = gt.taxonID + "1",
+                x.ncbiTaxonID = gt.ncbiTaxonID + "1",
+                x.parentTaxonID = gt.parentTaxonID + "1",
+                x.nodeRank = gt.rank + "1",
+                x.geneticCode = gt.geneticCodeID + "1",
+                x.mitoGeneticCode = gt.mitochondialGeneticCodeID + "1",
+                x.leftValue = "SK1(" + gt.taxonID + ")" + "1",
+                x.rightValue = "SK2(" + gt.taxonID + ")" + "1"
+        ON MATCH
+            SET x:BIOSQLTaxon,
+                x.taxonID =
+                CASE
+                    WHEN x.taxonID <> gt.taxonID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.taxonID + "1"
+                END,
+                x.ncbiTaxonID =
+                CASE
+                    WHEN x.ncbiTaxonID <> gt.ncbiTaxonID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.ncbiTaxonID + "1"
+                END,
+                x.parentTaxonID =
+                CASE
+                    WHEN x.parentTaxonID <> gt.parentTaxonID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.parentTaxonID + "1"
+                END,
+                x.nodeRank =
+                CASE
+                    WHEN x.nodeRank <> gt.rank + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.rank + "1"
+                END,
+                x.geneticCode =
+                CASE
+                    WHEN x.geneticCode <> gt.geneticCodeID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.geneticCodeID + "1"
+                END,
+                x.mitoGeneticCode =
+                CASE
+                    WHEN x.mitoGeneticCode <> gt.mitochondrialGeneticCode + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gt.mitochondrialGeneticCode + "1"
+                END,
+                x.leftValue =
+                CASE
+                    WHEN x.leftValue <> "SK1(" + gt.taxonID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + gt.taxonID + ")" + "1"
+                END,
+                x.rightValue =
+                CASE
+                    WHEN x.rightValue <> "SK2(" + gt.taxonID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + gt.taxonID + ")" + "1"
+                END
+        """)
+        # rule#3 using our framework
+        rule3 = TransformationRule(f"""
+        MATCH (gg:GUSGene)
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(gg) + ")" 
+        }})
+        ON CREATE
+            SET x:BIOSQLBioEntry,
+                x.bioEntryID = gg.geneID + "1",
+                x.bioDatabaseEntry = "SK3(" + gg.geneSymbol + ")" + "1",
+                x.taxonID = "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" + "1", 
+                x.name = gg.name + "1",
+                x.accession = gg.geneSymbol + "1",
+                x.identifier = gg.sequenceOntologyID + "1",
+                x.division = gg.geneCategoryID + "1",
+                x.description = gg.description + "1",
+                x.version = "SK5(" + gg.geneID + "," + gg.reviewStatusID + ")" + "1"
+        ON MATCH
+            SET x:BIOSQLBioEntry,
+                x.bioEntryID =
+                CASE
+                    WHEN x.bioEntryID <> gg.geneID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.bioEntryID + "1"
+                END,
+                x.bioDatabaseEntry =
+                CASE
+                    WHEN x.bioDatabaseEntry <> "SK3(" + gg.geneSymbol + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK3(" + gg.geneSymbol + ")" + "1"
+                END,
+                x.taxonID =
+                CASE
+                    WHEN x.taxonID <> "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" + "1"
+                END,
+                x.name =
+                CASE
+                    WHEN x.name <> gg.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.name + "1"
+                END,
+                x.accession =
+                CASE
+                    WHEN x.accession <> gg.geneSymbol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.geneSymbol + "1"
+                END,
+                x.identifier =
+                CASE
+                    WHEN x.identifier <> gg.sequenceOntologyID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.sequenceOntologyID + "1"
+                END,
+                x.division =
+                CASE
+                    WHEN x.division <> gg.geneCategoryID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.geneCategoryID + "1"
+                END,
+                x.description =
+                CASE
+                    WHEN x.description <> gg.description + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.description + "1"
+                END,
+                x.version =
+                CASE
+                    WHEN x.version <> "SK5(" + gg.geneID + "," + gg.reviewStatusID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK5(" + gg.geneID + "," + gg.reviewStatusID + ")" + "1"
+                END
+        MERGE (y:_dummy {{ 
+            _id: "(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" 
+        }})
+        ON CREATE
+            SET y:BIOSQLTaxon,
+                y.taxonID = "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" + "1", 
+                y.ncbiTaxonID = "SK6(" + gg.geneID + ")" + "1",
+                y.parentTaxonID = "SK7(" + gg.geneID + ")" + "1",
+                y.nodeRank = "SK8(" + gg.geneID + ")" + "1",
+                y.geneticCode = "SK9(" + gg.geneID + ")" + "1",
+                y.mitoGeneticCode = "SK10(" + gg.geneID + ")" + "1",
+                y.leftValue = "SK11(" + gg.geneID + ")" + "1",
+                y.rightValue ="SK12(" + gg.geneID + ")" + "1"
+        ON MATCH
+            SET y:BIOSQLTaxon,
+                y.taxonID =
+                CASE
+                    WHEN y.taxonID <> "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + gg.geneID + "," + gg.geneSymbol + "," + gg.geneCategoryID + ")" + "1"
+                END,
+                y.ncbiTaxonID =
+                CASE
+                    WHEN y.ncbiTaxonID <> "SK6(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK6(" + gg.geneID + ")" + "1"
+                END,
+                y.parentTaxonID =
+                CASE
+                    WHEN y.parentTaxonID <> "SK7(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK7(" + gg.geneID + ")" + "1"
+                END,
+                y.nodeRank =
+                CASE
+                    WHEN y.nodeRank <> "SK8(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK8(" + gg.geneID + ")" + "1"
+                END,
+                y.geneticCode =
+                CASE
+                    WHEN y.geneticCode <> "SK9(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK9(" + gg.geneID + ")" + "1"
+                END,
+                y.mitoGeneticCode =
+                CASE
+                    WHEN y.mitoGeneticCode <> "SK10(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK10(" + gg.geneID + ")" + "1"
+                END,
+                y.leftValue =
+                CASE
+                    WHEN y.leftValue <> "SK11(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK11(" + gg.geneID + ")" + "1"
+                END,
+                y.rightValue =
+                CASE
+                    WHEN y.rightValue <> "SK12(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK12(" + gg.geneID + ")" + "1"
+                END
+        MERGE (x)-[:HAS_TAXON {{
+            _id: "(HAS_TAXON:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule(f"""
+        MATCH (ggs:GUSGeneSynonym)
+        MATCH (gg:GUSGene)
+        WHERE ggs.geneID = gg.geneID
+        MERGE (x:_dummy {{
+            _id: "(" + elementID(ggs)  + ")"
+        }})
+        ON CREATE
+            SET x:BIOSQLTermSynonym,
+                x.synonym = ggs.geneSynonymID + "1",
+                x.termID = ggs.geneID + "1"
+        ON MATCH
+            SET x:BIOSQLTermSynonym,
+                x.synonym =
+                CASE
+                    WHEN x.synonym <> ggs.geneSynonymID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggs.geneSynonymID + "1"
+                END,
+                x.termID =
+                CASE
+                    WHEN x.termID <> ggs.geneID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggs.geneID + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + elementID(gg) + ")"
+        }})
+        ON CREATE
+            SET y:BIOSQLTerm,
+                y.termID = gg.geneID + "1",
+                y.name = gg.name + "1",
+                y.definition = gg.description + "1",
+                y.identifier = "SK13(" + gg.geneID + ")" + "1",
+                y.isObsolete = ggs.isObsolete + "1",
+                y.ontologyID = "SK15(" + gg.sequenceOntologyID + ")" + "1"
+        ON MATCH
+            SET y:BIOSQLTerm,
+                y.termID =
+                CASE
+                    WHEN y.termID <> gg.geneID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.geneID + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> gg.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.name + "1"
+                END,
+                y.definition =
+                CASE
+                    WHEN y.definition <> gg.description + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.description + "1"
+                END,
+                y.identifier =
+                CASE
+                    WHEN y.identifier <> "SK13(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + gg.geneID + ")" + "1"
+                END,
+                y.isObsolete =
+                CASE
+                    WHEN y.isObsolete <> ggs.isObsolete + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggs.isObsolete + "1"
+                END,
+                y.ontologyID =
+                CASE
+                    WHEN y.ontologyID <> "SK15(" + gg.sequenceOntologyID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + gg.sequenceOntologyID + ")" + "1"
+                END
+        MERGE (x)-[:HAS_SYNONYM {{
+            _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#5 using our framework
+        rule5 = TransformationRule(f"""
+        MATCH (ggt:GUSGoTerm) 
+        MERGE (x:_dummy {{
+            _id: "(" + elementID(ggt) + ")"
+        }})
+        ON CREATE
+            SET x:BIOSQLTerm,
+                x.termID = ggt.goTermID + "1",
+                x.name = ggt.name + "1",
+                x.definition = ggt.definition + "1",
+                x.identifier = ggt.goID + "1",
+                x.isObsolete = ggt.isObsolete + "1",
+                x.ontologyID = "SK15(" + ggt.goTermID + ")" + "1"
+        ON MATCH
+            SET x:BIOSQLTerm,
+                x.termID =
+                CASE
+                    WHEN x.termID <> ggt.goTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.goTermID + "1"
+                END,
+                x.name =
+                CASE
+                    WHEN x.name <> ggt.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.name + "1"
+                END,
+                x.definition =
+                CASE
+                    WHEN x.definition <> ggt.definition + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.definition + "1"
+                END,
+                x.identifier =
+                CASE
+                    WHEN x.identifier <> ggt.goId + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.goID + "1"
+                END,
+                x.isObsolete =
+                CASE
+                    WHEN x.isObsolete <> ggt.isObsolete + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.isObsolete + "1"
+                END,
+                x.ontologyID =
+                CASE
+                    WHEN x.ontologyID <> "SK15(" + ggt.goTermID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + ggt.goTermID + ")" + "1"
+                END
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule(f"""
+        MATCH (ggs:GUSGoSynonym)
+        MATCH (ggt:GUSGoTerm)
+        WHERE ggs.goTermID = ggt.goTermID
+        MERGE (x:_dummy {{
+            _id: "(" + elementID(ggs)  + ")"
+        }})
+        ON CREATE
+            SET x:BIOSQLTermSynonym,
+                x.synonym = ggs.goSynonymID + "1",
+                x.termID = ggs.goTermID + "1"
+        ON MATCH
+            SET x:BIOSQLTermSynonym,
+                x.synonym =
+                CASE
+                    WHEN x.synonym <> ggs.goSynonymID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggs.goSynonymID + "1"
+                END,
+                x.termID =
+                CASE
+                    WHEN x.termID <> ggs.goTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggs.goTermID + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + elementID(ggt) + ")"
+        }})
+        ON CREATE
+            SET y:BIOSQLTerm,
+                y.termID = ggt.goTermID + "1",
+                y.name = ggt.name + "1",
+                y.definition = ggt.definition + "1",
+                y.identifier = ggt.goID + "1",
+                y.isObsolete = ggt.isObsolete + "1",
+                y.ontologyID = "SK15(" + ggt.goTermID + ")" + "1"
+        ON MATCH
+            SET y:BIOSQLTerm,
+                y.termID =
+                CASE
+                    WHEN y.termID <> ggt.goTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.goTermID + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> ggt.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.name + "1"
+                END,
+                y.definition =
+                CASE
+                    WHEN y.definition <> ggt.definition + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.definition + "1"
+                END,
+                y.identifier =
+                CASE
+                    WHEN y.identifier <> ggt.goId + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.goID + "1"
+                END,
+                y.isObsolete =
+                CASE
+                    WHEN y.isObsolete <> ggt.isObsolete + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt.isObsolete + "1"
+                END,
+                y.ontoloyID =
+                CASE
+                    WHEN y.ontologyID <> "SK15(" + ggt.goTermID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + ggt.goTermID + ")" + "1"
+                END
+        MERGE (x)-[:HAS_SYNONYM {{
+            _id: "(HAS_SYNONYM:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule(f"""
+        MATCH (ggr:GUSGoRelationship)
+        MATCH (ggt1:GUSGoTerm)
+        MATCH (ggt2:GUSGoTerm)
+        MERGE (x:_dummy {{
+            _id: "(" + elementID(ggt1) + ")"
+        }})
+        ON CREATE
+            SET x:BIOSQLTerm,
+                x.termID = ggt1.goTermID + "1",
+                x.name = ggt1.name + "1",
+                x.definition = ggt1.definition + "1",
+                x.identifier = ggt1.goID + "1",
+                x.isObsolete = ggt1.isObsolete + "1",
+                x.ontologyID = "SK21(" + ggt1.goTermID + ")" + "1"
+        ON MATCH
+            SET x:BIOSQLTerm,
+                x.termID =
+                CASE
+                    WHEN x.termID <> ggt1.goTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt1.goTermID + "1"
+                END,
+                x.name =
+                CASE
+                    WHEN x.name <> ggt1.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt1.name + "1"
+                END,
+                x.definition =
+                CASE
+                    WHEN x.definition <> ggt1.definition + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt1.definition + "1"
+                END,
+                x.identifier =
+                CASE
+                    WHEN x.identifier <> ggt1.goId + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt1.goID + "1"
+                END,
+                x.isObsolete =
+                CASE
+                    WHEN x.isObsolete <> ggt1.isObsolete + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt1.isObsolete + "1"
+                END,
+                x.ontoloyID =
+                CASE
+                    WHEN x.ontologyID <> "SK21(" + ggt1.goTermID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK21(" + ggt1.goTermID + ")" + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + elementID(ggt2) + ")"
+        }})
+        ON CREATE
+            SET y:BIOSQLTerm,
+                y.termID = ggt2.goTermID + "1",
+                y.name = ggt2.name + "1",
+                y.definition = ggt2.definition + "1",
+                y.identifier = ggt2.goID + "1",
+                y.isObsolete = ggt2.isObsolete + "1",
+                y.ontologyID = "SK22(" + ggt2.goTermID + ")" + "1"
+        ON MATCH
+            SET y:BIOSQLTerm,
+                y.termID =
+                CASE
+                    WHEN y.termID <> ggt2.goTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt2.goTermID + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> ggt2.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt2.name + "1"
+                END,
+                y.definition =
+                CASE
+                    WHEN y.definition <> ggt2.definition + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt2.definition + "1"
+                END,
+                y.identifier =
+                CASE
+                    WHEN y.identifier <> ggt2.goId + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt2.goID + "1"
+                END,
+                y.isObsolete =
+                CASE
+                    WHEN y.isObsolete <> ggt2.isObsolete + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggt2.isObsolete + "1"
+                END,
+                y.ontoloyID =
+                CASE
+                    WHEN y.ontologyID <> "SK22(" + ggt2.goTermID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK22(" + ggt2.goTermID + ")" + "1"
+                END
+        MERGE (x)-[z:TERM_RELATIONSHIP {{
+            _id: "(TERM_RELATIONSHIP:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        ON CREATE
+            SET z.termRelationshipID = ggr.goRelationshipID + "1",
+                z.subjectTermID = ggr.parentTermID + "1",
+                z.predicateTermID = ggr.goRelationshipTypeID + "1",
+                z.objectTermID = ggr.childTermID + "1",
+                z.ontologyID = "SK20(" + ggr.goRelationshipID + ")" + "1"
+        ON MATCH
+            SET z.termRelationshipID =
+                CASE
+                    WHEN z.termRelationshipID <> ggr.goRelationshipID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggr.goRelationshipID + "1"
+                END,
+                z.subjectTermID =
+                CASE
+                    WHEN z.subjectTermID <> ggr.parentTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggr.parentTermID + "1"
+                END,
+                z.predicateTermID =
+                CASE
+                    WHEN z.predicateTermID <> ggr.goRelationshipTypeID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggr.goRelationshipTypeID + "1"
+                END,
+                z.objectTermID =
+                CASE
+                    WHEN z.objectTermID <> ggr.childTermID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ggr.childTermID + "1"
+                END,
+                z.ontoloyID =
+                CASE
+                    WHEN z.ontologyID <> "SK20(" + ggr.goRelationshipID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK20(" + ggr.goRelationshipID + ")" + "1"
+                END
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule(f"""
+        MATCH (gg:GUSGene)
+        MERGE (x:_dummy {{
+            _id: "(" + elementID(gg) + ")"
+        }})
+        ON CREATE
+            SET x:BIOSQLTerm,
+                x.termID = gg.geneID + "1",
+                x.name = gg.name + "1",
+                x.definition = gg.description + "1",
+                x.identifier = "SK13(" + gg.geneID + ")" + "1", 
+                x.isObsolete = "SK18(" + gg.geneID + "," + gg.reviewStatusID + ")" + "1",
+                x.ontologyID = "SK14(" + gg.sequenceOntologyID + ")" + "1"
+        ON MATCH
+            SET x:BIOSQLTerm,
+                x.termID =
+                CASE
+                    WHEN x.termID <> gg.geneID + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.geneID + "1"
+                END,
+                x.name =
+                CASE
+                    WHEN x.name <> gg.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.name + "1"
+                END,
+                x.definition =
+                CASE
+                    WHEN x.definition <> gg.description + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        gg.description + "1"
+                END,
+                x.identifier =
+                CASE
+                    WHEN x.identifier <> "SK13(" + gg.geneID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + gg.geneID + ")" + "1"
+                END,
+                x.isObsolete =
+                CASE
+                    WHEN x.isObsolete <> "SK18(" + gg.geneID + "," + gg.reviewStatusID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK18(" + gg.geneID + "," + gg.reviewStatusID + ")" + "1"
+                END,
+                x.ontologyID =
+                CASE
+                    WHEN x.ontologyID <> "SK14(" + gg.sequenceOntologyID + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK14(" + gg.sequenceOntologyID + ")" + "1"
+                END
+        """)
+
+        # transformation rules
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
