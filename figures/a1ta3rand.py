@@ -3,7 +3,7 @@ from figures.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 
-class FigureGTBRandomConflicts(Figure):
+class FigureA1TA3RandomConflicts(Figure):
     def __init__(self, app, prefix, values=[], nbLaunches=1, showStats=True, probs = [50]):
         super().__init__(app, prefix, values, nbLaunches, showStats)
         self.probs = probs

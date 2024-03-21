@@ -51,6 +51,7 @@ if __name__ == "__main__":
     from figures.persondatarand import *
     from figures.gtbrand import *
     from figures.dta1rand import *
+    from figures.a1ta3rand import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -96,6 +97,7 @@ if __name__ == "__main__":
         #FigurePersonDataRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         #FigureGTBRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         # FigureDTA1RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        # FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
     ]
     
     # compute results    
