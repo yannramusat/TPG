@@ -52,6 +52,7 @@ if __name__ == "__main__":
     from figures.gtbrand import *
     from figures.dta1rand import *
     from figures.a1ta3rand import *
+    from figures.flighthotelscale import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -98,6 +99,7 @@ if __name__ == "__main__":
         #FigureGTBRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         # FigureDTA1RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         # FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=1, showStats=showStats, scale=[1, 20, 100])
     ]
     
     # compute results    
