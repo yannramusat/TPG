@@ -32,7 +32,7 @@ class FigureFlightHotelScale(Figure):
 
         sizes = [s * self.x[0] * 2 for s in self.scale]
 
-        # Figure for investigating the horizontal scalability | FlightHotelScenario
+        # Figure for investigating the horizontal scalability | FlightHotel scenario
         fig2, ax = plt.subplots(layout="constrained", figsize=(6,3))
         ax.plot(sizes, self.results_flighthotel_PI, label="PI", marker="D")
         ax.plot(sizes, self.results_flighthotel_CD_PI, label="CD/PI", marker="s")
@@ -44,6 +44,6 @@ class FigureFlightHotelScale(Figure):
         plt.savefig("outfigs/FigureHorizontalScaleFH.png")
 
     def print_cmd(self):
-        print("## Figure for investigating the horizontal scalability | FlightHotelScenario")
+        print("## Figure for investigating the horizontal scalability | FlightHotel scenario")
         print(f"{self.results_flighthotel_PI=}")
         print(f"{self.results_flighthotel_CD_PI=}")
