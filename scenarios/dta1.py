@@ -3180,3 +3180,1250 @@ class DBLPToAmalgam1CDoverSI(DBLPToAmalgam1SeparateIndexes):
 
         # transformation rules
         self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10]
+
+class DBLPToAmalgam1RandomConflicts(DBLPToAmalgam1CDoverPlain):
+    def __init__(self, prefix, size = 100, lstring = 5, prob_conflict = 50):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule(f"""
+        MATCH (dip:DInProceedings)
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(dip) + ")" 
+        }})
+        ON CREATE
+            SET x:InProceedings,
+                x.pid = "SK1(" + dip.pid + ")" + "1",
+                x.title = dip.title + "1",
+                x.bktitle = dip.booktitle + "1",
+                x.year = dip.year + "1",
+                x.month = dip.month + "1",
+                x.pages = dip.pages + "1",
+                x.vol = "SK2(" + dip.booktitle + "," + dip.year + ")" + "1",
+                x.num = "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1", 
+                x.loc = "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1", 
+                x.class = "SK6(" + dip.pid + ")" + "1",
+                x.note = "SK7(" + dip.pid + ")" + "1",
+                x.annote = "SK8(" + dip.pid + ")" + "1"
+        ON MATCH
+            SET x:InProceedings,
+                x.pid =
+                CASE
+                    WHEN x.pid <> "SK1(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + dip.pid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> dip.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.title + "1"
+                END,
+                x.bktitle =
+                CASE
+                    WHEN x.bktitle <> dip.booktitle + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.booktitle + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> dip.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.year + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> dip.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.month + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> dip.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.pages + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> "SK2(" + dip.booktitle + "," + dip.year + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + dip.booktitle + "," + dip.year + ")" + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE    
+                        "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1"
+                END,
+                x.loc =
+                CASE
+                    WHEN x.loc <> "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1"
+                END,
+                x.class =
+                CASE
+                    WHEN x.class <> "SK6(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK6(" + dip.pid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> "SK7(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK7(" + dip.pid + ")" + "1"
+                END,
+                x.annote =
+                CASE
+                    WHEN x.annote <> "SK8(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK8(" + dip.pid + ")" + "1"
+                END
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule(f"""
+        MATCH (dip:DInProceedings)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = dip.pid
+        MERGE (a:_dummy {{
+            _id: "(" + pa.author + ")"
+        }})
+        ON CREATE
+            SET a:Author,
+                a.name = pa.author + "1"
+        ON MATCH
+            SET a:Author,
+                a.name =
+                CASE
+                    WHEN a.name <> pa.author + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author + "1"
+                END
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(dip) + ")" 
+        }})
+        ON CREATE
+            SET x:InProceedings,
+                x.pid = "SK1(" + dip.pid + ")" + "1",
+                x.title = dip.title + "1",
+                x.bktitle = dip.booktitle + "1",
+                x.year = dip.year + "1",
+                x.month = dip.month + "1",
+                x.pages = dip.pages + "1",
+                x.vol = "SK2(" + dip.booktitle + "," + dip.year + ")" + "1",
+                x.num = "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1", 
+                x.loc = "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1", 
+                x.class = "SK6(" + dip.pid + ")" + "1",
+                x.note = "SK7(" + dip.pid + ")" + "1",
+                x.annote = "SK8(" + dip.pid + ")" + "1"
+        ON MATCH
+            SET x:InProceedings,
+                x.pid =
+                CASE
+                    WHEN x.pid <> "SK1(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + dip.pid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> dip.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.title + "1"
+                END,
+                x.bktitle =
+                CASE
+                    WHEN x.bktitle <> dip.booktitle + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.booktitle + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> dip.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.year + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> dip.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.month + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> dip.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        dip.pages + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> "SK2(" + dip.booktitle + "," + dip.year + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + dip.booktitle + "," + dip.year + ")" + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE    
+                        "SK3(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1"
+                END,
+                x.loc =
+                CASE
+                    WHEN x.loc <> "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + dip.booktitle + "," + dip.year + "," + dip.month + ")" + "1"
+                END,
+                x.class =
+                CASE
+                    WHEN x.class <> "SK6(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK6(" + dip.pid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> "SK7(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK7(" + dip.pid + ")" + "1"
+                END,
+                x.annote =
+                CASE
+                    WHEN x.annote <> "SK8(" + dip.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK8(" + dip.pid + ")" + "1"
+                END
+        MERGE (x)-[:IN_PROC_PUBLISHED {{
+            _id: "(IN_PROC_PUBLISHED:" + elementId(x) + "," + elementId(a) + ")"
+        }}]-(a)
+        """)
+        # rule#3 using our framework
+        rule3 = TransformationRule(f"""
+        MATCH (w:WWW)
+        MERGE (m:_dummy {{
+            _id: "(" + elementId(w) + ")"
+        }})
+        ON CREATE
+            SET m:Misc,
+                m.miscid = "SK11(" + w.pid + ")" + "1",
+                m.howpub = "SK12(" + w.pid + ")" + "1",
+                m.confloc = "SK13(" + w.pid + ")" + "1",
+                m.year = w.year + "1",
+                m.month = "SK14(" + w.pid + ")" + "1",
+                m.pages = "SK15(" + w.pid + ")" + "1",
+                m.vol = "SK16(" + w.pid + ")" + "1",
+                m.num = "SK17(" + w.pid + ")" + "1",
+                m.loc = "SK18(" + w.pid + ")" + "1",
+                m.class ="SK19(" + w.pid + ")" + "1",
+                m.note = "SK20(" + w.pid + ")" + "1",
+                m.annote = "SK21(" + w.pid + ")" + "1"
+        ON MATCH
+            SET m:Misc,
+                m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK11(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK11(" + w.pid + ")" + "1"
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK12(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK12(" + w.pid + ")" + "1"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK13(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + w.pid + ")" + "1"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> w.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        w.year + "1"
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> "SK14(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK14(" + w.pid + ")" + "1"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK15(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + w.pid + ")" + "1"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK16(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK16(" + w.pid + ")" + "1"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> "SK17(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK17(" + w.pid + ")" + "1"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK18(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK18(" + w.pid + ")" + "1"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK19(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK19(" + w.pid + ")" + "1"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK20(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK20(" + w.pid + ")" + "1"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> "SK21(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK21(" + w.pid + ")" + "1"
+                END
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule(f"""
+        MATCH (w:WWW)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = w.pid
+        MERGE (a:_dummy {{
+            _id: "(" + pa.author + ")"
+        }})
+        ON CREATE
+            SET a:Author,
+                a.name = pa.author + "1"
+        ON MATCH
+            SET a:Author,
+                a.name =
+                CASE
+                    WHEN a.name <> pa.author + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author + "1"
+                END
+        MERGE (m:_dummy {{
+            _id: "(" + elementId(w) + ")"
+        }})
+        ON CREATE
+            SET m:Misc,
+                m.miscid = "SK11(" + w.pid + ")" + "1",
+                m.howpub = "SK12(" + w.pid + ")" + "1",
+                m.confloc = "SK13(" + w.pid + ")" + "1",
+                m.year = w.year + "1",
+                m.month = "SK14(" + w.pid + ")" + "1",
+                m.pages = "SK15(" + w.pid + ")" + "1",
+                m.vol = "SK16(" + w.pid + ")" + "1",
+                m.num = "SK17(" + w.pid + ")" + "1",
+                m.loc = "SK18(" + w.pid + ")" + "1",
+                m.class ="SK19(" + w.pid + ")" + "1",
+                m.note = "SK20(" + w.pid + ")" + "1",
+                m.annote = "SK21(" + w.pid + ")" + "1"
+        ON MATCH
+            SET m:Misc,
+                m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK11(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK11(" + w.pid + ")" + "1"
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK12(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK12(" + w.pid + ")" + "1"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK13(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + w.pid + ")" + "1"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> w.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        w.year + "1"
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> "SK14(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK14(" + w.pid + ")" + "1"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK15(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + w.pid + ")" + "1"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK16(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK16(" + w.pid + ")" + "1"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> "SK17(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK17(" + w.pid + ")" + "1"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK18(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK18(" + w.pid + ")" + "1"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK19(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK19(" + w.pid + ")" + "1"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK20(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK20(" + w.pid + ")" + "1"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> "SK21(" + w.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK21(" + w.pid + ")" + "1"
+                END
+        MERGE (m)-[:MISC_PUBLISHED {{
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(a) + ")"
+        }}]-(a)
+        """)
+        # rule#5 using our framework
+        rule5 = TransformationRule(f"""
+        MATCH (da:DArticle)
+        MERGE (a:_dummy {{ 
+            _id: "(" + elementId(da) + ")" 
+        }})
+        ON CREATE
+            SET a:Article,
+                a.articleid = "SK22(" + da.pid + ")" + "1",
+                a.title = da.title + "1",
+                a.journal = da.journal + "1",
+                a.year = da.year + "1",
+                a.month = da.month + "1",
+                a.pages = da.pages + "1",
+                a.vol = da.volume + "1",
+                a.num = da.number + "1", 
+                a.loc = "SK23(" + da.pid + ")" + "1", 
+                a.class = "SK24(" + da.pid + ")" + "1",
+                a.note = "SK25(" + da.pid + ")" + "1",
+                a.annote = "SK26(" + da.pid + ")" + "1"
+        ON MATCH
+            SET a:Article,
+                a.articleid =
+                CASE
+                    WHEN a.articleid <> "SK22(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK22(" + da.pid + ")" + "1"
+                END,
+                a.title =
+                CASE
+                    WHEN a.title <> da.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.title + "1"
+                END,
+                a.journal =
+                CASE
+                    WHEN a.journal <> da.journal + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.journal + "1"
+                END,
+                a.year =
+                CASE
+                    WHEN a.year <> da.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.year + "1"
+                END,
+                a.month =
+                CASE
+                    WHEN a.month <> da.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.month + "1"
+                END,
+                a.pages =
+                CASE
+                    WHEN a.pages <> da.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.pages + "1"
+                END,
+                a.vol =
+                CASE
+                    WHEN a.vol <> da.volume + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.volume + "1"
+                END,
+                a.num =
+                CASE
+                    WHEN a.num <> da.number + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.number + "1"
+                END,
+                a.loc =
+                CASE
+                    WHEN a.loc <> "SK23(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK23(" + da.pid + ")" + "1"
+                END,
+                a.class =
+                CASE
+                    WHEN a.class <> "SK24(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK24(" + da.pid + ")" + "1"
+                END,
+                a.note =
+                CASE
+                    WHEN a.note <> "SK25(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK25(" + da.pid + ")" + "1"
+                END,
+                a.annote =
+                CASE
+                    WHEN a.annote <> "SK26(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK26(" + da.pid + ")" + "1"
+                END
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule(f"""
+        MATCH (da:DArticle)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = da.pid
+        MERGE (au:_dummy {{
+            _id: "(" + pa.author + ")"
+        }})
+        ON CREATE
+            SET au:Author,
+                au.name = pa.author + "1"
+        ON MATCH
+            SET au:Author,
+                au.name =
+                CASE
+                    WHEN au.name <> pa.author + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author + "1"
+                END
+        MERGE (a:_dummy {{ 
+            _id: "(" + elementId(da) + ")" 
+        }})
+        ON CREATE
+            SET a:Article,
+                a.articleid = "SK22(" + da.pid + ")" + "1",
+                a.title = da.title + "1",
+                a.journal = da.journal + "1",
+                a.year = da.year + "1",
+                a.month = da.month + "1",
+                a.pages = da.pages + "1",
+                a.vol = da.volume + "1",
+                a.num = da.number + "1", 
+                a.loc = "SK23(" + da.pid + ")" + "1", 
+                a.class = "SK24(" + da.pid + ")" + "1",
+                a.note = "SK25(" + da.pid + ")" + "1",
+                a.annote = "SK26(" + da.pid + ")" + "1"
+        ON MATCH
+            SET a:Article,
+                a.articleid =
+                CASE
+                    WHEN a.articleid <> "SK22(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK22(" + da.pid + ")" + "1"
+                END,
+                a.title =
+                CASE
+                    WHEN a.title <> da.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.title + "1"
+                END,
+                a.journal =
+                CASE
+                    WHEN a.journal <> da.journal + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.journal + "1"
+                END,
+                a.year =
+                CASE
+                    WHEN a.year <> da.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.year + "1"
+                END,
+                a.month =
+                CASE
+                    WHEN a.month <> da.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.month + "1"
+                END,
+                a.pages =
+                CASE
+                    WHEN a.pages <> da.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.pages + "1"
+                END,
+                a.vol =
+                CASE
+                    WHEN a.vol <> da.volume + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.volume + "1"
+                END,
+                a.num =
+                CASE
+                    WHEN a.num <> da.number + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        da.number + "1"
+                END,
+                a.loc =
+                CASE
+                    WHEN a.loc <> "SK23(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK23(" + da.pid + ")" + "1"
+                END,
+                a.class =
+                CASE
+                    WHEN a.class <> "SK24(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK24(" + da.pid + ")" + "1"
+                END,
+                a.note =
+                CASE
+                    WHEN a.note <> "SK25(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK25(" + da.pid + ")" + "1"
+                END,
+                a.annote =
+                CASE
+                    WHEN a.annote <> "SK26(" + da.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK26(" + da.pid + ")" + "1"
+                END
+        MERGE (a)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(a) + "," + elementId(au) + ")"
+        }}]-(au)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule(f"""
+        MATCH (db:DBook)
+        MERGE (b:_dummy {{ 
+            _id: "(" + elementId(db) + ")" 
+        }})
+        ON CREATE
+            SET b:Book,
+                b.bookID = "SK27(" + db.pid + ")" + "1",
+                b.title = db.title + "1",
+                b.publisher = db.publisher + "1",
+                b.year = db.year + "1",
+                b.month = "SK28(" + db.pid + ")" + "1",
+                b.pages = "SK29(" + db.pid + ")" + "1",
+                b.vol = "SK30(" + db.pid + ")" + "1",
+                b.num = "SK31(" + db.pid + ")" + "1", 
+                b.loc = "SK32(" + db.pid + ")" + "1", 
+                b.class = "SK33(" + db.pid + ")" + "1",
+                b.note = "SK34(" + db.pid + ")" + "1",
+                b.annote = "SK35(" + db.pid + ")" + "1"
+        ON MATCH
+            SET b:Book,
+                b.bookID =
+                CASE
+                    WHEN b.bookID <> "SK27(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK27(" + db.pid + ")" + "1"
+                END,
+                b.title =
+                CASE
+                    WHEN b.title <> db.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.title + "1"
+                END,
+                b.publisher =
+                CASE
+                    WHEN b.publisher <> db.publisher + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.publisher + "1"
+                END,
+                b.year =
+                CASE
+                    WHEN b.year <> db.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.year + "1"
+                END,
+                b.month =
+                CASE
+                    WHEN b.month <> "SK28(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK28(" + db.pid + ")" + "1"
+                END,
+                b.pages =
+                CASE
+                    WHEN b.pages <> "SK29(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK29(" + db.pid + ")" + "1"
+                END,
+                b.vol =
+                CASE
+                    WHEN b.vol <> "SK30(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK30(" + db.pid + ")" + "1"
+                END,
+                b.num =
+                CASE
+                    WHEN b.num <> "SK31(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK31(" + db.pid + ")" + "1"
+                END,
+                b.loc =
+                CASE
+                    WHEN b.loc <> "SK32(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK32(" + db.pid + ")" + "1"
+                END,
+                b.class =
+                CASE
+                    WHEN b.class <> "SK33(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK33(" + db.pid + ")" + "1"
+                END,
+                b.note =
+                CASE
+                    WHEN b.note <> "SK34(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK34(" + db.pid + ")" + "1"
+                END,
+                b.annote =
+                CASE
+                    WHEN b.annote <> "SK35(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK35(" + db.pid + ")" + "1"
+                END
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule(f"""
+        MATCH (db:DBook)
+        MATCH (pa:PubAuthors)
+        WHERE pa.pid = db.pid
+        MERGE (au:_dummy {{
+            _id: "(" + pa.author + ")"
+        }})
+        ON CREATE
+            SET au:Author,
+                au.name = pa.author + "1"
+        ON MATCH
+            SET au:Author,
+                au.name =
+                CASE
+                    WHEN au.name <> pa.author + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        pa.author + "1"
+                END
+        MERGE (b:_dummy {{ 
+            _id: "(" + elementId(db) + ")" 
+        }})
+        ON CREATE
+            SET b:Book,
+                b.bookID = "SK27(" + db.pid + ")" + "1",
+                b.title = db.title + "1",
+                b.publisher = db.publisher + "1",
+                b.year = db.year + "1",
+                b.month = "SK28(" + db.pid + ")" + "1",
+                b.pages = "SK29(" + db.pid + ")" + "1",
+                b.vol = "SK30(" + db.pid + ")" + "1",
+                b.num = "SK31(" + db.pid + ")" + "1", 
+                b.loc = "SK32(" + db.pid + ")" + "1", 
+                b.class = "SK33(" + db.pid + ")" + "1",
+                b.note = "SK34(" + db.pid + ")" + "1",
+                b.annote = "SK35(" + db.pid + ")" + "1"
+        ON MATCH
+            SET b:Book,
+                b.bookID =
+                CASE
+                    WHEN b.bookID <> "SK27(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK27(" + db.pid + ")" + "1"
+                END,
+                b.title =
+                CASE
+                    WHEN b.title <> db.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.title + "1"
+                END,
+                b.publisher =
+                CASE
+                    WHEN b.publisher <> db.publisher + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.publisher + "1"
+                END,
+                b.year =
+                CASE
+                    WHEN b.year <> db.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        db.year + "1"
+                END,
+                b.month =
+                CASE
+                    WHEN b.month <> "SK28(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK28(" + db.pid + ")" + "1"
+                END,
+                b.pages =
+                CASE
+                    WHEN b.pages <> "SK29(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK29(" + db.pid + ")" + "1"
+                END,
+                b.vol =
+                CASE
+                    WHEN b.vol <> "SK30(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK30(" + db.pid + ")" + "1"
+                END,
+                b.num =
+                CASE
+                    WHEN b.num <> "SK31(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK31(" + db.pid + ")" + "1"
+                END,
+                b.loc =
+                CASE
+                    WHEN b.loc <> "SK32(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK32(" + db.pid + ")" + "1"
+                END,
+                b.class =
+                CASE
+                    WHEN b.class <> "SK33(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK33(" + db.pid + ")" + "1"
+                END,
+                b.note =
+                CASE
+                    WHEN b.note <> "SK34(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK34(" + db.pid + ")" + "1"
+                END,
+                b.annote =
+                CASE
+                    WHEN b.annote <> "SK35(" + db.pid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK35(" + db.pid + ")" + "1"
+                END
+        MERGE (b)-[:BOOK_PUBLISHED {{
+            _id: "(BOOK_PUBLISHED:" + elementId(b) + "," + elementId(au) + ")"
+        }}]-(au)
+        """)
+        # rule#9 using our framework
+        rule9 = TransformationRule(f"""
+        MATCH (t:PhDThesis)
+        MERGE (au:_dummy {{
+            _id: "(" + t.author + ")"
+        }})
+        ON CREATE
+            SET au:Author,
+                au.name = t.author + "1"
+        ON MATCH
+            SET au:Author,
+                au.name =
+                CASE
+                    WHEN au.name <> t.author + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.author + "1"
+                END
+        MERGE (m:_dummy {{
+            _id: "(" + elementId(t) + ")"
+        }})
+        ON CREATE
+            SET m:Misc,
+                m.miscid = "SK36(" + t.author + "," + t.title + ")" + "1",
+                m.title = t.title + "1",
+                m.howpub = "SK37(" + t.author + "," + t.title + ")" + "1",
+                m.confloc = "SK38(" + t.author + "," + t.title + ")" + "1",
+                m.year = t.year + "1",
+                m.month = t.month + "1",
+                m.pages = "SK39(" + t.author + "," + t.title + ")" + "1",
+                m.vol = "SK40(" + t.author + "," + t.title + ")" + "1",
+                m.num = t.number + "1",
+                m.loc = "SK41(" + t.author + "," + t.title + ")" + "1",
+                m.class = "SK42(" + t.author + "," + t.title + ")" + "1",
+                m.note = "SK43(" + t.author + "," + t.title + ")" + "1",
+                m.annote = t.school + "1"
+        ON MATCH
+            SET m:Misc,
+                m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK36(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK36(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.title =
+                CASE
+                    WHEN m.title <> t.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.title + "1"
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK37(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK37(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK38(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK38(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> t.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.year + "1"
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> t.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.month + "1"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK39(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK39(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK40(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK40(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> t.number + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.number + "1"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK41(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK41(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK42(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK42(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK43(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK43(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> t.school + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.school + "1"
+                END
+        MERGE (m)-[:MISC_PUBLISHED {{
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(au) + ")"
+        }}]-(au)
+        """)
+        # rule#10 using our framework
+        rule10 = TransformationRule(f"""
+        MATCH (t:MasterThesis)
+        MERGE (au:_dummy {{
+            _id: "(" + t.author + ")"
+        }})
+        ON CREATE
+            SET au:Author,
+                au.name = t.author + "1"
+        ON MATCH
+            SET au:Author,
+                au.name =
+                CASE
+                    WHEN au.name <> t.author + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.author + "1"
+                END
+        MERGE (m:_dummy {{
+            _id: "(" + elementId(t) + ")"
+        }})
+        ON CREATE
+            SET m:Misc,
+                m.miscid = "SK44(" + t.author + "," + t.title + ")" + "1",
+                m.title = t.title + "1",
+                m.howpub = "SK45(" + t.author + "," + t.title + ")" + "1",
+                m.confloc = "SK46(" + t.author + "," + t.title + ")" + "1",
+                m.year = t.year + "1",
+                m.month = "SK47(" + t.author + "," + t.title + ")" + "1",
+                m.pages = "SK48(" + t.author + "," + t.title + ")" + "1",
+                m.vol = "SK49(" + t.author + "," + t.title + ")" + "1",
+                m.num = "SK50(" + t.author + "," + t.title + ")" + "1",
+                m.loc = "SK51(" + t.author + "," + t.title + ")" + "1",
+                m.class = "SK52(" + t.author + "," + t.title + ")" + "1",
+                m.note = "SK53(" + t.author + "," + t.title + ")" + "1",
+                m.annote = t.school + "1"
+        ON MATCH
+            SET m:Misc,
+                m.miscid =
+                CASE
+                    WHEN m.miscid <> "SK44(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK44(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.title =
+                CASE
+                    WHEN m.title <> t.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.title + "1"
+                END,
+                m.howpub =
+                CASE
+                    WHEN m.howpub <> "SK45(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK45(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.confloc =
+                CASE
+                    WHEN m.confloc <> "SK46(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK46(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.year =
+                CASE
+                    WHEN m.year <> t.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.year + "1"
+                END,
+                m.month =
+                CASE
+                    WHEN m.month <> "SK47(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK47(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.pages =
+                CASE
+                    WHEN m.pages <> "SK48(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK48(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.vol =
+                CASE
+                    WHEN m.vol <> "SK49(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK49(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.num =
+                CASE
+                    WHEN m.num <> "SK50(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK50(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.loc =
+                CASE
+                    WHEN m.loc <> "SK51(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK51(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.class =
+                CASE
+                    WHEN m.class <> "SK52(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK52(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.note =
+                CASE
+                    WHEN m.note <> "SK53(" + t.author + "," + t.title + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK53(" + t.author + "," + t.title + ")" + "1"
+                END,
+                m.annote =
+                CASE
+                    WHEN m.annote <> t.school + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.school + "1"
+                END
+        MERGE (m)-[:MISC_PUBLISHED {{
+            _id: "(MISC_PUBLISHED:" + elementId(m) + "," + elementId(au) + ")"
+        }}]-(au)
+        """)
+
+        # transformation rules
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10]
+
+    def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=False, shuffle=True, minmax=True):
+        ttime = 0.0
+        min_rtime = float("inf")
+        max_rtime = 0
+        for i in range(launches):
+            self.prepare(app, stats=stats)
+            # shuffle rules in place; if requested
+            if shuffle:
+                import random
+                random.shuffle(self.rules)
+                print(f"The rules have been shuffled.")
+            # resume to the classic run procedure
+            if(nodeIndex):
+                self.addNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.addRelIndexes(app, stats=stats)
+            # statistics about runtime
+            rtime = self.transform(app, stats=stats)
+            ttime += rtime
+            if(rtime < min_rtime):
+                min_rtime = rtime
+            if(rtime > max_rtime):
+                max_rtime = rtime
+            # resume to classic run procedure
+            if(nodeIndex):
+                self.delNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.delRelIndexes(app, stats=stats)
+        avg_time = ttime / launches
+        if(stats):
+            print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
+        if(minmax):
+            return (min_rtime, avg_time, max_rtime)
+        else:
+            return avg_time
