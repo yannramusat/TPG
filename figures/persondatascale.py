@@ -13,16 +13,16 @@ class FigurePersonDataScale(Figure):
 
     def compute(self):
         # execute PI_NI for PersonData on scale
-        from scenarios.persondatascale import PersonDataScenarioPlainScale
+        from scenarios.persondatas1scale import PersonDataScenarioS1PlainScale
         for i in self.x:
             for s in self.scale:
-                scenario = PersonDataScenarioPlainScale(self.prefix, size=i, scale=s)
+                scenario = PersonDataScenarioS1PlainScale(self.prefix, size=i, scale=s)
                 self.results_persondata_PI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
         # execute CD/PI_NI for PersonData on scale
-        from scenarios.persondatascale import PersonDataScenarioCDoverPlainScale
+        from scenarios.persondatas1scale import PersonDataScenarioS1CDoverPlainScale
         for i in self.x:
             for s in self.scale:
-                scenario = PersonDataScenarioCDoverPlainScale(self.prefix, size=i, scale=s)
+                scenario = PersonDataScenarioS1CDoverPlainScale(self.prefix, size=i, scale=s)
                 self.results_persondata_CD_PI.append(scenario.run(self.app, launches=self.nbLaunches, stats=self.showStats, nodeIndex=True, relIndex=False))
 
     def plot(self):

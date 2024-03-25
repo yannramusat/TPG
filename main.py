@@ -53,6 +53,8 @@ if __name__ == "__main__":
     from figures.dta1rand import *
     from figures.a1ta3rand import *
     from figures.flighthotelscale import *
+    from figures.personaddressscale import *
+    from figures.persondatascale import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -93,14 +95,17 @@ if __name__ == "__main__":
         #FigureComparisonIndexesGTB(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesGTB(app, prefix=prefix, values=y, nbLaunches=20, showStats=showStats),
 
-        #FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        #FigurePersonAddressRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        #FigurePersonDataRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        #FigureGTBRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        FigureDTA1RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=nbLaunches, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        
-        #FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=1, showStats=showStats, scale=[1, 20, 100])
+        #FigureFlightHotelRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        #FigurePersonAddressRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        #FigurePersonDataRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        #FigureGTBRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        #FigureDTA1RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        #FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[10, 20, 30, 40, 50]),
+
+        FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=5, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=5, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=5, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
     ]
     
     # compute results    
