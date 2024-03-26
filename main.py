@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # sudo docker run --name neo4jVol -p 7474:7474 -p 7687:7687 -v ~/research/vPGt/output-ibench-data:/var/lib/neo4j/import --env NEO4J_AUTH=none neo4j:5.16.0-community
     prefix = "file:///"
     # then sudo chown -R yann:yann output-ibench-data if necessary
-    nbLaunches = 20
+    nbLaunches = 5
     showStats = True
     nodeIndexes = True
     relIndexes = True
@@ -55,6 +55,8 @@ if __name__ == "__main__":
     from figures.flighthotelscale import *
     from figures.personaddressscale import *
     from figures.persondatascale import *
+    from figures.gtbscale import *
+    from figures.dta1scale import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -101,11 +103,15 @@ if __name__ == "__main__":
         #FigureGTBRandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         #FigureDTA1RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
         #FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[10, 20, 30, 40, 50]),
 
-        FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=5, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
-        FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=5, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
-        FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=5, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        #FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        #FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        #FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[50]),
+        FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[20, 50]),    
+        
+        FigureGTBScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
+        #FigureDTA1Scale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
     ]
     
     # compute results    

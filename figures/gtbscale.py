@@ -30,7 +30,7 @@ class FigureGTBScale(Figure):
         import matplotlib.pyplot as plt
         import numpy as np
 
-        sizes = [s * self.x[0] * 2 for s in self.scale]
+        sizes = [s * self.x[0] * 7 for s in self.scale]
 
         # Figure for investigating the horizontal scalability | GUSToBIOSQL scenario
         fig2, ax = plt.subplots(layout="constrained", figsize=(6,3))
