@@ -57,6 +57,7 @@ if __name__ == "__main__":
     from figures.persondatascale import *
     from figures.gtbscale import *
     from figures.dta1scale import *
+    from figures.a1ta3scale import *
     figures = [
         #FigureComparisonIndexesPersonAddress(app, prefix=prefix, values=x, nbLaunches=nbLaunches, showStats=showStats),
         #FigureComparisonAlternativeApproachesPersonAddress(app, prefix=prefix, values=y, nbLaunches=nbLaunches, showStats=showStats),
@@ -106,12 +107,11 @@ if __name__ == "__main__":
 
         #FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
         #FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
-        #FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
-        FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[50]),
-        FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[20, 50]),    
-        
-        FigureGTBScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
-        #FigureDTA1Scale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
+        FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[10, 20]),
+        #FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]), 
+        #FigureGTBScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
+        FigureDTA1Scale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
+        FigureA1TA3Scale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10]),
     ]
     
     # compute results    
