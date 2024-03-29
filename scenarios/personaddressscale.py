@@ -33,12 +33,12 @@ class PersonAddressScenarioPlainScale(PersonAddressScenarioScale):
             MERGE (x:_dummy {{
                 _id: "(" + a.zip + "," + a.city + ",{i})"
             }})
-            SET x:Person2{i}, 
+            SET x:Person2:{i},
                 x.address = a.zip
             MERGE (y:_dummy {{
                 _id: "(" + elementId(a) + ",{i})"
             }})
-            SET y:Address2{i}, 
+            SET y:Address2:{i}, 
                 y.zip = a.zip, 
                 y.city = a.city
             MERGE (x)-[v:LIVES_AT{i} {{
@@ -55,13 +55,13 @@ class PersonAddressScenarioPlainScale(PersonAddressScenarioScale):
             MERGE (x:_dummy {{ 
                 _id: "(" + elementId(p) + ",{i})"
             }})
-            SET x:Person2{i},
+            SET x:Person2:{i},
                 x.name = p.name,
                 x.address = p.address
             MERGE (y:_dummy {{ 
                 _id: "(" + elementId(a) + ",{i})"
             }})
-            SET y:Address2{i},
+            SET y:Address2:{i},
                 y.zip = a.zip,
                 y.city = a.city
             MERGE (x)-[v:LIVES_AT{i} {{
@@ -102,10 +102,10 @@ class PersonAddressScenarioCDoverPlainScale(PersonAddressScenarioPlainScale):
                 _id: "(" + a.zip + "," + a.city + ",{i})"
             }})
             ON CREATE
-                SET x:Person2{i},
+                SET x:Person2:{i},
                     x.address = a.zip
             ON MATCH
-                SET x:Person2{i},
+                SET x:Person2:{i},
                     x.address =
                     CASE
                         WHEN x.address <> a.zip
@@ -116,11 +116,11 @@ class PersonAddressScenarioCDoverPlainScale(PersonAddressScenarioPlainScale):
                 _id: "(" + elementId(a) + ",{i})"
             }})
             ON CREATE
-                SET y:Address2{i},
+                SET y:Address2:{i},
                     y.zip = a.zip,
                     y.city = a.city
             ON MATCH
-                SET y:Address2{i},
+                SET y:Address2:{i},
                     y.zip =
                     CASE
                         WHEN y.zip <> a.zip
@@ -148,11 +148,11 @@ class PersonAddressScenarioCDoverPlainScale(PersonAddressScenarioPlainScale):
                 _id: "(" + elementId(p) + ",{i})"
             }})
             ON CREATE
-                SET x:Person2{i},
+                SET x:Person2:{i},
                     x.name = p.name,
                     x.address = p.address
             ON MATCH
-                SET x:Person2{i},
+                SET x:Person2:{i},
                     x.name =
                     CASE
                         WHEN x.name <> p.name
@@ -169,11 +169,11 @@ class PersonAddressScenarioCDoverPlainScale(PersonAddressScenarioPlainScale):
                 _id: "(" + elementId(a) + ",{i})"
             }})
             ON CREATE
-                SET y:Address2{i},
+                SET y:Address2:{i},
                     y.zip = a.zip,
                     y.city = a.city
             ON MATCH
-                SET y:Address2{i},
+                SET y:Address2:{i},
                     y.zip =
                     CASE
                         WHEN y.zip <> a.zip
