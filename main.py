@@ -106,8 +106,8 @@ if __name__ == "__main__":
         #FigureA1TA3RandomConflicts(app, prefix=prefix, values=[10000], nbLaunches=20, showStats=showStats, probs=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
 
         #FigureFlightHotelScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
-        FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
-        #FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]), 
+        #FigurePersonAddressScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
+        #FigurePersonDataScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20, 50]),
         #FigureGTBScale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10, 20]),
         #FigureDTA1Scale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10]),
         #FigureA1TA3Scale(app, prefix=prefix, values=[5000], nbLaunches=nbLaunches, showStats=showStats, scale=[1, 2, 5, 10]),
