@@ -29,9 +29,9 @@ if __name__ == "__main__":
     z = [100, 200, 500, 1_000, 2_000, 5_000]
     
     # temporary testing playground for scale
-    #from scenarios.flighthotelscale import *
-    #scenario = FlightHotelScenarioCDoverPlainScale(prefix, size=1000, scale=3)
-    #scenario.run(app, launches=3, stats=showStats, nodeIndex=True, relIndex=False)
+    #from scenarios.a1ta3scale import *
+    #scenario = Amalgam1ToAmalgam3PlainScale(prefix, size=5000, scale=20)
+    #scenario.run(app, launches=1, stats=showStats, nodeIndex=True, relIndex=False)
 
     # choose the experiments to run, and their parameters
     from figures.personaddress import *
