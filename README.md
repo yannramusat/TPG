@@ -38,7 +38,9 @@ This software is configured to connect to `localhost` with the default port and 
     ├── figures                  # Source code for figure generation
     ├── input-ibench-config      # Configuration files for iBench
     ├── output-ibench-data       # Input data (CSV format)
+    ├── results                  # Experimental results
     ├── scenarios                # Cypher scripts implementing the transformations
+    ├── user-study               # Materials related to the user study
     ├── Appendix.pdf             # The file containing the Appendix
     └── ...
 
