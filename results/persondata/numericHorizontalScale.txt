@@ -1,0 +1,3 @@
+## Figure for investigating the horizontal scalability | PersonData scenario
+self.results_persondata_PI=[321.8, 607.0, 1489.0, 2988.6, 6017.4, 15395.6, 34338.0]
+self.results_persondata_CD_PI=[346.8, 652.2, 1647.8, 3341.6, 6416.0, 16266.0, 35855.0]

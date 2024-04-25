@@ -1,0 +1,3 @@
+## Figure for investigating the horizontal scalability | Amalgam1ToAmalgam3 scenario
+self.results_a1ta3_PI=[2251.0, 4535.0, 11239.6, 22740.0, 52948.0]
+self.results_a1ta3_CD_PI=[3032.6, 5930.8, 14859.2, 29683.2, 67382.0]

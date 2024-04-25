@@ -1,0 +1,21 @@
+## Figure for exhaustive comparison of indexes | FlightHotel scenario
+# Separate indexes alternative
+self.results_Sep_NI_RI=[141.0, 148.8, 162.0, 182.4]
+self.results_Sep_NI=[137.4, 145.6, 154.8, 181.4]
+self.results_Sep_RI=[131.0, 163.8, 435.8, 1297.8]
+self.results_Sep=[29.6, 64.8, 357.8, 1389.6]
+# Plain implementation
+self.results_Plain_NI_RI=[156.2, 154.6, 175.0, 191.6]
+self.results_Plain_NI=[126.4, 136.2, 149.4, 172.6]
+self.results_Plain_RI=[153.8, 245.8, 822.8, 2678.4]
+self.results_Plain=[52.8, 133.6, 1050.4, 3167.2]
+# Conflict Detection over Separate indexes
+self.results_CDoverSI_NI_RI=[160.8, 157.0, 175.6, 201.4]
+self.results_CDoverSI_NI=[153.0, 171.2, 184.2, 231.2]
+self.results_CDoverSI_RI=[193.4, 215.6, 544.6, 1662.8]
+self.results_CDoverSI=[34.6, 75.0, 372.2, 1486.0]
+# Conflict Detection over Plain
+self.results_CDoverPlain_NI_RI=[165.4, 173.0, 182.0, 229.6]
+self.results_CDoverPlain_NI=[161.6, 163.4, 179.4, 205.0]
+self.results_CDoverPlain_RI=[171.4, 308.4, 1002.8, 3371.0]
+self.results_CDoverPlain=[58.0, 145.4, 861.6, 3395.0]

@@ -1,0 +1,4 @@
+## Figure for evaluating the impact of the frequency of conflicts | Amalgam1ToAmalgam3 scenario
+self.results_shuffle_rand_min=[5473, 5550, 5517, 5533, 5511, 5448, 5481, 5490, 5467, 5445, 5482]
+self.results_shuffle_rand=[5684.65, 5761.55, 5982.9, 6037.55, 6081.95, 6219.1, 5707.3, 5688.4, 5678.3, 5664.0, 5671.15]
+self.results_shuffle_rand_max=[5797, 6091, 6722, 7059, 7937, 9786, 6086, 6106, 6173, 6137, 5754]

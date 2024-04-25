@@ -1,0 +1,8 @@
+## Figure for comparing Uniqueness Constraints vs Indexes | FlightHotel scenario
+# Comparison of alternative implementations
+self.results_Sep_long=[174.4, 145.0, 169.4, 190.8, 236.6, 387.4, 644.0]
+self.results_Plain_long=[148.2, 140.0, 151.4, 187.6, 235.4, 401.2, 737.0]
+self.results_Conflicting_long=[137.6, 137.8, 155.2, 180.2, 227.2, 390.8, 623.8]
+self.results_Sep_long_UC=[76.8, 83.2, 99.2, 139.0, 205.6, 387.0, 696.6]
+self.results_Plain_long_UC=[77.8, 83.0, 101.8, 133.6, 192.0, 391.6, 711.6]
+self.results_Conflicting_long_UC=[74.6, 82.6, 96.8, 132.8, 194.0, 384.4, 697.4]

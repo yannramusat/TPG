@@ -1,0 +1,4 @@
+## Figure for comparing with the baseline approach | PersonAddress scenario
+self.results_baseline_long=[21.6, 61.2, 393.8, 1885.8, 6387.0, 39919.0]
+self.results_baseline_NI_long=[60.0, 77.0, 211.8, 623.2, 2234.2, 13240.4]
+self.results_PI_NI_long=[94.8, 105.4, 116.0, 141.6, 196.4, 366.6]

@@ -1,0 +1,4 @@
+## Figure for comparing with the baseline approach | FlightHotel scenario
+self.results_baseline_long=[22.2, 51.0, 307.8, 1069.8, 3447.4, 20351.4]
+self.results_baseline_NI_long=[88.4, 121.8, 256.2, 638.2, 1943.2, 10685.8]
+self.results_PI_NI_long=[164.0, 160.8, 167.4, 203.4, 283.0, 423.8]

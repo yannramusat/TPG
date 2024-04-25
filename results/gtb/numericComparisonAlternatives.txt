@@ -1,0 +1,9 @@
+## Figure for comparing alternative implementations | GTB scenario
+# Comparison of alternative implementations
+results_Plain_min=[277, 291, 336, 409, 544, 941, 1714]
+results_Plain=[285.85, 303.0, 352.85, 424.5, 568.85, 988.5, 1752.9]
+results_Plain_max=[308, 312, 379, 459, 632, 1060, 1823]
+results_Shuffled_min=[259, 282, 306, 371, 505, 891, 1601]
+results_Shuffled=[276.6, 296.6, 326.7, 408.7, 534.45, 961.95, 1680.25]
+results_Shuffled_max=[315, 318, 369, 450, 591, 1059, 1805]
+

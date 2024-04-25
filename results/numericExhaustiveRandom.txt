@@ -1,0 +1,24 @@
+## Figure for evaluating the impact of the frequency of conflicts | FlightHotel scenario
+self.results_shuffle_rand_min=[740, 735, 733, 735, 735, 732, 729, 731, 729, 733, 734]
+self.results_shuffle_rand=[761.05, 748.25, 748.9, 752.85, 747.1, 746.6, 746.05, 749.2, 745.55, 748.1, 741.2]
+self.results_shuffle_rand_max=[779, 777, 773, 778, 818, 811, 809, 779, 782, 771, 759]
+## Figure for evaluating the impact of the frequency of conflicts | PersonAddress scenario
+self.results_shuffle_rand_min=[770, 768, 761, 750, 746, 759, 759, 737, 752, 749, 758]
+self.results_shuffle_rand=[790.0, 784.25, 780.1, 775.75, 779.6, 775.85, 773.75, 764.6, 772.7, 779.65, 777.6]
+self.results_shuffle_rand_max=[828, 811, 824, 807, 809, 801, 806, 784, 834, 832, 794]
+## Figure for evaluating the impact of the frequency of conflicts | PersonData scenario
+self.results_shuffle_rand_min=[540, 489, 485, 496, 479, 535, 483, 490, 480, 483, 538]
+self.results_shuffle_rand=[552.0, 546.45, 545.65, 547.45, 545.3, 547.05, 542.6, 545.85, 544.55, 543.7, 547.45]
+self.results_shuffle_rand_max=[570, 572, 591, 592, 591, 566, 564, 575, 576, 567, 586]
+## Figure for evaluating the impact of the frequency of conflicts | GUSToBIOSQL scenario
+self.results_shuffle_rand_min=[3172, 3173, 3159, 3167, 3165, 3050, 3034, 3148, 3139, 3133, 3133]
+self.results_shuffle_rand=[3189.6, 3227.1, 3206.05, 3205.8, 3220.45, 3184.1, 3200.45, 3194.4, 3179.2, 3174.45, 3163.1]
+self.results_shuffle_rand_max=[3238, 3509, 3524, 3475, 3579, 3250, 3480, 3565, 3462, 3488, 3236]
+## Figure for evaluating the impact of the frequency of conflicts | DBLPToAmalgam1 scenario
+self.results_shuffle_rand_min=[5320, 5195, 5321, 5304, 5297, 5263, 5251, 5242, 5213, 5173, 5194]
+self.results_shuffle_rand=[5395.45, 5408.05, 5417.15, 5415.35, 5383.0, 5355.6, 5360.4, 5362.65, 5350.95, 5331.65, 5283.85]
+self.results_shuffle_rand_max=[5572, 5973, 5991, 5966, 5928, 5513, 5876, 6016, 5867, 5929, 5524]
+## Figure for evaluating the impact of the frequency of conflicts | Amalgam1ToAmalgam3 scenario
+self.results_shuffle_rand_min=[5473, 5480, 5524, 5666, 5472, 5484, 5481, 5490, 5467, 5445, 5482]
+self.results_shuffle_rand=[5684.65, 5719.15, 5735.3, 5721.9, 5660.9, 5687.35, 5707.3, 5688.4, 5678.3, 5664.0, 5671.15]
+self.results_shuffle_rand_max=[5797, 5844, 5906, 5802, 5799, 5767, 6086, 6106, 6173, 6137, 5754]

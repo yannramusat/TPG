@@ -1,0 +1,22 @@
+## Figure for exhaustive comparison of indexes | PersonData scenario
+# Separate indexes alternative
+self.results_Sep_NI_RI=[94.0, 111.2, 127.8, 143.2]
+self.results_Sep_NI=[103.4, 97.0, 128.0, 152.2]
+self.results_Sep_RI=[123.0, 165.8, 264.2, 639.8]
+self.results_Sep=[26.4, 42.6, 209.2, 576.4]
+# Plain implementation
+self.results_Plain_NI_RI=[119.0, 126.2, 134.0, 160.6]
+self.results_Plain_NI=[97.8, 104.2, 120.6, 133.4]
+self.results_Plain_RI=[130.0, 191.6, 710.0, 2146.4]
+self.results_Plain=[38.6, 97.8, 548.6, 2069.6]
+# Conflict Detection over Separate indexes
+self.results_CDoverSI_NI_RI=[108.8, 115.2, 134.0, 148.4]
+self.results_CDoverSI_NI=[106.4, 102.4, 116.6, 144.2]
+self.results_CDoverSI_RI=[115.4, 137.4, 304.0, 899.8]
+self.results_CDoverSI=[24.0, 52.6, 264.0, 738.8]
+# Conflict Detection over Plain
+self.results_CDoverPlain_NI_RI=[144.4, 140.2, 159.6, 183.4]
+self.results_CDoverPlain_NI=[121.8, 109.6, 122.2, 159.6]
+self.results_CDoverPlain_RI=[144.8, 214.8, 773.6, 2638.6]
+self.results_CDoverPlain=[41.0, 100.0, 573.0, 2159.2]
+

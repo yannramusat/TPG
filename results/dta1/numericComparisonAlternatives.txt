@@ -1,0 +1,8 @@
+## Figure for comparing alternative implementations | DTA1 scenario
+# Comparison of alternative implementations
+self.results_Plain_min=[431, 460, 501, 590, 790, 1474, 2780]
+self.results_Plain=[473.35, 503.3, 518.9, 606.8, 806.3, 1502.7, 2823.85]
+self.results_Plain_max=[522, 536, 546, 628, 875, 1548, 2864]
+self.results_Shuffled_min=[404, 430, 494, 569, 773, 1464, 2784]
+self.results_Shuffled=[439.3, 458.65, 512.7, 604.0, 800.85, 1503.95, 2841.75]
+self.results_Shuffled_max=[500, 494, 537, 642, 835, 1550, 2907]

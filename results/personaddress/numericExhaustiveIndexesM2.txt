@@ -1,0 +1,21 @@
+## Figure for exhaustive comparison of indexes | PersonAddress (M2) scenario
+# Separate indexes alternative
+self.results_Sep_NI_RI=[74.4, 84.6, 86.8, 100.8]
+self.results_Sep_NI=[59.4, 61.2, 70.0, 82.8]
+self.results_Sep_RI=[63.2, 81.0, 188.8, 565.8]
+self.results_Sep=[13.0, 25.2, 132.8, 505.6]
+# Plain implementation
+self.results_Plain_NI_RI=[63.4, 67.4, 75.6, 93.8]
+self.results_Plain_NI=[64.6, 63.6, 72.0, 87.0]
+self.results_Plain_RI=[73.6, 111.4, 336.2, 1140.0]
+self.results_Plain=[24.8, 48.8, 272.4, 1082.6]
+# Conflict Detection over Separate indexes
+self.results_CDoverSI_NI_RI=[94.0, 99.4, 109.4, 114.2]
+self.results_CDoverSI_NI=[78.4, 77.4, 87.2, 98.4]
+self.results_CDoverSI_RI=[79.0, 96.8, 214.0, 592.6]
+self.results_CDoverSI=[19.2, 25.4, 134.6, 512.4]
+# Conflict Detection over Plain
+self.results_CDoverPlain_NI_RI=[75.4, 82.4, 85.6, 107.4]
+self.results_CDoverPlain_NI=[77.2, 82.0, 86.6, 101.2]
+self.results_CDoverPlain_RI=[94.0, 122.0, 354.8, 1182.0]
+self.results_CDoverPlain=[22.4, 48.4, 281.2, 1099.2]

@@ -1,0 +1,21 @@
+## Figure for exhaustive comparison of indexes | GTB scenario
+# Separate indexes implementation
+self.results_Sep_NI_RI=[294.4, 321.8, 388.2, 532.6]
+self.results_Sep_NI=[346.2, 361.4, 427.4, 480.0]
+self.results_Sep_RI=[335.6, 488.6, 1454.8, 5457.0]
+self.results_Sep=[105.6, 205.4, 1236.0, 4595.4]
+# Plain implementation
+self.results_Plain_NI_RI=[311.6, 348.6, 388.0, 470.6]
+self.results_Plain_NI=[281.8, 368.2, 424.2, 475.2]
+self.results_Plain_RI=[592.8, 1458.6, 6566.2, 25985.4]
+self.results_Plain=[352.2, 1054.0, 6630.8, 25581.4]
+# Conflict Detection over Separate indexes
+self.results_CDoverSI_NI_RI=[548.2, 572.8, 756.0, 851.6]
+self.results_CDoverSI_NI=[572.8, 614.4, 626.2, 711.6]
+self.results_CDoverSI_RI=[610.8, 800.4, 2173.0, 7171.0]
+self.results_CDoverSI=[198.6, 302.2, 1709.8, 6617.0]
+# Conflict Detection over Plain
+self.results_CDoverPlain_NI_RI=[542.6, 567.0, 620.4, 724.2]
+self.results_CDoverPlain_NI=[539.6, 555.2, 619.8, 752.6]
+self.results_CDoverPlain_RI=[910.6, 1936.4, 6780.6, 26783.4]
+self.results_CDoverPlain=[393.2, 1183.0, 6879.6, 27152.8]
