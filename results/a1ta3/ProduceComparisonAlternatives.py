@@ -21,7 +21,7 @@ Plain_err=np.row_stack((Plain_min_err, Plain_max_err))
 Shuffled_err=np.row_stack((Shuffled_min_err, Shuffled_max_err))
 
 # Figure for comparing alternative implementations | A1TA3 scenario
-fig2, ax = plt.subplots(layout="constrained", figsize=(4,2.5))
+fig2, ax = plt.subplots(layout="constrained", figsize=(4,2))
 trans1 = Affine2D().translate(-0.05, 0.0) + ax.transData
 trans2 = Affine2D().translate(+0.05, 0.0) + ax.transData
 #ax.plot(x, results_Plain, label="PI", marker="D", color="blue")
