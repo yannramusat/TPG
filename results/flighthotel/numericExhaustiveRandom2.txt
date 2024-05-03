@@ -1,0 +1,4 @@
+## Figure for evaluating the impact of the frequency of conflicts | FlightHotel scenario
+self.results_shuffle_rand_min=[740, 735, 733, 735, 735, 732, 729, 731, 729, 733, 734]
+self.results_shuffle_rand=[761.05, 748.25, 748.9, 752.85, 747.1, 746.6, 746.05, 749.2, 745.55, 748.1, 741.2]
+self.results_shuffle_rand_max=[779, 777, 773, 778, 818, 811, 809, 779, 782, 771, 759]

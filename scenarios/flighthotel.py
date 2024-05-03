@@ -590,3 +590,130 @@ class FlightHotelScenarioCDoverConflicting(FlightHotelScenarioConflicting):
         """)
         # transformation rules
         self.rules = [rule1]
+
+class FlightHotelScenarioRandomConflicts(FlightHotelScenarioCDoverPlain):
+    def __init__(self, prefix, size = 100, lstring = 5, prob_conflict = 50):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule(f"""
+        MATCH (f:Flight)
+        MATCH (h:Hotel)
+        WHERE f.fid = h.flid
+        MERGE (l:_dummy {{ 
+            _id: "(" + f.src + ")" 
+        }})
+        ON CREATE
+            SET l:Location,
+                l.name = f.src + "1"
+        ON MATCH
+            SET l:Location,
+                l.name =
+                CASE
+                    WHEN l.name <> f.src + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.src + "1"
+                END
+        MERGE (j:_dummy {{ 
+            _id: "(" + f.dest + ")" 
+        }})
+        ON CREATE
+            SET j:Location,
+                j.name = f.dest + "1"
+        ON MATCH
+            SET j:Location,
+                j.name =
+                CASE
+                    WHEN j.name <> f.dest + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.dest + "1"
+                END
+        MERGE (t:_dummy {{
+            _id: "(" + f.src + "," + f.dest + ")"
+        }})
+        ON CREATE
+            SET t:Travel,
+                t.from = f.src + "1",
+                t.to = f.dest + "1"
+        ON MATCH
+            SET t:Travel,
+                t.from =
+                CASE
+                    WHEN t.from <> f.src + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.src + "1"
+                END,
+                t.to =
+                CASE
+                    WHEN t.to <> f.dest + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        f.dest + "1"
+                END
+        MERGE (m:_dummy {{
+            _id: "(h(" + h.hid + "))"
+        }})
+        ON CREATE
+            SET m:Hotel2,
+                m.name = h.hid + "1"
+        ON MATCH
+            SET m:Hotel2,
+                m.name =
+                CASE
+                    WHEN m.name <> h.hid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        h.hid + "1"
+                END
+        MERGE (l)-[ft:FLIGHTS_TO {{
+            _id: "(FLIGHTS_TO:" + elementId(l) + "," + elementId(t) + ")"
+        }}]->(t)
+        MERGE (t)-[ft2:FLIGHTS_TO {{
+            _id: "(FLIGHTS_TO:" + elementId(t) + "," + elementId(j) + ")"
+        }}]->(j)
+        MERGE (t)-[hh:HAS_HOTEL {{
+            _id: "(HAS_HOTEL:" + elementId(t) + "," + elementId(m) + ")"
+        }}]->(m)
+        """)
+        # transformation rules
+        self.rules = [rule1]
+    
+    def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=False, shuffle=True, minmax=True):
+        ttime = 0.0
+        min_rtime = float("inf")
+        max_rtime = 0
+        for i in range(launches):
+            self.prepare(app, stats=stats)
+            # shuffle rules in place; if requested
+            if shuffle:
+                import random
+                random.shuffle(self.rules)
+                print(f"The rules have been shuffled.")
+            # resume to the classic run procedure
+            if(nodeIndex):
+                self.addNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.addRelIndexes(app, stats=stats)
+            # statistics about runtime
+            rtime = self.transform(app, stats=stats)
+            ttime += rtime
+            if(rtime < min_rtime):
+                min_rtime = rtime
+            if(rtime > max_rtime):
+                max_rtime = rtime
+            # resume to classic run procedure
+            if(nodeIndex):
+                self.delNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.delRelIndexes(app, stats=stats)
+        avg_time = ttime / launches
+        if(stats):
+            print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
+        if(minmax):
+            return (min_rtime, avg_time, max_rtime)
+        else:
+            return avg_time

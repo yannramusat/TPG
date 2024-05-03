@@ -1,0 +1,3 @@
+## Figure for investigating the horizontal scalability | DBLPToAmalgam1 scenario
+self.results_dta1_PI=[1838.2, 3506.6, 8778.8, 20444.0, 39965.0, 101254.0]
+self.results_dta1_CD_PI=[3017.4, 5868.8, 14919.4, 29046.0, 63614.0, 168257.0]

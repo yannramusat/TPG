@@ -1,0 +1,8 @@
+## Figure for comparing alternative implementations | A1TA3 scenario
+# Comparison of alternative implementations
+self.results_Plain_min=[416, 451, 541, 694, 1008, 1966, 3587]
+self.results_Plain=[434.55, 466.65, 549.15, 705.15, 1029.8, 1984.85, 3688.5]
+self.results_Plain_max=[474, 496, 560, 718, 1085, 2013, 3869]
+self.results_Shuffled_min=[396, 426, 512, 669, 977, 1967, 3603]
+self.results_Shuffled=[432.4, 456.5, 543.4, 696.6, 1021.45, 1991.8, 3670.7]
+self.results_Shuffled_max=[501, 491, 591, 720, 1080, 2041, 3879]

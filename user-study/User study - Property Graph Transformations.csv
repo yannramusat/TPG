@@ -1,0 +1,510 @@
+"Horodateur","How would you rate your knowledge about databases?","How would you rate your knowledge about openCypher?","How would you rate your knowledge about the MERGE clause of openCypher?","How would you rate your knowledge about property graph transformations?","Does this query create as many Director nodes as there are Person nodes that have an outgoing relationship of type DIRECTED to a Movie node?","Does this query can create nodes with both Director and Actor labels?","Executed after the previous two queries, does this one will create new Director nodes?","Will two Persons having co-directed the same Movie be connected to a same Film node?","Does this transformation generate as many Director nodes as there are Person nodes that have an outgoing relationship of type DIRECTED to a Movie node?","Does this transformation can generate nodes with both a Director and an Actor labels?","Will more Director nodes be created?","Will two persons having co-directed the same movie be connected to the same Film node?","How would you modify the openCypher script to account for this?
+Please provide the modified openCypher script.","How would you modify the transformation rule to account for this?
+Please provide the modified transformation rule.","How would you modify the openCypher script to account for this?
+Please provide the modified openCypher script.","How would you modify the transformation rule to account for this?
+Please provide the modified transformation rule.","From a scale of 1 to 5, which one of the two methods you find easier to understand? (When a transformation is given, inferring the produced output.)","Why?","From a scale of 1 to 5, which one of the two methods you find more intuitive? (Better for describing the desired output.)","Why?","From a scale of 1 to 5, which one of the two methods you find more flexible? (Easier to adapt to a new specification.)","Why?"
+"2024/04/12 2:13:45 PM UTC+2","4","3","3","3","Yes","Each query specifically creates nodes with either the Director or Actor label based on different relationship types (DIRECTED and ACTED_IN, respectively). If a person has both directed and acted in movies, they would have separate nodes for each role (one as a Director and one as an Actor), not a single node with both labels.","No","No","Yes","the syntax used in your description, particularly the GENERATE keyword and the way the labels and properties are being set, isn't standard Cypher query language. Cypher uses CREATE, MERGE, or SET for such operations","Yes","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WHERE n <> o
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie: m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WHERE n <> o
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[():COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WHERE n <> o
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+WITH x, y, collect(m.title) AS movies
+MERGE (x)-[d:COLLEAGUE]->(y)
+SET d.movies = movies","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WHERE n <> o
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[r:COLLEAGUE {
+    movies = collect(m.title)
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","1 - openCypher scripts are easier to understand","They clearly spell out each step of the process, such as matching patterns, merging nodes, and setting properties.","3","Both methods have strengths and weaknesses in terms of intuitively describing the intended output.","4","transformation rules with the GENERATE clause tend to be more flexible when adapting to new specifications, particularly when those adaptations involve complex changes in the logic or structure of the data manipulations."
+"2024/04/12 3:28:50 PM UTC+2","4","3","2","2","No","No","Yes","No","Yes","Yes","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie: m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m.title):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE]->(y), (x)-[:DIRECTOR_OF]->(m), (y)-[:DIRECTOR_OF]->(m)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","4","The identity is specified explicitly in GENERATE clauses.","4","Again, because the identity is specified explicitly, and because the transformation is not ""distributed"" among several clauses in GENERATE clauses (which makes them more descriptive and less procedural than openCypher).","4","It took me a lot longer to adapt the openCypher scripts. I think, the underlying reason is the procedural nature of the openCypher scripts. A GENERATE clause is more descriptive, and ""self-contained""."
+"2024/04/12 3:51:27 PM UTC+2","5 - Expert","3","1 - Novice","2","Yes","No","No","Yes","Yes","Yes","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie: m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[z = (m.title):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie: m.title, movie-id: m.id}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[z = (m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","3","The name of the Cypher Merge clause is very misleading and it's a bit unclear what the uniqueness constraint applies to (do I have to add id(x) to force edges to multiple movies with the same name?) 
+As for transformation rules, I find adding a ""useless"" variable that will never be referred to a bit weird. ","4","I guess the explicit shared context is nicer to think about and might lead to less mistakes? ","3","Can't really say from just examples, I would need to look at a full specification for both solutions."
+"2024/04/17 2:25:09 PM UTC+2","3","2","2","2","Yes","Yes","No","Yes","Yes","Yes","No","Yes","MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+
+
+WITH x, y, COLLECT(DISTINCT m.title) AS coDirMovies
+
+UNWIND coDirMovies AS title
+MERGE (x)-[d:COLLEAGUE]->(y)
+SET d.movie = title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE]->(y)
+ON CREATE SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","5 - The transformations rules and the GENERATE clause are easier to understand","Because the change is easier to make and it is explicit.","5 - The transformations rules and the GENERATE clause better describe the intended output","Because the change is easier to understand.","5 - The transformations rules and the GENERATE clause are easier to adapt","Because you need to change less when using GENERATE clause."
+"2024/04/17 5:55:55 PM UTC+2","4","4","3","2","Yes","No","Yes","No","Yes","No","No","Yes","MATCH (n:Director)-[r1:DIRECTED]->(m:Movie)<-[r2:DIRECTED]-(o:Director)
+MERGE (n)-[d:COLLEAGUE]->(y)
+ON CREATE SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[():COLLEAGUE { 
+    movie = (m.title) 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MERGE (n:Director)-[r1:DIRECTED]->(m:Movie)<-[r2:DIRECTED]-(o:Director)
+ON CREATE (n)-[d:COLLEAGUE]->(y)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(r):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","4","It's easier to have a single construct to define transformations rather than having not only MERGE, but also its combinations with MATCH and CREATE, as in openCypher.","3","Previous exposure to openCypher constructs.","4","It seems that modifying the transformation rules amounts to adding parentheses where needed whereas in openCypher due to the interactions between the constructs, the scripts needs to be rewritten. "
+"2024/04/18 12:26:30 PM UTC+2","5 - Expert","4","4","3","No","No","No","Yes","Yes","Yes","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+CREATE (x)-[d:COLLEAGUE]->(y)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+GENERATE
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (y)-[d:CO_DIRECTED]->(m)
+SET d.movie = m.title
+MERGE (x)-[d:CO_DIRECTED]->(m)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+GENERATE
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):CO_DIRECTED { 
+    movie = m.title 
+}]->(m)
+GENERATE
+(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})-[(m):CO_DIRECTED { 
+    movie = m.title 
+}]->(m)","3","The binding is difficult to understand in the beginning. By the way, the difference between the create and merge in OpenCypher is not intuitive","4"," GENERATE reflects more the standard way of thinking and user expectation with respect to the create clause of OpenCypher","5 - The transformations rules and the GENERATE clause are easier to adapt","You can create multiple nodes and relationships without forcing the uniqueness or crafting a difficult and long cypher query "
+"2024/04/18 6:05:16 PM UTC+2","3","2","1 - Novice","1 - Novice","No","Yes","No","Yes","Yes","No","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+CREATE (x)-[d:COLLEAGUE {movie: m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Directors {
+    name1: n.name, 
+    born1: n.born,
+    name2: o.name, 
+    born2: o.born
+})
+MERGE (y:Movie {
+    title: m.title
+})
+CREATE (x)-[d:CODIRECTS]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born,o.name,o.born):CoDirector {
+    name1 = n.name, 
+    born1 = n.born,
+    name2 = o.name, 
+    born2 = o.born,
+})-[(m):CODIRECTS { 
+    movie = m.title 
+}]->(y = (m.title):Movie {
+    title = m.title
+})
+
+","3","","4","","4",""
+"2024/04/19 12:04:34 AM UTC+2","3","2","3","3","Yes","No","No","Yes","Yes","Yes","No","Yes","To modify the openCypher script to account for having multiple relationships between two Directors for distinct movie titles, we need to adjust the GENERATE clause to generate multiple relationships based on the distinct movie titles. We can achieve this by utilizing a subquery to first gather the distinct movie titles co-directed by the two Directors, and then generate relationships for each distinct movie title.
+
+MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WITH n, o, COLLECT(DISTINCT m.title) AS movieTitles
+UNWIND movieTitles AS title
+GENERATE 
+(x = (n.name, n.born):Director {
+    name: n.name, 
+    born: n.born
+})-[():COLLEAGUE { 
+    movie: title
+}]->(y = (o.name, o.born):Director {
+    name: o.name, 
+    born: o.born
+})
+","
+To modify the transformation rule to account for having multiple relationships between two Directors for distinct movie titles, we need to adjust the GENERATE clause to generate multiple relationships based on the distinct movie titles. We can achieve this by using a subquery to first gather the distinct movie titles co-directed by the two Directors, and then generate relationships for each distinct movie title.
+
+MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WITH n, o, COLLECT(DISTINCT m.title) AS movieTitles
+UNWIND movieTitles AS title
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[():COLLEAGUE { 
+    movie = title
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})
+","To modify the openCypher script to account for having one relationship for each movie co-directed by the two Directors, we can simplify the approach by directly matching the distinct movies co-directed by both Directors and then generating a COLLEAGUE relationship for each of these movies.
+
+MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WITH n, o, COLLECT(DISTINCT m) AS coDirectedMovies
+UNWIND coDirectedMovies AS movie
+GENERATE 
+(x = (n.name, n.born):Director {
+    name: n.name, 
+    born: n.born
+})-[():COLLEAGUE { 
+    movie: movie.title
+}]->(y = (o.name, o.born):Director {
+    name: o.name, 
+    born: o.born
+})
+","To modify the transformation rule to account for having one relationship for each movie co-directed by the two Directors, we need to adjust the GENERATE clause to generate a COLLEAGUE relationship for each distinct movie co-directed by both Directors.
+
+MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WITH n, o, COLLECT(DISTINCT m) AS coDirectedMovies
+UNWIND coDirectedMovies AS movie
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[():COLLEAGUE { 
+    movie = movie.title
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})
+","1 - openCypher scripts are easier to understand","being easier to understand for inferring the produced output","5 - The transformations rules and the GENERATE clause better describe the intended output","The transformations rules and the GENERATE clause provide a more direct and intuitive description of the intended output because they explicitly specify the transformations and operations to be applied to the input data to produce the desired output.","4",""
+"2024/04/19 9:52:54 AM UTC+2","3","2","2","2","Yes","No","No","Yes","Yes","No","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+UNWIND m.title AS movieTitle
+MERGE (x:Director {
+  name: n.name,
+  born: n.born
+})
+MERGE (y:Director {
+  name: o.name,
+  born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie: movieTitle}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE
+  (x = (n.name, n.born):Director {
+    name: n.name,
+    born: n.born
+  })-[:COLLEAGUE { movie: m.title }]->(y = (o.name, n.born):Director {
+    name: o.name,
+    born: o.born
+  })","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+WITH n, o, COLLECT(m.title) AS coDirectedMovies
+MERGE (x:Director {
+  name: n.name,
+  born: n.born
+})
+MERGE (y:Director {
+  name: o.name,
+  born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movies: coDirectedMovies}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE
+  (x = (n.name, n.born):Director {
+    name: n.name,
+    born: n.born
+  })-[:COLLEAGUE { movies: COLLECT(m.title) }]->(y = (o.name, n.born):Director {
+    name: o.name,
+    born: n.born
+  })","3","Both openCypher scripts and transformation rules with GENERATE can have varying levels of complexity depending on the specific use case","4","","3",""
+"2024/04/19 10:37:52 AM UTC+2","3","2","2","2","Yes","Yes","No","Yes","Yes","Yes","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE]->(y)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[():COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE]->(y)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[():COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","3","","3","","3",""
+"2024/04/19 1:29:05 PM UTC+2","4","4","5 - Expert","3","No","No","Yes","No","Yes","Yes","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie: m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m.title):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+CREATE (x)-[d:COLLEAGUE]->(y)
+SET d.movie = m.title","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[(m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","5 - The transformations rules and the GENERATE clause are easier to understand","The fact that the identifiers are explicit makes the result with GENERATE way easier to infer.","4","GENERATE is way better for describing what you want than openCypher (5 in your scale).  However, I would say it is more of a 4 on the intuitive -scale.  The user has to sit down to choose identifiers properly.","5 - The transformations rules and the GENERATE clause are easier to adapt","Since understanding the semantics of sequences of CREATE/MERGE is hard, it is hard to adapt it.
+(In your examples, the openCypher queries were reasonably easy to adapt, but I expect real queries to be harder.)"
+"2024/04/19 1:55:39 PM UTC+2","5 - Expert","3","3","3","No","No","Yes","No","Yes","Yes","No","Yes","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+MERGE (x)-[d:COLLEAGUE {movie : m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[z = (m.title):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person) 
+MERGE (x:Director {
+    name: n.name, 
+    born: n.born
+})
+MERGE (y:Director {
+    name: o.name, 
+    born: o.born
+})
+CREATE (x)-[d:COLLEAGUE {movie = m.title}]->(y)","MATCH (n:Person)-[:DIRECTED]->(m:Movie)<-[:DIRECTED]-(o:Person)
+GENERATE 
+(x = (n.name, n.born):Director {
+    name = n.name, 
+    born = n.born
+})-[z = (m):COLLEAGUE { 
+    movie = m.title 
+}]->(y = (o.name, o.born):Director {
+    name = o.name, 
+    born = o.born
+})","5 - The transformations rules and the GENERATE clause are easier to understand","MERGE is particularly tricky in that it does not allow partial matching. That is, MERGE (x), MERGE (x) -> (y) is not the same as MERGE (x) -> (y). Indeed, the second query will not reuse an existing (x) vertex.","3","I have no strong feeling one way or the other. Both require the user to develop its own model of what the two frameworks do, neither of them being particularly intuitive. Then it just becomes a technical task to write down (perhaps by trial and error) the correct script.","5 - The transformations rules and the GENERATE clause are easier to adapt","The GENERATE approach seems more flexible and expressive, as the user has more control over the grouping criterion."

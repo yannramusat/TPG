@@ -1,0 +1,21 @@
+## Figure for exhaustive comparison of Uniqueness Constraints | FlightHotel scenario
+# Separate labels alternative
+self.results_Sep_NI_RI=[80.8, 91.0, 126.8, 181.8]
+self.results_Sep_NI=[75.6, 82.4, 107.2, 131.0]
+self.results_Sep_RI=[92.2, 148.0, 460.0, 1465.0]
+self.results_Sep=[35.0, 70.4, 382.4, 1377.6]
+# Plain implementation
+self.results_Plain_NI_RI=[80.0, 106.4, 121.8, 173.4]
+self.results_Plain_NI=[75.8, 75.6, 97.6, 136.0]
+self.results_Plain_RI=[124.4, 228.2, 943.4, 3167.6]
+self.results_Plain=[55.4, 152.4, 927.8, 3745.2]
+# Conflict Detection over Separate labels
+self.results_CDoverSI_NI_RI=[88.2, 110.2, 146.2, 192.4]
+self.results_CDoverSI_NI=[90.0, 89.4, 116.2, 149.0]
+self.results_CDoverSI_RI=[99.4, 144.8, 474.4, 1498.6]
+self.results_CDoverSI=[39.8, 79.8, 379.8, 1411.6]
+# Conflict Detection over Plain
+self.results_CDoverPlain_NI_RI=[92.0, 112.6, 131.6, 181.6]
+self.results_CDoverPlain_NI=[85.4, 85.2, 107.6, 145.4]
+self.results_CDoverPlain_RI=[123.2, 241.8, 962.6, 3216.0]
+self.results_CDoverPlain=[58.2, 155.6, 853.4, 3137.0]

@@ -1,0 +1,3 @@
+## Figure for investigating the horizontal scalability | FlightHotel scenario
+self.results_flighthotel_PI=[416.4, 802.0, 1985.6, 3997.0, 8057.4, 20530.8, 44311.0]
+self.results_flighthotel_CD_PI=[433.8, 834.6, 2043.2, 4105.0, 8371.6, 21275.0, 46609.0]

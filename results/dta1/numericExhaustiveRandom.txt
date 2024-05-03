@@ -1,0 +1,4 @@
+## Figure for evaluating the impact of the frequency of conflicts | DBLPToAmalgam1 scenario
+self.results_shuffle_rand_min=[5320, 5195, 5321, 5304, 5297, 5263, 5251, 5242, 5213, 5173, 5194]
+self.results_shuffle_rand=[5395.45, 5408.05, 5417.15, 5415.35, 5383.0, 5355.6, 5360.4, 5362.65, 5350.95, 5331.65, 5283.85]
+self.results_shuffle_rand_max=[5572, 5973, 5991, 5966, 5928, 5513, 5876, 6016, 5867, 5929, 5524]

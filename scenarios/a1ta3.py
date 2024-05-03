@@ -3246,3 +3246,1258 @@ class Amalgam1ToAmalgam3CDoverSI(Amalgam1ToAmalgam3SeparateIndexes):
 
         # transformation rules
         self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
+
+class Amalgam1ToAmalgam3RandomConflicts(Amalgam1ToAmalgam3CDoverPlain):
+    def __init__(self, prefix, size = 100, lstring = 5, prob_conflict = 50):
+        # input schema
+        super().__init__(prefix, size, lstring)
+
+        # rule#1 using our framework
+        rule1 = TransformationRule(f"""
+        MATCH (pub:InProcPublished)
+        MATCH (ip:InProceedings)
+        WHERE pub.inproc = ip.inprocid
+        MATCH (a:Author)
+        WHERE pub.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(ip) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK1(" + ip.inprocid + ")" + "1",
+                x.title = ip.title + "1",
+                x.vol = ip.vol + "1",
+                x.num = ip.num + "1",
+                x.pages = ip.pages + "1",
+                x.month = ip.month + "1",
+                x.year = ip.year + "1",
+                x.refkey = "SK2(" + ip.inprocid + ")" + "1",
+                x.note = ip.note + "1",
+                x.remarks = "SK3(" + ip.inprocid + ")" + "1",
+                x.refs = "SK4(" + ip.inprocid + ")" + "1",
+                x.xxxrefs = "SK5(" + ip.inprocid + ")" + "1",
+                x.fullxxxrefs = "SK6(" + ip.inprocid + ")" + "1",
+                x.oldkey = "SK7(" + ip.inprocid + ")" + "1",
+                x.abstract = "SK8(" + ip.inprocid + ")" + "1",
+                x.preliminary = "SK9(" + ip.inprocid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK1(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK1(" + ip.inprocid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> ip.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> ip.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> ip.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> ip.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> ip.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> ip.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK2(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK2(" + ip.inprocid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> ip.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        ip.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK3(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK3(" + ip.inprocid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK4(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK4(" + ip.inprocid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK5(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK5(" + ip.inprocid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK6(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK6(" + ip.inprocid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK7(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK7(" + ip.inprocid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK8(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK8(" + ip.inprocid + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK9(" + ip.inprocid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK9(" + ip.inprocid + ")" + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#2 using our framework
+        rule2 = TransformationRule(f"""
+        MATCH (ap:ArticlePublished)
+        MATCH (art:Article)
+        WHERE ap.article = art.articleid
+        MATCH (a:Author)
+        WHERE ap.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(art) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK11(" + art.articleid + ")" + "1",
+                x.title = art.title + "1",
+                x.vol = art.vol + "1",
+                x.num = art.num + "1",
+                x.pages = art.pages + "1",
+                x.month = art.month + "1",
+                x.year = art.year + "1",
+                x.refkey = "SK12(" + art.articleid + ")" + "1",
+                x.note = art.note + "1",
+                x.remarks = "SK13(" + art.articleid + ")" + "1",
+                x.refs = "SK14(" + art.articleid + ")" + "1",
+                x.xxxrefs = "SK15(" + art.articleid + ")" + "1",
+                x.fullxxxrefs = "SK16(" + art.articleid + ")" + "1",
+                x.oldkey = "SK17(" + art.articleid + ")" + "1",
+                x.abstract = "SK18(" + art.articleid + ")" + "1",
+                x.preliminary = "SK19(" + art.articleid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK11(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK11(" + art.articleid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> art.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> art.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> art.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> art.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> art.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> art.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK12(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK12(" + art.articleid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> art.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        art.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK13(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK13(" + art.articleid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK14(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK14(" + art.articleid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK15(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK15(" + art.articleid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK16(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK16(" + art.articleid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK17(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK17(" + art.articleid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK18(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK18(" + art.articleid  + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK19(" + art.articleid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK19(" + art.articleid + ")" + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#3 using our framework
+        rule3 = TransformationRule(f"""
+        MATCH (tp:TechPublished)
+        MATCH (t:TechReport)
+        WHERE tp.tech = t.techid
+        MATCH (a:Author)
+        WHERE tp.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(t) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK21(" + t.techid + ")" + "1",
+                x.title = t.title + "1",
+                x.vol = t.vol + "1",
+                x.num = t.num + "1",
+                x.pages = t.pages + "1",
+                x.month = t.month + "1",
+                x.year = t.year + "1",
+                x.refkey = "SK22(" + t.techid + ")" + "1",
+                x.note = t.note + "1",
+                x.remarks = "SK23(" + t.techid + ")" + "1",
+                x.refs = "SK24(" + t.techid + ")" + "1",
+                x.xxxrefs = "SK25(" + t.techid + ")" + "1",
+                x.fullxxxrefs = "SK26(" + t.techid + ")" + "1",
+                x.oldkey = "SK27(" + t.techid + ")" + "1",
+                x.abstract = "SK28(" + t.techid + ")" + "1",
+                x.preliminary = "SK29(" + t.techid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK21(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK21(" + t.techid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> t.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> t.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> t.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> t.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> t.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> t.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK22(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK22(" + t.techid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> t.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        t.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK23(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK23(" + t.techid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK24(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK24(" + t.techid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK25(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK25(" + t.techid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK26(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK26(" + t.techid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK27(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK27(" + t.techid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK28(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK28(" + t.techid  + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK29(" + t.techid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK29(" + t.techid + ")" + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#4 using our framework
+        rule4 = TransformationRule(f"""
+        MATCH (bp:BookPublished)
+        MATCH (b:Book)
+        WHERE bp.book = b.bookid
+        MATCH (a:Author)
+        WHERE bp.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(b) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK31(" + b.bookid + ")" + "1",
+                x.title = b.title + "1",
+                x.vol = b.vol + "1",
+                x.num = b.num + "1",
+                x.pages = b.pages + "1",
+                x.month = b.month + "1",
+                x.year = b.year + "1",
+                x.refkey = "SK32(" + b.bookid + ")" + "1",
+                x.note = b.note + "1",
+                x.remarks = "SK33(" + b.bookid + ")" + "1",
+                x.refs = "SK34(" + b.bookid + ")" + "1",
+                x.xxxrefs = "SK35(" + b.bookid + ")" + "1",
+                x.fullxxxrefs = "SK36(" + b.bookid + ")" + "1",
+                x.oldkey = "SK37(" + b.bookid + ")" + "1",
+                x.abstract = "SK38(" + b.bookid + ")" + "1",
+                x.preliminary = "SK39(" + b.bookid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK31(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK31(" + b.bookid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> b.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> b.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> b.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> b.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> b.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> b.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK32(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK32(" + b.bookid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> b.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        b.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK33(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK33(" + b.bookid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK34(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK34(" + b.bookid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK35(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK35(" + b.bookid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK36(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK36(" + b.bookid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK37(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK37(" + b.bookid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK38(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK38(" + b.bookid  + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK39(" + b.bookid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK39(" + b.bookid + ")" + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#5 using our framework
+        rule5 = TransformationRule(f"""
+        MATCH (icp:InCollPublished)
+        MATCH (i:InCollection)
+        WHERE icp.col = i.colid
+        MATCH (a:Author)
+        WHERE icp.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(i) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK41(" + i.colid + ")" + "1",
+                x.title = i.title + "1",
+                x.vol = i.vol + "1",
+                x.num = i.num + "1",
+                x.pages = i.pages + "1",
+                x.month = i.month + "1",
+                x.year = i.year + "1",
+                x.refkey = "SK42(" + i.colid + ")" + "1",
+                x.note = i.note + "1",
+                x.remarks = "SK43(" + i.colid + ")" + "1",
+                x.refs = "SK44(" + i.colid + ")" + "1",
+                x.xxxrefs = "SK45(" + i.colid + ")" + "1",
+                x.fullxxxrefs = "SK46(" + i.colid + ")" + "1",
+                x.oldkey = "SK47(" + i.colid + ")" + "1",
+                x.abstract = "SK48(" + i.colid + ")" + "1",
+                x.preliminary = "SK49(" + i.colid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK41(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK41(" + i.colid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> i.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> i.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> i.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> i.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> i.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> i.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK42(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK42(" + i.colid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> i.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        i.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK43(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK43(" + i.colid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK44(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK44(" + i.colid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK45(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK45(" + i.colid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK46(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK46(" + i.colid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK47(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK47(" + i.colid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK48(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK48(" + i.colid  + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK49(" + i.colid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK49(" + i.colid + ")" + "1"
+                END
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#6 using our framework
+        rule6 = TransformationRule(f"""
+        MATCH (mp:MiscPublished)
+        MATCH (m:Misc)
+        WHERE mp.misc = m.miscid
+        MATCH (a:Author)
+        WHERE mp.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(m) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK51(" + m.miscid + ")" + "1",
+                x.title = m.title + "1",
+                x.vol = m.vol + "1",
+                x.num = m.num + "1",
+                x.pages = m.pages + "1",
+                x.month = m.month + "1",
+                x.year = m.year + "1",
+                x.refkey = "SK52(" + m.miscid + ")" + "1",
+                x.note = m.note + "1",
+                x.remarks = "SK53(" + m.miscid + ")" + "1",
+                x.refs = "SK54(" + m.miscid + ")" + "1",
+                x.xxxrefs = "SK55(" + m.miscid + ")" + "1",
+                x.fullxxxrefs = "SK56(" + m.miscid + ")" + "1",
+                x.oldkey = "SK57(" + m.miscid + ")" + "1",
+                x.abstract = "SK58(" + m.miscid + ")" + "1",
+                x.preliminary = "SK59(" + m.miscid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK51(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK51(" + m.miscid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> m.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> m.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> m.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> m.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> m.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> m.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK52(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK52(" + m.miscid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> m.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK53(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK53(" + m.miscid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK54(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK54(" + m.miscid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK55(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK55(" + m.miscid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK56(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK56(" + m.miscid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK57(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK57(" + m.miscid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK58(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK58(" + m.miscid  + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK59(" + m.miscid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK59(" + m.miscid + ")" + "1"
+                END 
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#7 using our framework
+        rule7 = TransformationRule(f"""
+        MATCH (mp:ManualPublished)
+        MATCH (m:Manual)
+        WHERE mp.manual = m.manid
+        MATCH (a:Author)
+        WHERE mp.auth = a.authid 
+        MERGE (x:_dummy {{ 
+            _id: "(" + elementId(m) + ")" 
+        }})
+        ON CREATE
+            SET x:TArticle,
+                x.articleid = "SK61(" + m.manid + ")" + "1",
+                x.title = m.title + "1",
+                x.vol = m.vol + "1",
+                x.num = m.num + "1",
+                x.pages = m.pages + "1",
+                x.month = m.month + "1",
+                x.year = m.year + "1",
+                x.refkey = "SK62(" + m.manid + ")" + "1",
+                x.note = m.note + "1",
+                x.remarks = "SK63(" + m.manid + ")" + "1",
+                x.refs = "SK64(" + m.manid + ")" + "1",
+                x.xxxrefs = "SK65(" + m.manid + ")" + "1",
+                x.fullxxxrefs = "SK66(" + m.manid + ")" + "1",
+                x.oldkey = "SK67(" + m.manid + ")" + "1",
+                x.abstract = "SK68(" + m.manid + ")" + "1",
+                x.preliminary = "SK69(" + m.manid + ")" + "1"
+        ON MATCH
+            SET x:TArticle,
+                x.articleid =
+                CASE
+                    WHEN x.articleid <> "SK61(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK61(" + m.manid + ")" + "1"
+                END,
+                x.title =
+                CASE
+                    WHEN x.title <> m.title + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.title + "1"
+                END,
+                x.vol =
+                CASE
+                    WHEN x.vol <> m.vol + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.vol + "1"
+                END,
+                x.num =
+                CASE
+                    WHEN x.num <> m.num + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.num + "1"
+                END,
+                x.pages =
+                CASE
+                    WHEN x.pages <> m.pages + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.pages + "1"
+                END,
+                x.month =
+                CASE
+                    WHEN x.month <> m.month + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.month + "1"
+                END,
+                x.year =
+                CASE
+                    WHEN x.year <> m.year + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.year + "1"
+                END,
+                x.refkey =
+                CASE
+                    WHEN x.refkey <> "SK62(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK62(" + m.manid + ")" + "1"
+                END,
+                x.note =
+                CASE
+                    WHEN x.note <> m.note + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        m.note + "1"
+                END,
+                x.remarks =
+                CASE
+                    WHEN x.remarks <> "SK63(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK63(" + m.manid + ")" + "1"
+                END,
+                x.refs =
+                CASE
+                    WHEN x.refs <> "SK64(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK64(" + m.manid + ")" + "1"
+                END,
+                x.xxxrefs =
+                CASE
+                    WHEN x.xxxrefs <> "SK65(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK65(" + m.manid + ")" + "1"
+                END,
+                x.fullxxxrefs =
+                CASE
+                    WHEN x.fullxxxrefs <> "SK66(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK66(" + m.manid + ")" + "1"
+                END,
+                x.oldkey =
+                CASE
+                    WHEN x.oldkey <> "SK67(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK67(" + m.manid + ")" + "1"
+                END,
+                x.abstract =
+                CASE
+                    WHEN x.abstract <> "SK68(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK68(" + m.manid  + ")" + "1"
+                END,
+                x.preliminary =
+                CASE
+                    WHEN x.preliminary <> "SK69(" + m.manid + ")" + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        "SK69(" + m.manid + ")" + "1"
+                END 
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        MERGE (x)-[:ARTICLE_PUBLISHED {{
+            _id: "(ARTICLE_PUBLISHED:" + elementId(x) + "," + elementId(y) + ")"
+        }}]-(y)
+        """)
+        # rule#8 using our framework
+        rule8 = TransformationRule(f"""
+        MATCH (a:Author)
+        MERGE (y:_dummy {{
+            _id: "(" + a.authid + ")"
+        }})
+        ON CREATE
+            SET y:Auth,
+                y.authorid = a.authid + "1",
+                y.name = a.name + "1"
+        ON MATCH
+            SET y:Auth,
+                y.authorid =
+                CASE
+                    WHEN y.authorid <> a.authid + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.authid + "1"
+                END,
+                y.name =
+                CASE
+                    WHEN y.name <> a.name + toInteger(sign((rand() * 100) - {prob_conflict}))
+                        THEN "Conflict detected!"
+                    ELSE
+                        a.name + "1"
+                END 
+        """)
+
+        # transformation rules
+        self.rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8]
+
+    def run(self, app, launches=5, stats=False, nodeIndex=True, relIndex=False, shuffle=True, minmax=True):
+        ttime = 0.0
+        min_rtime = float("inf")
+        max_rtime = 0
+        for i in range(launches):
+            self.prepare(app, stats=stats)
+            # shuffle rules in place; if requested
+            if shuffle:
+                import random
+                random.shuffle(self.rules)
+                print(f"The rules have been shuffled.")
+            # resume to the classic run procedure
+            if(nodeIndex):
+                self.addNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.addRelIndexes(app, stats=stats)
+            # statistics about runtime
+            rtime = self.transform(app, stats=stats)
+            ttime += rtime
+            if(rtime < min_rtime):
+                min_rtime = rtime
+            if(rtime > max_rtime):
+                max_rtime = rtime
+            # resume to classic run procedure
+            if(nodeIndex):
+                self.delNodeIndexes(app, stats=stats)
+            if(relIndex):
+                self.delRelIndexes(app, stats=stats)
+        avg_time = ttime / launches
+        if(stats):
+            print(f"The transformation: {self}  averaged {avg_time} ms over {launches} run(s).")
+        if(minmax):
+            return (min_rtime, avg_time, max_rtime)
+        else:
+            return avg_time

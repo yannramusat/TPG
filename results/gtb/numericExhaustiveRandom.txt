@@ -1,0 +1,4 @@
+## Figure for evaluating the impact of the frequency of conflicts | GUSToBIOSQL scenario
+self.results_shuffle_rand_min=[3172, 3173, 3159, 3167, 3165, 3050, 3034, 3148, 3139, 3133, 3133]
+self.results_shuffle_rand=[3189.6, 3227.1, 3206.05, 3205.8, 3220.45, 3184.1, 3200.45, 3194.4, 3179.2, 3174.45, 3163.1]
+self.results_shuffle_rand_max=[3238, 3509, 3524, 3475, 3579, 3250, 3480, 3565, 3462, 3488, 3236]

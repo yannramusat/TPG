@@ -1,0 +1,8 @@
+## Figure for comparing alternative implementations | FlightHotel scenario
+# Comparison of alternative implementations
+self.results_Sep_long=[143.2, 136.6, 158.0, 183.8, 223.2, 362.2, 600.6]
+self.results_Plain_long=[128.4, 133.2, 147.4, 171.8, 220.8, 369.8, 612.6]
+self.results_Conflicting_long=[134.8, 133.6, 146.8, 171.8, 217.8, 368.8, 608.6]
+self.results_CDoverSI_long=[156.2, 147.0, 167.4, 189.8, 237.6, 395.6, 632.6]
+self.results_CDoverPlain_long=[141.2, 144.0, 156.2, 181.0, 228.4, 383.0, 635.8]
+self.results_CDoverConflicting_long=[144.6, 144.6, 160.0, 184.2, 234.0, 381.2, 631.0]

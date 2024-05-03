@@ -1,0 +1,6 @@
+## Figure for comparing alternative implementations | PersonAddress scenario
+# Comparison of alternative implementations
+results_Sep_long=[133.6, 142.8, 155.2, 174.4, 205.8, 355.6, 591.2]
+results_Plain_long=[129.2, 120.4, 135.2, 157.4, 201.0, 349.0, 616.6]
+results_CDoverSI_long=[122.4, 127.4, 144.4, 158.6, 213.2, 350.2, 628.4]
+results_CDoverPlain_long=[116.0, 126.4, 136.4, 162.8, 209.2, 366.2, 629.2]

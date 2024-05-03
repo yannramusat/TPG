@@ -1,0 +1,4 @@
+## Figure for comparing with the baseline approach | PersonData scenario
+self.results_baseline_long=[16.8, 21.8, 105.2, 329.4, 1177.0, 6629.6]
+self.results_baseline_NI_long=[83.4, 84.0, 83.8, 95.0, 128.4, 217.2]
+self.results_PI_NI_long=[100.2, 102.0, 113.4, 131.0, 167.8, 297.2]

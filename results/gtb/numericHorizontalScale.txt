@@ -1,0 +1,3 @@
+## Figure for investigating the horizontal scalability | GUSToBIOSQL scenario
+self.results_gtb_PI=[1164.0, 2337.4, 5865.8, 11741.4, 23678.6, 66425.0]
+self.results_gtb_CD_PI=[1705.0, 3320.8, 8323.6, 16613.0, 33383.4, 97791.0]

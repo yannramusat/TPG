@@ -1,0 +1,4 @@
+## Figure for evaluating the impact of the frequency of conflicts | PersonData scenario
+self.results_shuffle_rand_min=[540, 489, 485, 496, 479, 535, 483, 490, 480, 483, 538]
+self.results_shuffle_rand=[552.0, 546.45, 545.65, 547.45, 545.3, 547.05, 542.6, 545.85, 544.55, 543.7, 547.45]
+self.results_shuffle_rand_max=[570, 572, 591, 592, 591, 566, 564, 575, 576, 567, 586]
