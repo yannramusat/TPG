@@ -36,12 +36,12 @@ This software is configured to connect to `localhost` with the default port and 
 ## Folder Structure
     .
     ├── figures                  # Source code for figure generation
+    ├── icij                     # Experiments on the ICIJ database
     ├── input-ibench-config      # Configuration files for iBench
     ├── output-ibench-data       # Input data (CSV format)
     ├── results                  # Experimental results
     ├── scenarios                # Cypher scripts implementing the transformations
     ├── user-study               # Materials related to the user study
-    ├── icij                     # Experiments on the ICIJ database
     ├── Appendix.pdf             # The file containing the Appendix
     └── ...
 
