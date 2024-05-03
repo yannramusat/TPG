@@ -41,6 +41,7 @@ This software is configured to connect to `localhost` with the default port and 
     ├── results                  # Experimental results
     ├── scenarios                # Cypher scripts implementing the transformations
     ├── user-study               # Materials related to the user study
+    ├── icij                     # Experiments on the ICIJ database
     ├── Appendix.pdf             # The file containing the Appendix
     └── ...
 
