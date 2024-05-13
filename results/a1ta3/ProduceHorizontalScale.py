@@ -14,7 +14,7 @@ fig2, ax = plt.subplots(layout="constrained", figsize=(3,2))
 ax.plot(sizes, results_a1ta3_PI, label="PI", marker="D")
 ax.plot(sizes, results_a1ta3_CD_PI, label="CD/PI", marker="s")
 ax.set_title("Amalgam1ToAmalgam3")
-ax.set_xlabel("total number of input nodes")
+ax.set_xlabel("number of input nodes")
 ax.set_ylabel("time (s)")
 ax.legend(loc="best", fontsize="10")
         
