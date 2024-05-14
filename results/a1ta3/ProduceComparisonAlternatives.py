@@ -29,7 +29,7 @@ ax.errorbar([str(p) for p in x], results_Plain, yerr=Plain_err, fmt='.', linewid
 #ax.plot(x, results_Shuffled, label="PI; Shuffled", marker="s", color="red")
 ax.errorbar([str(p) for p in x], results_Shuffled, yerr=Shuffled_err, fmt='.', linewidth=1, capsize=5, label="PI; Randomized order", color="red", transform=trans2)
 ax.set_title("Amalgam1ToAmalgam3")
-ax.set_xlabel("nodes of nodes of each type")
+ax.set_xlabel("number of nodes per input label")
 ax.set_ylabel("time (ms)")
 ax.set_yscale("log")
 from matplotlib.ticker import NullFormatter

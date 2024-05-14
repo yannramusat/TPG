@@ -16,7 +16,7 @@ ax.plot(x, results_Plain_long, label="PI_NI", marker="s")
 ax.plot(x, results_Sep_long_UC, label="SI_NUC", marker="o")
 ax.plot(x, results_Plain_long_UC, label="PI_NUC", marker="x")
 ax.set_title("FlightHotel")
-ax.set_xlabel("number of nodes of each type")
+ax.set_xlabel("number of nodes per input label")
 ax.set_ylabel("time (s)")
 ax.legend(loc="best", ncol=2)
 

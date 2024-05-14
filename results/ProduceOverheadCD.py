@@ -36,7 +36,7 @@ ax.plot(x, ratioGTB, label="GUSToBIOSQL", marker="P")
 ax.plot(x, ratioDTA1, label="DBLPToAmalgam1", marker="x")
 ax.plot(x, ratioA1TA3, label="Amalgam1ToAmalgam3", marker="p")
 ax.set_title("Scalability analysis of Conflict Detection")
-ax.set_xlabel("number of nodes of each type")
+ax.set_xlabel("number of nodes per input label")
 ax.set_ylabel("ratio {CD/PI} / {PI}")
 ax.legend(loc="best", fontsize="10", ncol=2)
 
